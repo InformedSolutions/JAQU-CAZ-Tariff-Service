@@ -1,0 +1,10 @@
+application:
+  title: CAZ Tariff/Exemption Service
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  health:
+    diskspace:
+      enabled: false
