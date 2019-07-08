@@ -5,20 +5,22 @@ import com.amazonaws.serverless.proxy.model.AwsProxyRequest;
 import com.amazonaws.serverless.proxy.model.AwsProxyResponse;
 import com.amazonaws.serverless.proxy.spring.SpringBootLambdaContainerHandler;
 import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.amazonaws.services.lambda.runtime.events.SNSEvent;
 import com.google.common.base.Splitter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import uk.gov.caz.tariff.Application;
+import uk.gov.caz.tariff.service.CsvImporterService;
+import uk.gov.caz.tariff.service.CsvImporterService.NewCsvEvent;
 
-public class StreamLambdaHandler implements RequestStreamHandler {
+public class SnsLambdaHandler implements RequestHandler<SNSEvent, String> {
 
   private static final Splitter SPLITTER = Splitter.on(',')
       .trimResults()
       .omitEmptyStrings();
 
   private static SpringBootLambdaContainerHandler<AwsProxyRequest, AwsProxyResponse> handler;
+  private static CsvImporterService csvImporterService;
 
   static {
     try {
@@ -29,6 +31,8 @@ public class StreamLambdaHandler implements RequestStreamHandler {
       } else {
         handler = SpringBootLambdaContainerHandler.getAwsProxyHandler(Application.class);
       }
+      csvImporterService = WebApplicationContextUtils
+          .getWebApplicationContext(handler.getServletContext()).getBean(CsvImporterService.class);
     } catch (ContainerInitializationException e) {
       // if we fail here. We re-throw the exception to force another cold start
       e.printStackTrace();
@@ -36,14 +40,13 @@ public class StreamLambdaHandler implements RequestStreamHandler {
     }
   }
 
-  @Override
-  public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context)
-      throws IOException {
-    handler.proxyStream(inputStream, outputStream, context);
-  }
-
   private static String[] splitToArray(String activeProfiles) {
     return SPLITTER.splitToList(activeProfiles).toArray(new String[0]);
   }
-}
 
+  @Override
+  public String handleRequest(SNSEvent snsEvent, Context context) {
+    CsvImporterService.NewCsvEvent newCsvEvent = new NewCsvEvent("/s3");
+    return csvImporterService.importCsv(newCsvEvent);
+  }
+}

@@ -8,6 +8,25 @@ Globals:
     EndpointConfiguration: REGIONAL
 
 Resources:
+  JaquCazTariffSnsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: uk.gov.caz.tariff.amazonaws.SnsLambdaHandler::handleRequest
+      Runtime: java8
+      CodeUri: target/tariff-1.0-SNAPSHOT-lambda-package.zip
+      MemorySize: 1512
+      Policies: AWSLambdaBasicExecutionRole
+      Timeout: 60
+      Events:
+        PatryksTopic:
+          Type: SNS
+          Properties:
+            Topic: !Ref PatryksTopic
+  PatryksTopic:
+    Type: "AWS::SNS::Topic"
+    Properties:
+      DisplayName: PatryksTopic
+
   JaquCazTariffFunction:
     Type: AWS::Serverless::Function
     Properties:
