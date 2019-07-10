@@ -8,3 +8,21 @@ management:
   health:
     diskspace:
       enabled: false
+
+swagger:
+  api:
+    title: Tariff/Exemption Service(API)
+    description: Tariffs, charging rules and exemptions of all Clean Air Zones
+    version: 0.1
+
+  operations:
+    cleanAirZones:
+      description: Array containing Clean Air Zone (CAZ) detail objects
+
+  model.descriptions:
+    cleanAirZones:
+      cleanAirZoneDetails: List of Clean Air Zones
+    cleanAirZone:
+      name: Name of CAZ
+      id: ID of the zone
+      infoUrl: URL provided by zone operators, contains details about tariffs
