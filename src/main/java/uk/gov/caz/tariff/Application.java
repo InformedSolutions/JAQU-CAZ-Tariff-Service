@@ -7,14 +7,14 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Import;
 import uk.gov.caz.tariff.configuration.RequestMappingConfiguration;
 import uk.gov.caz.tariff.configuration.SwaggerConfiguration;
-import uk.gov.caz.tariff.controller.ExampleController;
+import uk.gov.caz.tariff.controller.CleanAirZonesController;
 
 @SpringBootConfiguration
 @EnableAutoConfiguration
 @Import({
     RequestMappingConfiguration.class,
     SwaggerConfiguration.class,
-    ExampleController.class
+    CleanAirZonesController.class
 })
 public class Application extends SpringBootServletInitializer {
 

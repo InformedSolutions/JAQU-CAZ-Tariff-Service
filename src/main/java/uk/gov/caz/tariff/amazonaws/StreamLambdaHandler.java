@@ -20,25 +20,24 @@ public class StreamLambdaHandler implements RequestStreamHandler {
 
   private static SpringBootLambdaContainerHandler<AwsProxyRequest, AwsProxyResponse> handler;
 
-  static {
-    try {
-      String listOfActiveSpringProfiles = System.getenv("SPRING_PROFILES_ACTIVE");
-      if (listOfActiveSpringProfiles != null) {
-        handler = SpringBootLambdaContainerHandler.getAwsProxyHandler(Application.class,
-            splitToArray(listOfActiveSpringProfiles));
-      } else {
-        handler = SpringBootLambdaContainerHandler.getAwsProxyHandler(Application.class);
-      }
-    } catch (ContainerInitializationException e) {
-      // if we fail here. We re-throw the exception to force another cold start
-      e.printStackTrace();
-      throw new RuntimeException("Could not initialize Spring Boot application", e);
-    }
-  }
-
   @Override
   public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context)
       throws IOException {
+    if (handler == null) {
+      try {
+        String listOfActiveSpringProfiles = System.getenv("SPRING_PROFILES_ACTIVE");
+        if (listOfActiveSpringProfiles != null) {
+          handler = SpringBootLambdaContainerHandler.getAwsProxyHandler(Application.class,
+              splitToArray(listOfActiveSpringProfiles));
+        } else {
+          handler = SpringBootLambdaContainerHandler.getAwsProxyHandler(Application.class);
+        }
+      } catch (ContainerInitializationException e) {
+        // if we fail here. We re-throw the exception to force another cold start
+        e.printStackTrace();
+        throw new RuntimeException("Could not initialize Spring Boot application", e);
+      }
+    }
     handler.proxyStream(inputStream, outputStream, context);
   }
 
