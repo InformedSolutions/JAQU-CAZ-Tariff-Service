@@ -1,0 +1,145 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0002.1-1.0
+      author: jaroslaw.piotrowski
+      changes:
+        - createTable:
+            tableName: T_CLEAN_AIR_ZONES
+            columns:
+              - column:
+                  name: CLEAN_AIR_ZONE_ID
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: clean_air_zone_pkey
+              - column:
+                  name: NAME
+                  type: varchar(60)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: TARIFF_CLASS
+                  type: char(1)
+              - column:
+                  name: MOTORCYCLES_CHARGEABLE
+                  type: boolean
+              - column:
+                  name: EMISSISIONS_STANDARDS_URL
+                  type: text
+              - column:
+                  name: MAIN_INFO_URL
+                  type: text
+              - column:
+                  name: PRICING_URL
+                  type: text
+              - column:
+                  name: HOURS_OF_OPERATION_URL
+                  type: text
+              - column:
+                  name: EXEMPTION_OR_DISCOUNT_URL
+                  type: text
+              - column:
+                  name: PAY_CAZ_URL
+                  type: text
+              - column:
+                  name: BECOME_COMPLIANT_URL
+                  type: text
+              - column:
+                  name: FINANCIAL_ASSISTANCE_URL
+                  type: text
+        - createTable:
+            tableName: T_TARIFFS
+            columns:
+              - column:
+                  name: CLEAN_AIR_ZONE_ID
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: clean_air_zone_pkey_fk
+                    references: T_CLEAN_AIR_ZONES(CLEAN_AIR_ZONE_ID)
+                    foreignKeyName: clean_air_zone_fk
+              - column:
+                  name: BUS
+                  type: numeric(18,2)
+                  defaultValue: 0.0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: COACH
+                  type: numeric(18,2)
+                  defaultValue: 0.0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: TAXI
+                  type: numeric(18,2)
+                  defaultValue: 0.0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: PHV
+                  type: numeric(18,2)
+                  defaultValue: 0.0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: HGV
+                  type: numeric(18,2)
+                  defaultValue: 0.0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: LARGE_VAN
+                  type: numeric(18,2)
+                  defaultValue: 0.0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: MINIBUS
+                  type: numeric(18,2)
+                  defaultValue: 0.0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: SMALL_VAN
+                  type: numeric(18,2)
+                  defaultValue: 0.0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CAR
+                  type: numeric(18,2)
+                  defaultValue: 0.0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: MOTORCYCLE
+                  type: numeric(18,2)
+                  defaultValue: 0.0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: MOPED
+                  type: numeric(18,2)
+                  defaultValue: 0.0
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 0002.2-1.0
+      author: jaroslaw.piotrowski
+      changes:
+        - sql:
+            comment: Create Audit Trigger on all 2 tables
+            dbms: postgresql
+            endDelimiter: ;GO
+            splitStatements: true
+            sql: CREATE TRIGGER T_CLEAN_AIR_ZONES_AUDIT
+              AFTER INSERT OR UPDATE OR DELETE ON T_CLEAN_AIR_ZONES
+              FOR EACH ROW EXECUTE PROCEDURE audit.if_modified_func();
+
+              CREATE TRIGGER T_TARIFFS_AUDIT
+              AFTER INSERT OR UPDATE OR DELETE ON T_TARIFFS
+              FOR EACH ROW EXECUTE PROCEDURE audit.if_modified_func();
+            stripComments: true

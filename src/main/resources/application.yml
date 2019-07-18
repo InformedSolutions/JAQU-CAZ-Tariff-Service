@@ -26,3 +26,10 @@ swagger:
       name: Name of CAZ
       id: ID of the zone
       infoUrl: URL provided by zone operators, contains details about tariffs
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/caz-tariff
+    username: postgres
+    password: postgres
