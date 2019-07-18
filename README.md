@@ -140,3 +140,27 @@ To run just unit tests (without integration), please execute `make unit-test` in
 ## API specification
 
 API specification is available at `{server.host}:{server.port}/v2/api-docs` (locally usually at http://localhost:8080/v2/api-docs)
+
+## Database management
+
+Liquibase is being used as database migrations tool.
+Please check `src/main/resources/db.changelog` directory. It contains file named `db.changelog-master.yaml`
+which is automatically picked up by Spring Boot at application startup. This file drives
+application of all changesets and migrations.
+
+### Liquibase naming convention
+Each changeset should be prefixed with consecutive 4-digit number left padded with zeros.
+For example: 0001, 0002, 0003. Then current application version should be put and finally some
+short description of change. For example:
+
+`0001-1.0-create_tables_taxi_phv_licensing_authority.yaml`
+
+What we see is application order number, at what application version change was made and finally
+a short description of changes. Pretty informative and clean.
+
+If one changeset file contains more than one change, please put consecutive numbers in changeset id:
+
+`0002.1`, `0002.2` and so on.
+
+Raw SQL files must be used from Liquibase Yaml changesets and put into `rawSql` subfolder.
+Please use existing files as an example.
