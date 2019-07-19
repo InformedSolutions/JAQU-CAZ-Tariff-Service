@@ -25,7 +25,7 @@ databaseChangeLog:
                   name: MOTORCYCLES_CHARGEABLE
                   type: boolean
               - column:
-                  name: EMISSISIONS_STANDARDS_URL
+                  name: EMISSIONS_STANDARDS_URL
                   type: text
               - column:
                   name: MAIN_INFO_URL

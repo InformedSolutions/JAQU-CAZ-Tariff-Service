@@ -3,7 +3,7 @@
 # Uncomment if microservice uses Postgres/RDS, delete otherwise
 #spring:
 #  datasource:
-#    url: jdbc:postgresql://localhost:9999/caz_tariff
+#    url: jdbc:postgresql://localhost:9999/caz-tariff
 aws:
   s3:
     endpoint: http://localhost:4572
