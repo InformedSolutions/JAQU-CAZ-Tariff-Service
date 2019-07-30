@@ -28,14 +28,14 @@ class AuditTrailTestIT {
 
     thenNumberOfRowsInAuditLoggedActionsTableForCleanAirZonesShouldBe(1);
     andThereShouldBeExactlyOneInsertActionLogged();
-    withNewData("(" + uuid + ",Leeds,,,,,,,,,,)");
+    withNewData("(" + uuid + ",Leeds,,,,,,,,,,,)");
 
     // UPDATE case
     whenWeUpdateCleanAirZonesTableTo("Birmingham");
 
     thenNumberOfRowsInAuditLoggedActionsTableForCleanAirZonesShouldBe(2);
     andThereShouldBeExactlyOneUpdateActionLogged();
-    withNewData("(" + uuid + ",Birmingham,,,,,,,,,,)");
+    withNewData("(" + uuid + ",Birmingham,,,,,,,,,,,)");
 
     // DELETE case
     whenWeDeleteRowFromCleanAirZonesTable();

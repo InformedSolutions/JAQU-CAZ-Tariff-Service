@@ -8,13 +8,15 @@ import org.springframework.context.annotation.Import;
 import uk.gov.caz.tariff.configuration.RequestMappingConfiguration;
 import uk.gov.caz.tariff.configuration.SwaggerConfiguration;
 import uk.gov.caz.tariff.controller.CleanAirZonesController;
+import uk.gov.caz.tariff.service.TariffRepository;
 
 @SpringBootConfiguration
 @EnableAutoConfiguration
 @Import({
     RequestMappingConfiguration.class,
     SwaggerConfiguration.class,
-    CleanAirZonesController.class
+    CleanAirZonesController.class,
+    TariffRepository.class
 })
 public class Application extends SpringBootServletInitializer {
 

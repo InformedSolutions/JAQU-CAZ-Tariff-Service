@@ -48,6 +48,9 @@ databaseChangeLog:
               - column:
                   name: FINANCIAL_ASSISTANCE_URL
                   type: text
+              - column:
+                  name: BOUNDARY_URL
+                  type: text
         - createTable:
             tableName: T_TARIFFS
             columns:
