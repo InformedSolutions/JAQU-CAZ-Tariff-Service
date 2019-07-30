@@ -1,4 +1,4 @@
-package uk.gov.caz.tariff.dto;
+package uk.gov.caz.tariff.dto.clean.air.zone;
 
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
