@@ -11,7 +11,7 @@
 	create-archetype
 
 build:
-	./mvnw verify
+	./mvnw verify -P jacoco
 
 build-yolo:
 	./mvnw verify -DskipTests
@@ -20,13 +20,16 @@ package:
 	./mvnw package
 
 unit-test:
-	./mvnw clean test
+	./mvnw clean test -P jacoco
 
 integration-test:
-	./mvnw verify -DskipUnitTests
+	./mvnw verify -DskipUnitTests -P jacoco
 
 run:
 	./mvnw spring-boot:run
+
+run-development:
+	SPRING_PROFILES_ACTIVE=development ./mvnw spring-boot:run
 
 generate-javadoc:
 	./mvnw javadoc:javadoc
@@ -58,8 +61,17 @@ create-archetype: clean
 	./mvnw archetype:create-from-project
 	./mvnw -f target/generated-sources/archetype/pom.xml install
 
-local-db-up:
+sonar:
+	./mvnw sonar:sonar
+
+local-up:
 	docker-compose -f docker/docker-compose.yml -p postgres_docker up -d
+
+local-down:
+	docker-compose -f docker/docker-compose.yml -p postgres_docker down
+
+local-db-up:
+	docker-compose -f docker/docker-compose.yml -p postgres_docker up -d postgres
 
 local-db-down:
 	docker-compose -f docker/docker-compose.yml -p postgres_docker down
