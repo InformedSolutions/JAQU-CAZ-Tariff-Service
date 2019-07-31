@@ -73,11 +73,26 @@ class TariffRepositoryTest {
       assertThat(tariff).isNotNull();
       assertThat(tariff.getCleanAirZoneId()).isEqualTo(SOME_CLEAN_AIR_ZONE_ID);
       assertThat(tariff.getName()).isEqualTo(name);
+      assertThat(tariff.getTariffClass()).isEqualTo('C');
+      assertThat(tariff.isMotorcyclesChargeable()).isEqualTo(false);
+      assertThat(tariff.getInformationUrls().getBecomeCompliant()).isEqualTo(SOME_URL);
+      assertThat(tariff.getRates().getBus()).isEqualTo("50.55");
+      assertThat(tariff.getRates().getCoach()).isEqualTo("50.00");
+      assertThat(tariff.getRates().getTaxi()).isEqualTo("15.10");
+      assertThat(tariff.getRates().getPhv()).isEqualTo("15.35");
+      assertThat(tariff.getRates().getHgv()).isEqualTo("5.30");
+      assertThat(tariff.getRates().getLargeVan()).isEqualTo("80.30");
+      assertThat(tariff.getRates().getMiniBus()).isEqualTo("100.30");
+      assertThat(tariff.getRates().getSmallVan()).isEqualTo("100.00");
+      assertThat(tariff.getRates().getCar()).isEqualTo("25.01");
+      assertThat(tariff.getRates().getMotorcycle()).isEqualTo("25.10");
+      assertThat(tariff.getRates().getMoped()).isEqualTo("49.49");
     }
 
     private ResultSet mockResultSet(UUID uuid, String name) throws SQLException {
       ResultSet resultSet = mock(ResultSet.class);
       when(resultSet.getObject("clean_air_zone_id", UUID.class)).thenReturn(uuid);
+      when(resultSet.getBoolean("motorcycles_chargeable")).thenReturn(false);
 
       when(resultSet.getString(anyString())).thenAnswer(answer -> {
         String argument = answer.getArgument(0);
@@ -105,17 +120,27 @@ class TariffRepositoryTest {
         String argument = answer.getArgument(0);
         switch (argument) {
           case "bus":
+            return new BigDecimal("50.55");
           case "coach":
+            return new BigDecimal("50.00");
           case "taxi":
+            return new BigDecimal("15.10");
           case "phv":
+            return new BigDecimal("15.35");
           case "hgv":
+            return new BigDecimal("5.30");
           case "large_van":
+            return new BigDecimal("80.30");
           case "minibus":
+            return new BigDecimal("100.30");
           case "small_van":
+            return new BigDecimal("100.00");
           case "car":
+            return new BigDecimal("25.01");
           case "motorcycle":
+            return new BigDecimal("25.10");
           case "moped":
-            return BigDecimal.ONE;
+            return new BigDecimal("49.49");
 
         }
         throw new RuntimeException("Value not stubbed!");
