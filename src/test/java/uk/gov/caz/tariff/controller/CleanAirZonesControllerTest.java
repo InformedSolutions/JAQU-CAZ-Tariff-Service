@@ -25,7 +25,8 @@ import uk.gov.caz.tariff.service.TariffRepository;
 @ExtendWith(MockitoExtension.class)
 class CleanAirZonesControllerTest {
 
-  private static final UUID SOME_CLEAN_AIR_ZONE_ID = UUID.fromString("8ed3580b-f155-4f6d-ab12-5a96b071a0a7");
+  private static final UUID SOME_CLEAN_AIR_ZONE_ID = UUID
+      .fromString("8ed3580b-f155-4f6d-ab12-5a96b071a0a7");
 
   private static final String SOME_URL = "www.test.uk";
 
@@ -50,7 +51,8 @@ class CleanAirZonesControllerTest {
         CleanAirZone.builder()
             .cleanAirZoneId(UUID.fromString("42395f51-e924-42b4-8585-b1749dc05bfc"))
             .name("Birmingham")
-            .boundaryUrl(URI.create("https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/3)"))
+            .boundaryUrl(URI.create(
+                "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/3)"))
             .build()
     );
   }
@@ -98,38 +100,38 @@ class CleanAirZonesControllerTest {
   }
 
   public Optional<Tariff> prepareTariff() {
-      InformationUrls informationUrls = InformationUrls.builder()
-          .becomeCompliant(SOME_URL)
-          .boundary(SOME_URL)
-          .emissionsStandards(SOME_URL)
-          .exemptionOrDiscount(SOME_URL)
-          .hoursOfOperation(SOME_URL)
-          .payCaz(SOME_URL)
-          .pricing(SOME_URL)
-          .mainInfo(SOME_URL)
-          .financialAssistance(SOME_URL)
-          .build();
-      Rates rates = Rates.builder()
-          .bus(BigDecimal.ONE)
-          .car(BigDecimal.ONE)
-          .coach(BigDecimal.ONE)
-          .hgv(BigDecimal.ONE)
-          .largeVan(BigDecimal.ONE)
-          .miniBus(BigDecimal.ONE)
-          .moped(BigDecimal.ONE)
-          .motorcycle(BigDecimal.ONE)
-          .phv(BigDecimal.ONE)
-          .smallVan(BigDecimal.ONE)
-          .taxi(BigDecimal.ONE)
-          .build();
-      Tariff tariff = Tariff.builder()
-          .cleanAirZoneId(SOME_CLEAN_AIR_ZONE_ID)
-          .name("Leeds")
-          .motorcyclesChargeable(false)
-          .tariffClass('C')
-          .informationUrls(informationUrls)
-          .rates(rates)
-          .build();
+    InformationUrls informationUrls = InformationUrls.builder()
+        .becomeCompliant(SOME_URL)
+        .boundary(SOME_URL)
+        .emissionsStandards(SOME_URL)
+        .exemptionOrDiscount(SOME_URL)
+        .hoursOfOperation(SOME_URL)
+        .payCaz(SOME_URL)
+        .pricing(SOME_URL)
+        .mainInfo(SOME_URL)
+        .financialAssistance(SOME_URL)
+        .build();
+    Rates rates = Rates.builder()
+        .bus(new BigDecimal("5.50"))
+        .car(new BigDecimal("50.00"))
+        .coach(new BigDecimal("15.60"))
+        .hgv(new BigDecimal("5.69"))
+        .largeVan(new BigDecimal("100.00"))
+        .miniBus(new BigDecimal("25.50"))
+        .moped(new BigDecimal("49.49"))
+        .motorcycle(new BigDecimal("80.01"))
+        .phv(new BigDecimal("80.10"))
+        .smallVan(new BigDecimal("80.00"))
+        .taxi(new BigDecimal("2.00"))
+        .build();
+    Tariff tariff = Tariff.builder()
+        .cleanAirZoneId(SOME_CLEAN_AIR_ZONE_ID)
+        .name("Leeds")
+        .motorcyclesChargeable(false)
+        .tariffClass('C')
+        .informationUrls(informationUrls)
+        .rates(rates)
+        .build();
 
     return Optional.ofNullable(tariff);
   }
