@@ -3,10 +3,14 @@ package uk.gov.caz.tariff.controller;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.Optional;
@@ -83,30 +87,7 @@ class CleanAirZonesControllerTestIT {
         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
         .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
         .header(CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
-        .andExpect(jsonPath("$.cleanAirZoneId").value(CLEAN_AIR_ZONE_ID.toString()))
-        .andExpect(jsonPath("$.name").value("Leeds"))
-        .andExpect(jsonPath("$.tariffClass").value("C"))
-        .andExpect(jsonPath("$.motorcyclesChargeable").value("false"))
-        .andExpect(jsonPath("$.rates.bus").value(5.5))
-        .andExpect(jsonPath("$.rates.car").value(50))
-        .andExpect(jsonPath("$.rates.coach").value(15.6))
-        .andExpect(jsonPath("$.rates.hgv").value(5.69))
-        .andExpect(jsonPath("$.rates.largeVan").value(100))
-        .andExpect(jsonPath("$.rates.miniBus").value(25.5))
-        .andExpect(jsonPath("$.rates.moped").value(49.49))
-        .andExpect(jsonPath("$.rates.motorcycle").value(80.01))
-        .andExpect(jsonPath("$.rates.phv").value(80.10))
-        .andExpect(jsonPath("$.rates.smallVan").value(80))
-        .andExpect(jsonPath("$.rates.taxi").value(2))
-        .andExpect(jsonPath("$.informationUrls.becomeCompliant").value(SOME_URL))
-        .andExpect(jsonPath("$.informationUrls.boundary").value(SOME_URL))
-        .andExpect(jsonPath("$.informationUrls.emissionsStandards").value(SOME_URL))
-        .andExpect(jsonPath("$.informationUrls.exemptionOrDiscount").value(SOME_URL))
-        .andExpect(jsonPath("$.informationUrls.hoursOfOperation").value(SOME_URL))
-        .andExpect(jsonPath("$.informationUrls.payCaz").value(SOME_URL))
-        .andExpect(jsonPath("$.informationUrls.pricing").value(SOME_URL))
-        .andExpect(jsonPath("$.informationUrls.mainInfo").value(SOME_URL))
-        .andExpect(jsonPath("$.informationUrls.financialAssistance").value(SOME_URL))
+        .andExpect(content().json(readTariffJson()))
         .andExpect(status().isOk())
         .andExpect(header().string(CORRELATION_ID_HEADER, SOME_CORRELATION_ID));
   }
@@ -176,5 +157,9 @@ class CleanAirZonesControllerTestIT {
         .cleanAirZoneId(cazId)
         .boundaryUrl(URI.create(boundaryUrl))
         .build();
+  }
+
+  private String readTariffJson() throws IOException {
+    return Resources.toString(Resources.getResource("data/json/tariff.json"), Charsets.UTF_8);
   }
 }
