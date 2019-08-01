@@ -1,4 +1,4 @@
-package uk.gov.caz.tariff.dto.tariff;
+package uk.gov.caz.tariff.dto;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

@@ -1,4 +1,4 @@
-package uk.gov.caz.tariff.dto.tariff;
+package uk.gov.caz.tariff.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import java.util.UUID;

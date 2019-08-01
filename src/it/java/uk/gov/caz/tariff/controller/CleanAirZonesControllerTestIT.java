@@ -1,5 +1,6 @@
 package uk.gov.caz.tariff.controller;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -7,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -15,9 +17,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import uk.gov.caz.tariff.dto.tariff.InformationUrls;
-import uk.gov.caz.tariff.dto.tariff.Rates;
-import uk.gov.caz.tariff.dto.tariff.Tariff;
+import uk.gov.caz.tariff.dto.CleanAirZone;
+import uk.gov.caz.tariff.dto.CleanAirZones;
+import uk.gov.caz.tariff.dto.InformationUrls;
+import uk.gov.caz.tariff.dto.Rates;
+import uk.gov.caz.tariff.dto.Tariff;
+import uk.gov.caz.tariff.service.CleanAirZonesRepository;
 import uk.gov.caz.tariff.service.TariffRepository;
 
 @WebMvcTest(CleanAirZonesController.class)
@@ -40,11 +45,16 @@ class CleanAirZonesControllerTestIT {
   @MockBean
   private TariffRepository tariffRepository;
 
+  @MockBean
+  private CleanAirZonesRepository cleanAirZonesRepository;
+
   @Autowired
   private MockMvc mockMvc;
 
   @Test
   public void shouldReturnListOfCleanAirZones() throws Exception {
+    given(cleanAirZonesRepository.findAll()).willReturn(prepareCleanAirZones());
+
     mockMvc.perform(get(CleanAirZonesController.PATH)
         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
         .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -145,5 +155,26 @@ class CleanAirZonesControllerTestIT {
         .informationUrls(informationUrls)
         .rates(rates)
         .build());
+  }
+
+  private CleanAirZones prepareCleanAirZones() {
+    return new CleanAirZones(
+        newArrayList(
+            caz("Birmingham", UUID.fromString("42395f51-e924-42b4-8585-b1749dc05bfc"),
+                "https://www.birmingham.gov.uk/info/20076/pollution/"
+                    + "1763/a_clean_air_zone_for_birmingham/3)"),
+
+            caz("Leeds", UUID.fromString("146bbfd3-1928-41d3-9575-5f9e58e61ee1"),
+                "https://www.arcgis.com/home/webmap/viewer.html?webmap="
+                    + "de0120ae980b473982a3149ab072fdfc&extent=-1.733%2c53.7378%2c-1.333%2c53.8621")
+        ));
+  }
+
+  private CleanAirZone caz(String cazName, UUID cazId, String boundaryUrl) {
+    return CleanAirZone.builder()
+        .name(cazName)
+        .cleanAirZoneId(cazId)
+        .boundaryUrl(URI.create(boundaryUrl))
+        .build();
   }
 }
