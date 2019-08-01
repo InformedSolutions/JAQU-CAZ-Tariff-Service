@@ -58,7 +58,7 @@ class CleanAirZonesRepositoryTest {
     CleanAirZones result = cleanAirZonesRepository.findAll();
 
     // then
-    assertThat(result.getCleanAirZones()).hasSize(0);
+    assertThat(result.getCleanAirZones()).isEmpty();
   }
 
   @Nested

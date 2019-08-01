@@ -61,7 +61,6 @@ public class TariffRepository {
         new Object[]{cleanAirZoneId}, MAPPER));
   }
 
-  @VisibleForTesting
   public static class TariffRowMapper implements RowMapper<Tariff> {
 
     @Override

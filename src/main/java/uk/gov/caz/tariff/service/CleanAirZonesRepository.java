@@ -36,7 +36,6 @@ public class CleanAirZonesRepository {
     return new CleanAirZones(jdbcTemplate.query(SELECT_ALL_SQL, MAPPER));
   }
 
-  @VisibleForTesting
   public static class CleanAirZoneRowMapper implements RowMapper<CleanAirZone> {
 
     @Override
