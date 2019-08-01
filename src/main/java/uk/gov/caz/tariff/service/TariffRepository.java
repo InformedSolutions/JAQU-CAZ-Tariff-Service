@@ -8,12 +8,12 @@ import java.util.UUID;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import uk.gov.caz.tariff.dto.tariff.InformationUrls;
-import uk.gov.caz.tariff.dto.tariff.Rates;
-import uk.gov.caz.tariff.dto.tariff.Tariff;
+import uk.gov.caz.tariff.dto.InformationUrls;
+import uk.gov.caz.tariff.dto.Rates;
+import uk.gov.caz.tariff.dto.Tariff;
 
 /**
- * A class that is responsible for managing tariff data ({@link uk.gov.caz.tariff.dto.tariff.Tariff}
+ * A class that is responsible for managing tariff data ({@link Tariff}
  * entities) in the postgres database.
  */
 @Repository
@@ -61,7 +61,6 @@ public class TariffRepository {
         new Object[]{cleanAirZoneId}, MAPPER));
   }
 
-  @VisibleForTesting
   public static class TariffRowMapper implements RowMapper<Tariff> {
 
     @Override

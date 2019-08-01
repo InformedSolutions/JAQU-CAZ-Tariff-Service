@@ -15,11 +15,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import uk.gov.caz.tariff.dto.clean.air.zone.CleanAirZone;
-import uk.gov.caz.tariff.dto.clean.air.zone.CleanAirZones;
-import uk.gov.caz.tariff.dto.tariff.InformationUrls;
-import uk.gov.caz.tariff.dto.tariff.Rates;
-import uk.gov.caz.tariff.dto.tariff.Tariff;
+import uk.gov.caz.tariff.dto.CleanAirZone;
+import uk.gov.caz.tariff.dto.CleanAirZones;
+import uk.gov.caz.tariff.dto.InformationUrls;
+import uk.gov.caz.tariff.dto.Rates;
+import uk.gov.caz.tariff.dto.Tariff;
+import uk.gov.caz.tariff.service.CleanAirZonesRepository;
 import uk.gov.caz.tariff.service.TariffRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,12 +34,16 @@ class CleanAirZonesControllerTest {
   @Mock
   private TariffRepository tariffRepository;
 
+  @Mock
+  private CleanAirZonesRepository cleanAirZonesRepository;
+
   @InjectMocks
   private CleanAirZonesController cleanAirZonesController;
 
   @Test
-  public void shouldReturnSomeSampleHardcodedData() {
+  public void shouldReturnCleanAirZones() {
     // given
+    when(cleanAirZonesRepository.findAll()).thenReturn(prepareCleanAirZones());
 
     // when
     ResponseEntity<CleanAirZones> cleanAirZones = cleanAirZonesController
@@ -134,5 +139,26 @@ class CleanAirZonesControllerTest {
         .build();
 
     return Optional.ofNullable(tariff);
+  }
+
+  private CleanAirZones prepareCleanAirZones() {
+    return new CleanAirZones(
+        newArrayList(
+            caz("Birmingham", UUID.fromString("42395f51-e924-42b4-8585-b1749dc05bfc"),
+                "https://www.birmingham.gov.uk/info/20076/pollution/"
+                    + "1763/a_clean_air_zone_for_birmingham/3)"),
+
+            caz("Leeds", UUID.fromString("146bbfd3-1928-41d3-9575-5f9e58e61ee1"),
+                "https://www.arcgis.com/home/webmap/viewer.html?webmap="
+                    + "de0120ae980b473982a3149ab072fdfc&extent=-1.733%2c53.7378%2c-1.333%2c53.8621")
+        ));
+  }
+
+  private CleanAirZone caz(String cazName, UUID cazId, String boundaryUrl) {
+    return CleanAirZone.builder()
+        .name(cazName)
+        .cleanAirZoneId(cazId)
+        .boundaryUrl(URI.create(boundaryUrl))
+        .build();
   }
 }

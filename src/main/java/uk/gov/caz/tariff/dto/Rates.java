@@ -1,4 +1,4 @@
-package uk.gov.caz.tariff.dto.tariff;
+package uk.gov.caz.tariff.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModelProperty;

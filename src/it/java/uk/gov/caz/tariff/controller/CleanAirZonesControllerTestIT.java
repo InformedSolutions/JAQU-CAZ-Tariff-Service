@@ -1,12 +1,18 @@
 package uk.gov.caz.tariff.controller;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -15,9 +21,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import uk.gov.caz.tariff.dto.tariff.InformationUrls;
-import uk.gov.caz.tariff.dto.tariff.Rates;
-import uk.gov.caz.tariff.dto.tariff.Tariff;
+import uk.gov.caz.tariff.dto.CleanAirZone;
+import uk.gov.caz.tariff.dto.CleanAirZones;
+import uk.gov.caz.tariff.dto.InformationUrls;
+import uk.gov.caz.tariff.dto.Rates;
+import uk.gov.caz.tariff.dto.Tariff;
+import uk.gov.caz.tariff.service.CleanAirZonesRepository;
 import uk.gov.caz.tariff.service.TariffRepository;
 
 @WebMvcTest(CleanAirZonesController.class)
@@ -40,11 +49,16 @@ class CleanAirZonesControllerTestIT {
   @MockBean
   private TariffRepository tariffRepository;
 
+  @MockBean
+  private CleanAirZonesRepository cleanAirZonesRepository;
+
   @Autowired
   private MockMvc mockMvc;
 
   @Test
   public void shouldReturnListOfCleanAirZones() throws Exception {
+    given(cleanAirZonesRepository.findAll()).willReturn(prepareCleanAirZones());
+
     mockMvc.perform(get(CleanAirZonesController.PATH)
         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
         .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -73,30 +87,7 @@ class CleanAirZonesControllerTestIT {
         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
         .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
         .header(CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
-        .andExpect(jsonPath("$.cleanAirZoneId").value(CLEAN_AIR_ZONE_ID.toString()))
-        .andExpect(jsonPath("$.name").value("Leeds"))
-        .andExpect(jsonPath("$.tariffClass").value("C"))
-        .andExpect(jsonPath("$.motorcyclesChargeable").value("false"))
-        .andExpect(jsonPath("$.rates.bus").value(5.5))
-        .andExpect(jsonPath("$.rates.car").value(50))
-        .andExpect(jsonPath("$.rates.coach").value(15.6))
-        .andExpect(jsonPath("$.rates.hgv").value(5.69))
-        .andExpect(jsonPath("$.rates.largeVan").value(100))
-        .andExpect(jsonPath("$.rates.miniBus").value(25.5))
-        .andExpect(jsonPath("$.rates.moped").value(49.49))
-        .andExpect(jsonPath("$.rates.motorcycle").value(80.01))
-        .andExpect(jsonPath("$.rates.phv").value(80.10))
-        .andExpect(jsonPath("$.rates.smallVan").value(80))
-        .andExpect(jsonPath("$.rates.taxi").value(2))
-        .andExpect(jsonPath("$.informationUrls.becomeCompliant").value(SOME_URL))
-        .andExpect(jsonPath("$.informationUrls.boundary").value(SOME_URL))
-        .andExpect(jsonPath("$.informationUrls.emissionsStandards").value(SOME_URL))
-        .andExpect(jsonPath("$.informationUrls.exemptionOrDiscount").value(SOME_URL))
-        .andExpect(jsonPath("$.informationUrls.hoursOfOperation").value(SOME_URL))
-        .andExpect(jsonPath("$.informationUrls.payCaz").value(SOME_URL))
-        .andExpect(jsonPath("$.informationUrls.pricing").value(SOME_URL))
-        .andExpect(jsonPath("$.informationUrls.mainInfo").value(SOME_URL))
-        .andExpect(jsonPath("$.informationUrls.financialAssistance").value(SOME_URL))
+        .andExpect(content().json(readTariffJson()))
         .andExpect(status().isOk())
         .andExpect(header().string(CORRELATION_ID_HEADER, SOME_CORRELATION_ID));
   }
@@ -145,5 +136,30 @@ class CleanAirZonesControllerTestIT {
         .informationUrls(informationUrls)
         .rates(rates)
         .build());
+  }
+
+  private CleanAirZones prepareCleanAirZones() {
+    return new CleanAirZones(
+        newArrayList(
+            caz("Birmingham", UUID.fromString("42395f51-e924-42b4-8585-b1749dc05bfc"),
+                "https://www.birmingham.gov.uk/info/20076/pollution/"
+                    + "1763/a_clean_air_zone_for_birmingham/3)"),
+
+            caz("Leeds", UUID.fromString("146bbfd3-1928-41d3-9575-5f9e58e61ee1"),
+                "https://www.arcgis.com/home/webmap/viewer.html?webmap="
+                    + "de0120ae980b473982a3149ab072fdfc&extent=-1.733%2c53.7378%2c-1.333%2c53.8621")
+        ));
+  }
+
+  private CleanAirZone caz(String cazName, UUID cazId, String boundaryUrl) {
+    return CleanAirZone.builder()
+        .name(cazName)
+        .cleanAirZoneId(cazId)
+        .boundaryUrl(URI.create(boundaryUrl))
+        .build();
+  }
+
+  private String readTariffJson() throws IOException {
+    return Resources.toString(Resources.getResource("data/json/tariff.json"), Charsets.UTF_8);
   }
 }
