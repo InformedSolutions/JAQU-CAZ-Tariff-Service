@@ -1,0 +1,74 @@
+kind: pipeline
+name: ci
+
+steps:
+
+  # Clean agent images and containers to prevent disk space overuse!
+  - name: clean agent
+    image: docker
+    commands:
+    - docker system prune -f
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # Build Docker Image for Running Maven
+  - name: build docker maven base
+    image: docker
+    commands:
+    - docker build -t maven-base -f Dockerfile.base .
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # Run Unit tests
+  - name: unit test
+    image: maven-base
+    pull: never
+    commands:
+    - make unit-test
+
+  # Build and Package
+  - name: package
+    image: maven-base
+    volumes:
+      - name: package_directory
+        path: /drone/src/target
+    pull: never
+    commands:
+    - make build
+    - make package
+
+
+  # Invoke terraform plan for now :)
+  - name: deploy
+    image: hashicorp/terraform:0.12.3
+    commands:
+      - cd JAQU-CAZ-IAC/terraform/projects/tarrif-service-api/environments/dev
+      - terraform init
+      - terraform workspace select dev
+      - terraform plan
+    environment:
+      TF_VAR_access_key:
+        from_secret: aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: aws_secret_access_key
+    when:
+      event:
+        exclude:
+        - pull_request
+
+volumes:
+- name: docker_sock
+  host:
+    path: /var/run/docker.sock
+
+- name: package_directory
+  temp: {}
+
+trigger:
+  branch:
+  - develop
+  event:
+  - pull_request
+  - push
