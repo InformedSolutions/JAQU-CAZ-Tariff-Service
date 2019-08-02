@@ -3,7 +3,7 @@ name: ci
 
 steps:
 
-  # Clean agent images and containers to prevent disk space overuse
+  # Clean agent images and containers to prevent disk space overuse!
   - name: clean agent
     image: docker
     commands:
