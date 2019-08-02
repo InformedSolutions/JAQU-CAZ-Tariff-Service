@@ -303,6 +303,7 @@
           <consoleOutput>true</consoleOutput>
           <failOnViolation>true</failOnViolation>
           <linkXRef>false</linkXRef>
+          <violationSeverity>warning</violationSeverity>
         </configuration>
 
         <executions>
@@ -311,7 +312,6 @@
             <phase>validate</phase>
             <goals>
               <goal>check</goal>
-              <goal>checkstyle</goal> <!-- to generate a report during the build -->
             </goals>
           </execution>
         </executions>
