@@ -5,6 +5,7 @@
 	integration-test \
 	unit-test \
 	run \
+	checkstyle \
 	generate-javadoc \
 	clean \
 	deploy-to-aws \
@@ -27,6 +28,9 @@ integration-test:
 
 run:
 	./mvnw spring-boot:run
+
+checkstyle:
+	./mvnw checkstyle:checkstyle
 
 run-development:
 	SPRING_PROFILES_ACTIVE=development ./mvnw spring-boot:run
