@@ -42,6 +42,7 @@ steps:
   - name: deploy
     image: hashicorp/terraform:0.12.3
     commands:
+      - git clone https://github.com/InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC/terraform/projects/tarrif-service-api/environments/dev
       - terraform init
       - terraform workspace select dev
