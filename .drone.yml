@@ -45,7 +45,7 @@ steps:
       - cd JAQU-CAZ-IAC/terraform/projects/tarrif-service-api/environments/dev
       - terraform init
       - terraform workspace select dev
-      - terraform plan
+      - terraform apply -auto-approve
     environment:
       TF_VAR_access_key:
         from_secret: aws_access_key_id
@@ -53,7 +53,6 @@ steps:
         from_secret: aws_secret_access_key
     when:
       event:
-        exclude:
         - pull_request
 
 volumes:
