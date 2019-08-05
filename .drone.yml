@@ -28,8 +28,8 @@ steps:
     commands:
     - make unit-test
 
-  # Build and Package
-  - name: package
+  # Package
+  - name: package deployable zip
     image: maven-base
     volumes:
       - name: package_directory
@@ -39,6 +39,23 @@ steps:
     - make build
     - make package
 
+  # Scan with sonar
+  - name: sonar scan
+    image: aosapps/drone-sonar-plugin
+    environment:
+      sonar_host:
+        from_secret: sonar_host
+      sonar_token:
+        from_secret: sonar_token
+    commands:
+      - sonar-scanner -Dsonar.projectKey=${DRONE_REPO}
+        -Dsonar.projectName=${DRONE_REPO}
+        -Dsonar.host.url=$sonar_host
+        -Dsonar.login=$sonar_token
+        -Dsonar.tests=src/test/java
+        -Dsonar.sources=src/main/java
+        -Dsonar.java.libraries=./target/classes
+        -Dsonar.java.binaries=./target/classes
 
   # Invoke terraform plan for now :)
   - name: deploy
