@@ -64,7 +64,6 @@ steps:
     commands:
       - git clone https://github.com/InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC/terraform/projects/tarrif-service-api/environments/dev
-      - git checkout feature/VCCS-86/create-terraform-project-tarrif-service
       - export TF_VAR_lambda_file=$(ls /opt/package/*.zip | tail -1)
       - terraform init
       - terraform workspace select dev
