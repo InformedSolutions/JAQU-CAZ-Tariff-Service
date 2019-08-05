@@ -26,33 +26,62 @@ steps:
     image: maven-base
     pull: never
     commands:
-    - make unit-test
+    - mvn clean test -P jacoco
 
-  # Build and Package
-  - name: package
+  # Package
+  - name: package deployable zip
     image: maven-base
     volumes:
       - name: package_directory
         path: /drone/src/target
     pull: never
+    environment:
+      BUILD_ID: ${DRONE_BUILD_NUMBER}
     commands:
-    - make build
-    - make package
+    - mvn package -DskipUnitTests
 
+  # Scan with sonar
+  - name: sonar scan
+    image: aosapps/drone-sonar-plugin
+    environment:
+      sonar_host:
+        from_secret: sonar_host
+      sonar_token:
+        from_secret: sonar_token
+    commands:
+      - sonar-scanner -Dsonar.projectKey=${DRONE_REPO}
+        -Dsonar.projectName=${DRONE_REPO}
+        -Dsonar.host.url=$sonar_host
+        -Dsonar.login=$sonar_token
+        -Dsonar.tests=src/test/java
+        -Dsonar.sources=src/main/java
+        -Dsonar.java.libraries=./target/classes
+        -Dsonar.java.binaries=./target/classes
 
-  # Invoke terraform plan for now :)
+  # Invoke terraform apply
   - name: deploy
     image: hashicorp/terraform:0.12.3
     commands:
+      - git clone https://github.com/InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC/terraform/projects/tarrif-service-api/environments/dev
+      - export TF_VAR_lambda_file=$(ls /opt/package/*.zip | tail -1)
       - terraform init
       - terraform workspace select dev
-      - terraform plan
+      - terraform apply -auto-approve
     environment:
       TF_VAR_access_key:
         from_secret: aws_access_key_id
       TF_VAR_secret_key:
         from_secret: aws_secret_access_key
+      TF_VAR_db_user:
+        from_secret: db_user
+      TF_VAR_db_password:
+        from_secret: db_password
+      TF_VAR_db_name:
+        from_secret: db_name
+    volumes:
+      - name: package_directory
+        path: /opt/package
     when:
       event:
         exclude:
