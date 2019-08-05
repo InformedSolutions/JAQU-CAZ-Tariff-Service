@@ -17,6 +17,12 @@ build:
 build-yolo:
 	./mvnw verify -DskipTests
 
+# Grab current project version from pom.xml and put into POM_VERSION variable
+POM_VERSION=$(shell ./mvnw -q -Dexec.executable=echo -Dexec.args='$${project.version}' --non-recursive exec:exec)
+# # If BUILD_ID is set (for example from CI/CD or from user's env vars) then use it. If not use POM_VERSION.
+BUILD_ID := $(or $(BUILD_ID),$(POM_VERSION))
+# # BUILD_ID is being used by Maven Assembly plugin to customize Lambda zip name. See pom.xml
+export BUILD_ID
 package:
 	./mvnw package
 

@@ -404,7 +404,7 @@
                   <goal>single</goal>
                 </goals>
                 <configuration>
-                  <finalName>${project.artifactId}-${project.version}</finalName>
+                  <finalName>${project.artifactId}-${env.BUILD_ID}</finalName>
                   <descriptors>
                     <descriptor>src${file.separator}assembly${file.separator}bin.xml</descriptor>
                   </descriptors>
