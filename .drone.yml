@@ -26,7 +26,7 @@ steps:
     image: maven-base
     pull: never
     commands:
-    - make unit-test
+    - mvn clean test -P jacoco
 
   # Build and Package
   - name: package
@@ -36,9 +36,7 @@ steps:
         path: /drone/src/target
     pull: never
     commands:
-    - make build
-    - make package
-
+    - mvn package -DskipUnitTests
 
   # Invoke terraform plan for now :)
   - name: deploy
