@@ -35,6 +35,8 @@ steps:
       - name: package_directory
         path: /drone/src/target
     pull: never
+    environment:
+      BUILD_ID: ${DRONE_BUILD_NUMBER}
     commands:
     - mvn package -DskipUnitTests
 
@@ -63,6 +65,7 @@ steps:
       - git clone https://github.com/InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC/terraform/projects/tarrif-service-api/environments/dev
       - git checkout feature/VCCS-86/create-terraform-project-tarrif-service
+      - export TF_VAR_lambda_file=$(ls /opt/package/*.zip | tail -1)
       - terraform init
       - terraform workspace select dev
       - terraform apply -auto-approve
@@ -77,6 +80,9 @@ steps:
         from_secret: db_password
       TF_VAR_db_name:
         from_secret: db_name
+    volumes:
+      - name: package_directory
+        path: /opt/package
     when:
       event:
         - pull_request
