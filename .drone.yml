@@ -84,6 +84,7 @@ steps:
         path: /opt/package
     when:
       event:
+        exclude:
         - pull_request
 
 volumes:
