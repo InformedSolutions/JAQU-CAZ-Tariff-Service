@@ -38,7 +38,7 @@ steps:
     commands:
     - mvn package -DskipUnitTests
 
-  # Invoke terraform plan for now :)
+  # Apply Terraform code
   - name: deploy
     image: hashicorp/terraform:0.12.3
     commands:
@@ -52,6 +52,11 @@ steps:
         from_secret: aws_access_key_id
       TF_VAR_secret_key:
         from_secret: aws_secret_access_key
+      TF_VAR_db_user:
+        from_secret: db_user
+      TF_VAR_db_password:
+        from_secret: db_password
+
     when:
       event:
         - pull_request
