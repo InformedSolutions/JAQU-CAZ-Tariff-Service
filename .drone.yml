@@ -58,7 +58,7 @@ steps:
         -Dsonar.java.libraries=./target/classes
         -Dsonar.java.binaries=./target/classes
 
-  # Invoke terraform apply
+  # Invoke terraform apply and deploy
   - name: deploy
     image: hashicorp/terraform:0.12.3
     commands:
@@ -84,7 +84,6 @@ steps:
         path: /opt/package
     when:
       event:
-        exclude:
         - pull_request
 
 volumes:
