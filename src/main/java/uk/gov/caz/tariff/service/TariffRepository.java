@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -13,8 +14,8 @@ import uk.gov.caz.tariff.dto.Rates;
 import uk.gov.caz.tariff.dto.Tariff;
 
 /**
- * A class that is responsible for managing tariff data ({@link Tariff}
- * entities) in the postgres database.
+ * A class that is responsible for managing tariff data ({@link Tariff} entities) in the postgres
+ * database.
  */
 @Repository
 public class TariffRepository {
@@ -56,9 +57,19 @@ public class TariffRepository {
     this.jdbcTemplate = jdbcTemplate;
   }
 
+  /**
+   * Finds {@link Tariff} by cleanAirZoneId.
+   *
+   * @param cleanAirZoneId UUID of tariff that will be fetched.
+   * @return An {@link Optional} of {@link Tariff}
+   */
   public Optional<Tariff> findByCleanAirZoneId(UUID cleanAirZoneId) {
-    return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_BY_CLEAN_AIR_ZONE_ID_SQL,
-        new Object[]{cleanAirZoneId}, MAPPER));
+    try {
+      return Optional.ofNullable(
+          jdbcTemplate.queryForObject(SELECT_BY_CLEAN_AIR_ZONE_ID_SQL, MAPPER, cleanAirZoneId));
+    } catch (EmptyResultDataAccessException exc) {
+      return Optional.empty();
+    }
   }
 
   public static class TariffRowMapper implements RowMapper<Tariff> {
