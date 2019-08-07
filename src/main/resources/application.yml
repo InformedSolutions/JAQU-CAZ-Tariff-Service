@@ -2,6 +2,9 @@ application:
   title: CAZ Tariff/Exemption Service
 
 management:
+  endpoints:
+    web:
+      base-path:
   endpoint:
     health:
       show-details: always
@@ -64,3 +67,9 @@ spring:
     url: jdbc:postgresql://localhost:5432/caz-tariff
     username: postgres
     password: postgres
+    
+springfox:
+  documentation:
+    swagger:
+      v2:
+        path: /v1/swagger-docs
