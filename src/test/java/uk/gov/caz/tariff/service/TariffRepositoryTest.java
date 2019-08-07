@@ -155,7 +155,7 @@ class TariffRepositoryTest {
         .cleanAirZoneId(SOME_CLEAN_AIR_ZONE_ID)
         .name("Leeds")
         .build();
-    when(jdbcTemplate.queryForObject(anyString(), any(), any(TariffRowMapper.class))).thenReturn(
+    when(jdbcTemplate.queryForObject(anyString(), any(TariffRowMapper.class), any())).thenReturn(
         tariff);
     return tariff;
   }
