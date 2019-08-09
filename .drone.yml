@@ -21,12 +21,17 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
 
-  # Run Unit tests
+  # Unit test
   - name: unit test
     image: maven-base
+    volumes:
+      - name: package_directory
+        path: /drone/src/target
+      - name: m2_repo
+        path: /root/.m2
     pull: never
     commands:
-    - mvn clean test -P jacoco
+      - mvn test -P jacoco
 
   # Package
   - name: package deployable zip
@@ -34,6 +39,8 @@ steps:
     volumes:
       - name: package_directory
         path: /drone/src/target
+      - name: m2_repo
+        path: /root/.m2
     pull: never
     environment:
       BUILD_ID: ${DRONE_BUILD_NUMBER}
@@ -42,21 +49,24 @@ steps:
 
   # Scan with sonar
   - name: sonar scan
-    image: aosapps/drone-sonar-plugin
+    image: maven-base
+    volumes:
+      - name: package_directory
+        path: /drone/src/target
+      - name: m2_repo
+        path: /root/.m2
     environment:
       sonar_host:
         from_secret: sonar_host
       sonar_token:
         from_secret: sonar_token
+    pull: never
     commands:
-      - sonar-scanner -Dsonar.projectKey=${DRONE_REPO}
+      - mvn sonar:sonar -Dsonar.host.url=$sonar_host
+        -Dsonar.projectKey=${DRONE_REPO}
         -Dsonar.projectName=${DRONE_REPO}
-        -Dsonar.host.url=$sonar_host
         -Dsonar.login=$sonar_token
-        -Dsonar.tests=src/test/java
-        -Dsonar.sources=src/main/java
-        -Dsonar.java.libraries=./target/classes
-        -Dsonar.java.binaries=./target/classes
+        -Dsonar.coverage.jacoco.xmlReportPaths=/drone/src/target/site/jacoco/jacoco.xml
 
   # Invoke terraform apply
   - name: deploy
@@ -93,6 +103,9 @@ volumes:
     path: /var/run/docker.sock
 
 - name: package_directory
+  temp: {}
+
+- name: m2_repo
   temp: {}
 
 trigger:
