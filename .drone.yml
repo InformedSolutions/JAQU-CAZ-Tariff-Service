@@ -27,6 +27,8 @@ steps:
     volumes:
       - name: package_directory
         path: /drone/src/target
+      - name: m2_repo
+        path: /root/.m2
     pull: never
     commands:
       - mvn test -P jacoco
@@ -37,6 +39,8 @@ steps:
     volumes:
       - name: package_directory
         path: /drone/src/target
+      - name: m2_repo
+        path: /root/.m2
     pull: never
     environment:
       BUILD_ID: ${DRONE_BUILD_NUMBER}
@@ -49,6 +53,8 @@ steps:
     volumes:
       - name: package_directory
         path: /drone/src/target
+      - name: m2_repo
+        path: /root/.m2
     environment:
       sonar_host:
         from_secret: sonar_host
@@ -97,6 +103,9 @@ volumes:
     path: /var/run/docker.sock
 
 - name: package_directory
+  temp: {}
+
+- name: m2_repo
   temp: {}
 
 trigger:
