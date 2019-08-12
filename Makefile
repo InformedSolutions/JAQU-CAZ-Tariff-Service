@@ -17,6 +17,9 @@ build:
 build-yolo:
 	./mvnw verify -DskipTests
 
+compile:
+	./mvnw compile
+
 package:
 	./mvnw package
 
@@ -95,4 +98,4 @@ local-services-up: local-db-up localstack-up
 local-services-down: local-db-down localstack-down
 
 localstack-run:
-	SPRING_PROFILES_ACTIVE='localstack' AWS_PROFILE='localstack' AWS_REGION='eu-west-2' ./mvnw spring-boot:run
+	SPRING_PROFILES_ACTIVE='localstack,development' AWS_PROFILE='localstack' AWS_REGION='eu-west-2' ./mvnw spring-boot:run
