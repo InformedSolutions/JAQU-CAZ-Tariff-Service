@@ -23,6 +23,9 @@ Resources:
           Properties:
             Path: /{proxy+}
             Method: any
+      Environment:
+        Variables:
+          SPRING_PROFILES_ACTIVE: default
 
 Outputs:
   SpringBootJaquCazTariffApi:
