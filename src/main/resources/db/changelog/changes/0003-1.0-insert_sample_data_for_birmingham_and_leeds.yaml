@@ -107,7 +107,7 @@ databaseChangeLog:
                   value: "8"
               - column:
                   name: HGV
-                  value: "8"
+                  value: "50"
               - column:
                   name: LARGE_VAN
                   value: "0"
@@ -140,28 +140,28 @@ databaseChangeLog:
                   value: "50"
               - column:
                   name: TAXI
-                  value: "12"
+                  value: "12.5"
               - column:
                   name: PHV
-                  value: "5"
+                  value: "12.5"
               - column:
                   name: HGV
-                  value: "12"
+                  value: "50"
               - column:
                   name: LARGE_VAN
-                  value: "5"
+                  value: "0"
               - column:
                   name: MINIBUS
-                  value: "50"
+                  value: "12.5"
               - column:
                   name: SMALL_VAN
                   value: "0"
               - column:
                   name: CAR
-                  value: "12"
+                  value: "0"
               - column:
                   name: MOTORCYCLE
-                  value: "5"
+                  value: "0"
               - column:
                   name: MOPED
                   value: "0"
