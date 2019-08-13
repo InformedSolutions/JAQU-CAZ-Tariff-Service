@@ -1,9 +1,0 @@
-### Integration tests configuration
-
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:9999/caz-tariff
-
-aws:
-  s3:
-    endpoint: http://localhost:4572
