@@ -11,7 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("localstack")
+@ActiveProfiles("integration-tests")
 public @interface FullyRunningServerIntegrationTest {
 
 }

@@ -32,6 +32,7 @@
     <!-- to enable running only integration tests without unit tests -->
     <skipUnitTests>${skipTests}</skipUnitTests>
     <skipITs>${skipTests}</skipITs>
+    <skipLocalContainersSetup>${skipTests}</skipLocalContainersSetup>
   </properties>
 
   <repositories>
@@ -258,7 +259,7 @@
         </executions>
 
         <configuration>
-          <skip>${skipITs}</skip>
+          <skip>${skipLocalContainersSetup}</skip>
           <autoCreateCustomNetworks>true</autoCreateCustomNetworks>
           <images>
             <image>
@@ -513,7 +514,7 @@
     </profile>
 
     <profile>
-      <id>artifact-final-name-overrider</id>
+      <id>ci</id>
       <activation>
         <property>
           <name>env.BUILD_ID</name>
@@ -521,6 +522,8 @@
       </activation>
       <properties>
         <artifactFinalName>${project.artifactId}-${env.BUILD_ID}</artifactFinalName>
+        <skipLocalContainersSetup>true</skipLocalContainersSetup>
+        <skipITs>false</skipITs>
       </properties>
     </profile>
 
