@@ -17,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import uk.gov.caz.tariff.dto.Tariff;
 import uk.gov.caz.tariff.service.TariffRepository.TariffRowMapper;
@@ -50,6 +51,19 @@ class TariffRepositoryTest {
   @Test
   public void shouldNotFindAnyTariff() {
     // given
+
+    // when
+    Optional<Tariff> result = tariffRepository.findByCleanAirZoneId(SOME_CLEAN_AIR_ZONE_ID);
+
+    // then
+    assertThat(result).isEmpty();
+  }
+
+  @Test
+  public void shouldReturnEmptyOptionalWhenThrowException() {
+    // given
+    when(jdbcTemplate.queryForObject(anyString(), any(TariffRowMapper.class), any()))
+        .thenThrow(EmptyResultDataAccessException.class);
 
     // when
     Optional<Tariff> result = tariffRepository.findByCleanAirZoneId(SOME_CLEAN_AIR_ZONE_ID);
