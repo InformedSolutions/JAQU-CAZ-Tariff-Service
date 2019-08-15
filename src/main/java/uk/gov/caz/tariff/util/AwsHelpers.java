@@ -1,5 +1,8 @@
 package uk.gov.caz.tariff.util;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public final class AwsHelpers {
 
   /**

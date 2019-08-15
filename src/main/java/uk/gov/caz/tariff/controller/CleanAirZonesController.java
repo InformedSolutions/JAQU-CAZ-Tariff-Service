@@ -1,6 +1,7 @@
 package uk.gov.caz.tariff.controller;
 
-import java.util.UUID;
+import static uk.gov.caz.tariff.util.Constants.CORRELATION_ID_HEADER;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ import uk.gov.caz.tariff.service.TariffRepository;
 @Slf4j
 public class CleanAirZonesController implements CleanAirZonesControllerApiSpec {
 
-  static final String PATH = "/v1/clean-air-zones";
+  public static final String PATH = "/v1/clean-air-zones";
 
   private final TariffRepository tariffRepository;
 
@@ -33,24 +34,24 @@ public class CleanAirZonesController implements CleanAirZonesControllerApiSpec {
 
   @Override
   public ResponseEntity<CleanAirZones> cleanAirZones(
-      @RequestHeader("X-Correlation-ID") String correlationId) {
+      @RequestHeader(CORRELATION_ID_HEADER) String correlationId) {
     return ResponseEntity
         .status(HttpStatus.OK)
-        .header("X-Correlation-ID", correlationId)
+        .header(CORRELATION_ID_HEADER, correlationId)
         .body(cleanAirZonesRepository.findAll());
   }
 
   @Override
-  public ResponseEntity<Tariff> tariff(@PathVariable UUID cleanAirZoneId,
-      @RequestHeader("X-Correlation-ID") String correlationId) {
+  public ResponseEntity<Tariff> tariff(@PathVariable Integer cleanAirZoneId,
+      @RequestHeader(CORRELATION_ID_HEADER) String correlationId) {
     return tariffRepository.findByCleanAirZoneId(cleanAirZoneId)
         .map(tariff -> ResponseEntity
             .status(HttpStatus.OK)
-            .header("X-Correlation-ID", correlationId)
+            .header(CORRELATION_ID_HEADER, correlationId)
             .body(tariff))
         .orElseGet(() -> ResponseEntity
             .status(HttpStatus.NOT_FOUND)
-            .header("X-Correlation-ID", correlationId)
+            .header(CORRELATION_ID_HEADER, correlationId)
             .build());
   }
 }

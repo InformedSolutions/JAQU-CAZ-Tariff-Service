@@ -1,12 +1,13 @@
 package uk.gov.caz.tariff.controller;
 
+import static uk.gov.caz.tariff.util.Constants.CORRELATION_ID_HEADER;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,7 @@ public interface CleanAirZonesControllerApiSpec {
       @ApiResponse(code = 400, message = "Bad Request, for example required HTTP Header missing"),
   })
   @ApiImplicitParams({
-      @ApiImplicitParam(name = "X-Correlation-ID",
+      @ApiImplicitParam(name = CORRELATION_ID_HEADER,
           required = true,
           value = "UUID formatted string to track the request through the enquiries stack",
           paramType = "header")
@@ -52,7 +53,7 @@ public interface CleanAirZonesControllerApiSpec {
   @GetMapping
   @ResponseStatus(value = HttpStatus.OK)
   ResponseEntity<CleanAirZones> cleanAirZones(
-      @RequestHeader("X-Correlation-ID") String correlationId);
+      @RequestHeader(CORRELATION_ID_HEADER) String correlationId);
 
   /**
    * Returns details of Tariff.
@@ -73,13 +74,13 @@ public interface CleanAirZonesControllerApiSpec {
       @ApiResponse(code = 400, message = "Bad Request, for example required HTTP Header missing"),
   })
   @ApiImplicitParams({
-      @ApiImplicitParam(name = "X-Correlation-ID",
+      @ApiImplicitParam(name = CORRELATION_ID_HEADER,
           required = true,
           value = "UUID formatted string to track the request through the enquiries stack",
           paramType = "header")
   })
   @GetMapping("/{cleanAirZoneId}/tariff")
   @ResponseStatus(value = HttpStatus.OK)
-  ResponseEntity<Tariff> tariff(@PathVariable UUID cleanAirZoneId,
-      @RequestHeader("X-Correlation-ID") String correlationId);
+  ResponseEntity<Tariff> tariff(@PathVariable Integer cleanAirZoneId,
+      @RequestHeader(CORRELATION_ID_HEADER) String correlationId);
 }

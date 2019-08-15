@@ -3,11 +3,11 @@ package uk.gov.caz.tariff.controller;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
+import static uk.gov.caz.tariff.util.Constants.CORRELATION_ID_HEADER;
 
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.Optional;
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,8 +26,7 @@ import uk.gov.caz.tariff.service.TariffRepository;
 @ExtendWith(MockitoExtension.class)
 class CleanAirZonesControllerTest {
 
-  private static final UUID SOME_CLEAN_AIR_ZONE_ID = UUID
-      .fromString("8ed3580b-f155-4f6d-ab12-5a96b071a0a7");
+  private static final Integer SOME_CHARGE_DEFINITION_ID = 5;
 
   private static final String SOME_URL = "www.test.uk";
 
@@ -54,10 +53,10 @@ class CleanAirZonesControllerTest {
     assertThat(cleanAirZones.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
     assertThat(cleanAirZones.getBody().getCleanAirZones()).contains(
         CleanAirZone.builder()
-            .cleanAirZoneId(UUID.fromString("42395f51-e924-42b4-8585-b1749dc05bfc"))
-            .name("Birmingham")
+            .cleanAirZoneId(4)
+            .name("A")
             .boundaryUrl(URI.create(
-                "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/3)"))
+                "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/3"))
             .build()
     );
   }
@@ -74,17 +73,17 @@ class CleanAirZonesControllerTest {
     assertThat(cleanAirZones).isNotNull();
     assertThat(cleanAirZones.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
     assertThat(cleanAirZones.getHeaders())
-        .containsEntry("X-Correlation-ID", newArrayList("correlation-cleanAirZoneId"));
+        .containsEntry(CORRELATION_ID_HEADER, newArrayList("correlation-cleanAirZoneId"));
   }
 
   @Test
   public void shouldReturnSomeTariff() {
     // given
-    when(tariffRepository.findByCleanAirZoneId(SOME_CLEAN_AIR_ZONE_ID)).thenReturn(prepareTariff());
+    when(tariffRepository.findByCleanAirZoneId(SOME_CHARGE_DEFINITION_ID)).thenReturn(prepareTariff());
 
     // when
     ResponseEntity<Tariff> tariff = cleanAirZonesController
-        .tariff(SOME_CLEAN_AIR_ZONE_ID, "correlation-cleanAirZoneId");
+        .tariff(SOME_CHARGE_DEFINITION_ID, "correlation-cleanAirZoneId");
 
     // then
     assertThat(tariff).isNotNull();
@@ -98,7 +97,7 @@ class CleanAirZonesControllerTest {
 
     // when
     ResponseEntity<Tariff> tariff = cleanAirZonesController
-        .tariff(SOME_CLEAN_AIR_ZONE_ID, "correlation-cleanAirZoneId");
+        .tariff(SOME_CHARGE_DEFINITION_ID, "correlation-cleanAirZoneId");
 
     // then
     assertThat(tariff.getStatusCode()).isEqualByComparingTo(HttpStatus.NOT_FOUND);
@@ -108,7 +107,6 @@ class CleanAirZonesControllerTest {
     InformationUrls informationUrls = InformationUrls.builder()
         .becomeCompliant(SOME_URL)
         .boundary(SOME_URL)
-        .emissionsStandards(SOME_URL)
         .exemptionOrDiscount(SOME_URL)
         .hoursOfOperation(SOME_URL)
         .payCaz(SOME_URL)
@@ -118,11 +116,9 @@ class CleanAirZonesControllerTest {
         .build();
     Rates rates = Rates.builder()
         .bus(new BigDecimal("5.50"))
-        .car(new BigDecimal("50.00"))
         .coach(new BigDecimal("15.60"))
         .hgv(new BigDecimal("5.69"))
         .largeVan(new BigDecimal("100.00"))
-        .miniBus(new BigDecimal("25.50"))
         .moped(new BigDecimal("49.49"))
         .motorcycle(new BigDecimal("80.01"))
         .phv(new BigDecimal("80.10"))
@@ -130,9 +126,8 @@ class CleanAirZonesControllerTest {
         .taxi(new BigDecimal("2.00"))
         .build();
     Tariff tariff = Tariff.builder()
-        .cleanAirZoneId(SOME_CLEAN_AIR_ZONE_ID)
+        .cleanAirZoneId(SOME_CHARGE_DEFINITION_ID)
         .name("Leeds")
-        .motorcyclesChargeable(false)
         .tariffClass('C')
         .informationUrls(informationUrls)
         .rates(rates)
@@ -144,20 +139,20 @@ class CleanAirZonesControllerTest {
   private CleanAirZones prepareCleanAirZones() {
     return new CleanAirZones(
         newArrayList(
-            caz("Birmingham", UUID.fromString("42395f51-e924-42b4-8585-b1749dc05bfc"),
+            caz("A", 4,
                 "https://www.birmingham.gov.uk/info/20076/pollution/"
-                    + "1763/a_clean_air_zone_for_birmingham/3)"),
+                    + "1763/a_clean_air_zone_for_birmingham/3"),
 
-            caz("Leeds", UUID.fromString("146bbfd3-1928-41d3-9575-5f9e58e61ee1"),
+            caz("B", 5,
                 "https://www.arcgis.com/home/webmap/viewer.html?webmap="
                     + "de0120ae980b473982a3149ab072fdfc&extent=-1.733%2c53.7378%2c-1.333%2c53.8621")
         ));
   }
 
-  private CleanAirZone caz(String cazName, UUID cazId, String boundaryUrl) {
+  private CleanAirZone caz(String cazName, Integer id, String boundaryUrl) {
     return CleanAirZone.builder()
         .name(cazName)
-        .cleanAirZoneId(cazId)
+        .cleanAirZoneId(id)
         .boundaryUrl(URI.create(boundaryUrl))
         .build();
   }

@@ -11,9 +11,6 @@ import lombok.Value;
 @Builder
 public class InformationUrls {
 
-  @ApiModelProperty(value = "${swagger.model.descriptions.informationUrl.emissionsStandardsUrl}")
-  String emissionsStandards;
-
   @ApiModelProperty(value = "${swagger.model.descriptions.informationUrl.mainInfoUrl}")
   String mainInfo;
 

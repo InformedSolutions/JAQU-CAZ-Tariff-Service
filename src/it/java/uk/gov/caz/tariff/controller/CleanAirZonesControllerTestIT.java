@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static uk.gov.caz.tariff.util.Constants.CORRELATION_ID_HEADER;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
@@ -14,7 +15,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.Optional;
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -34,14 +34,9 @@ class CleanAirZonesControllerTestIT {
 
   private static final String SOME_URL = "www.test.uk";
 
-  private static final String ONE = "1";
-
   private static final String SOME_CORRELATION_ID = "63be7528-7efd-4f31-ae68-11a6b709ff1c";
 
-  private static final UUID CLEAN_AIR_ZONE_ID = UUID
-      .fromString("8ed3580b-f155-4f6d-ab12-5a96b071a0a7");
-
-  private static final String CORRELATION_ID_HEADER = "X-Correlation-ID";
+  private static final Integer CLEAN_AIR_ZONE_ID = 1;
 
   private static final String GET_TARIFF_PATH =
       CleanAirZonesController.PATH + "/" + CLEAN_AIR_ZONE_ID + "/tariff";
@@ -65,14 +60,14 @@ class CleanAirZonesControllerTestIT {
         .header(CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.cleanAirZones[0].cleanAirZoneId")
-            .value("42395f51-e924-42b4-8585-b1749dc05bfc"))
-        .andExpect(jsonPath("$.cleanAirZones[0].name").value("Birmingham"))
+            .value("1"))
+        .andExpect(jsonPath("$.cleanAirZones[0].name").value("Z"))
         .andExpect(jsonPath("$.cleanAirZones[0].boundaryUrl")
             .value("https://www.birmingham.gov.uk/info/20076/pollution/"
-                + "1763/a_clean_air_zone_for_birmingham/3)"))
+                + "1763/a_clean_air_zone_for_birmingham/3"))
         .andExpect(jsonPath("$.cleanAirZones[1].cleanAirZoneId")
-            .value("146bbfd3-1928-41d3-9575-5f9e58e61ee1"))
-        .andExpect(jsonPath("$.cleanAirZones[1].name").value("Leeds"))
+            .value("2"))
+        .andExpect(jsonPath("$.cleanAirZones[1].name").value("X"))
         .andExpect(jsonPath("$.cleanAirZones[1].boundaryUrl")
             .value("https://www.arcgis.com/home/webmap/viewer.html?webmap="
                 + "de0120ae980b473982a3149ab072fdfc&extent=-1.733%2c53.7378%2c-1.333%2c53.8621"))
@@ -106,7 +101,6 @@ class CleanAirZonesControllerTestIT {
     InformationUrls informationUrls = InformationUrls.builder()
         .becomeCompliant(SOME_URL)
         .boundary(SOME_URL)
-        .emissionsStandards(SOME_URL)
         .exemptionOrDiscount(SOME_URL)
         .hoursOfOperation(SOME_URL)
         .payCaz(SOME_URL)
@@ -116,11 +110,9 @@ class CleanAirZonesControllerTestIT {
         .build();
     Rates rates = Rates.builder()
         .bus(new BigDecimal("5.50"))
-        .car(new BigDecimal("50.00"))
         .coach(new BigDecimal("15.60"))
         .hgv(new BigDecimal("5.69"))
         .largeVan(new BigDecimal("100.00"))
-        .miniBus(new BigDecimal("25.50"))
         .moped(new BigDecimal("49.49"))
         .motorcycle(new BigDecimal("80.01"))
         .phv(new BigDecimal("80.10"))
@@ -130,8 +122,7 @@ class CleanAirZonesControllerTestIT {
 
     return Optional.ofNullable(Tariff.builder()
         .cleanAirZoneId(CLEAN_AIR_ZONE_ID)
-        .name("Leeds")
-        .motorcyclesChargeable(false)
+        .name("Z")
         .tariffClass('C')
         .informationUrls(informationUrls)
         .rates(rates)
@@ -141,17 +132,17 @@ class CleanAirZonesControllerTestIT {
   private CleanAirZones prepareCleanAirZones() {
     return new CleanAirZones(
         newArrayList(
-            caz("Birmingham", UUID.fromString("42395f51-e924-42b4-8585-b1749dc05bfc"),
+            caz("Z", 1,
                 "https://www.birmingham.gov.uk/info/20076/pollution/"
-                    + "1763/a_clean_air_zone_for_birmingham/3)"),
+                    + "1763/a_clean_air_zone_for_birmingham/3"),
 
-            caz("Leeds", UUID.fromString("146bbfd3-1928-41d3-9575-5f9e58e61ee1"),
+            caz("X", 2,
                 "https://www.arcgis.com/home/webmap/viewer.html?webmap="
                     + "de0120ae980b473982a3149ab072fdfc&extent=-1.733%2c53.7378%2c-1.333%2c53.8621")
         ));
   }
 
-  private CleanAirZone caz(String cazName, UUID cazId, String boundaryUrl) {
+  private CleanAirZone caz(String cazName, Integer cazId, String boundaryUrl) {
     return CleanAirZone.builder()
         .name(cazName)
         .cleanAirZoneId(cazId)
@@ -160,6 +151,6 @@ class CleanAirZonesControllerTestIT {
   }
 
   private String readTariffJson() throws IOException {
-    return Resources.toString(Resources.getResource("data/json/tariff.json"), Charsets.UTF_8);
+    return Resources.toString(Resources.getResource("data/json/sample-tariff.json"), Charsets.UTF_8);
   }
 }

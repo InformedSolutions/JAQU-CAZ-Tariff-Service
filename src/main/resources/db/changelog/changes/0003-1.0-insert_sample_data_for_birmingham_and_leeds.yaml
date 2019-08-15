@@ -4,26 +4,137 @@ databaseChangeLog:
       author: jaroslaw.piotrowski
       changes:
         - insert:
-            tableName: T_CLEAN_AIR_ZONES
+            tableName: T_CHARGE_CATEGORY
             columns:
               - column:
-                  name: CLEAN_AIR_ZONE_ID
-                  value: "5cd7441d-766f-48ff-b8ad-1809586fea37"
+                  name: CAZ_CATEGORY_CODE
+                  value: 'A'
               - column:
-                  name: NAME
-                  value: "Birmingham"
+                  name: CAZ_CATEGORY_CODE_DESC
+                  value: "Class A"
+        - insert:
+            tableName: T_CHARGE_CATEGORY
+            columns:
               - column:
-                  name: TARIFF_CLASS
-                  value: "D"
+                  name: CAZ_CATEGORY_CODE
+                  value: 'B'
               - column:
-                  name: MOTORCYCLES_CHARGEABLE
-                  value: false
+                  name: CAZ_CATEGORY_CODE_DESC
+                  value: "Class B"
+        - insert:
+            tableName: T_CHARGE_DEFINITION
+            columns:
+              - column:
+                  name: CAZ_NAME
+                  value: "Z"
+              - column:
+                  name: CAZ_CATEGORY_CODE
+                  value: "A"
+              - column:
+                  name: CAZ_IDENTIFIER
+                  value: "111111"
+              - column:
+                  name: ACTIVE_CHARGE_START_TIME
+                  value: "2019-08-20"
+              - column:
+                  name: ACTIVE_CHARGE_END_TIME
+                  value: "2019-12-20"
+        - insert:
+            tableName: T_CHARGE_DEFINITION
+            columns:
+              - column:
+                  name: CAZ_NAME
+                  value: "X"
+              - column:
+                  name: CAZ_CATEGORY_CODE
+                  value: "B"
+              - column:
+                  name: CAZ_IDENTIFIER
+                  value: "222222"
+              - column:
+                  name: ACTIVE_CHARGE_START_TIME
+                  value: "2019-07-20"
+              - column:
+                  name: ACTIVE_CHARGE_END_TIME
+                  value: "2019-11-20"
+        - insert:
+            tableName: T_TARIFF_DEFINITION
+            columns:
+              - column:
+                  name: CHARGE_DEFINITION_ID
+                  value: "1"
+              - column:
+                  name: HGV_ENTRANT_FEE
+                  value: "50"
+              - column:
+                  name: TAXI_ENTRANT_FEE
+                  value: "50"
+              - column:
+                  name: PHV_ENTRANT_FEE
+                  value: "8"
+              - column:
+                  name: BUS_ENTRANT_FEE
+                  value: "8"
+              - column:
+                  name: MOTORCYCLE_ENT_FEE
+                  value: "50"
+              - column:
+                  name: COACH_ENTRANT_FEE
+                  value: "0"
+              - column:
+                  name: LARGE_VAN_ENTRANT_FEE
+                  value: "50"
+              - column:
+                  name: SMALL_VAN_ENTRANT_FEE
+                  value: "8"
+              - column:
+                  name: MOPED_ENTRANT_FEE
+                  value: "8"
+        - insert:
+            tableName: T_TARIFF_DEFINITION
+            columns:
+              - column:
+                  name: CHARGE_DEFINITION_ID
+                  value: "2"
+              - column:
+                  name: HGV_ENTRANT_FEE
+                  value: "50"
+              - column:
+                  name: TAXI_ENTRANT_FEE
+                  value: "50"
+              - column:
+                  name: PHV_ENTRANT_FEE
+                  value: "12.5"
+              - column:
+                  name: BUS_ENTRANT_FEE
+                  value: "12.5"
+              - column:
+                  name: MOTORCYCLE_ENT_FEE
+                  value: "50"
+              - column:
+                  name: COACH_ENTRANT_FEE
+                  value: "0"
+              - column:
+                  name: LARGE_VAN_ENTRANT_FEE
+                  value: "12.5"
+              - column:
+                  name: SMALL_VAN_ENTRANT_FEE
+                  value: "0"
+              - column:
+                  name: MOPED_ENTRANT_FEE
+                  value: "0"
+        - insert:
+            tableName: T_CAZ_LINK_DETAIL
+            columns:
+              - column:
+                  name: CHARGE_DEFINITION_ID
+                  value: "1"
+              - column:
+                  name: CAZ_IDENTIFIER
+                  value: "111111"
               - column:
                   name: BOUNDARY_URL
                   value: "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/3"
-              - column:
-                  name: EMISSIONS_STANDARDS_URL
-                  value: "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/2"
               - column:
                   name: MAIN_INFO_URL
                   value: "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham"
@@ -31,14 +142,14 @@ databaseChangeLog:
                   name: PRICING_URL
                   value: "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/5"
               - column:
-                  name: HOURS_OF_OPERATION_URL
+                  name: OPERATION_HOURS_URL
                   value: "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/4"
               - column:
-                  name: EXEMPTION_OR_DISCOUNT_URL
+                  name: EXEMPTION_URL
                   value: "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/6"
               - column:
                   name: PAY_CAZ_URL
-                  value: null
+                  value: "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/3"
               - column:
                   name: BECOME_COMPLIANT_URL
                   value: "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/7"
@@ -46,26 +157,17 @@ databaseChangeLog:
                   name: FINANCIAL_ASSISTANCE_URL
                   value: "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/7"
         - insert:
-            tableName: T_CLEAN_AIR_ZONES
+            tableName: T_CAZ_LINK_DETAIL
             columns:
               - column:
-                  name: CLEAN_AIR_ZONE_ID
-                  value: "39e54ed8-3ed2-441d-be3f-38fc9b70c8d3"
+                  name: CHARGE_DEFINITION_ID
+                  value: "2"
               - column:
-                  name: NAME
-                  value: "Leeds"
-              - column:
-                  name: TARIFF_CLASS
-                  value: "B"
-              - column:
-                  name: MOTORCYCLES_CHARGEABLE
-                  value: false
+                  name: CAZ_IDENTIFIER
+                  value: "222222"
               - column:
                   name: BOUNDARY_URL
                   value: "https://www.arcgis.com/home/webmap/viewer.html?webmap=de0120ae980b473982a3149ab072fdfc&extent=-1.733%2c53.7378%2c-1.333%2c53.8621"
-              - column:
-                  name: EMISSIONS_STANDARDS_URL
-                  value: "https://www.leeds.gov.uk/business/environmental-health-for-business/air-quality/minimum-emissions-standards-clean-air-charging-zone"
               - column:
                   name: MAIN_INFO_URL
                   value: "https://www.leeds.gov.uk/business/environmental-health-for-business/air-quality"
@@ -73,95 +175,17 @@ databaseChangeLog:
                   name: PRICING_URL
                   value: "https://www.leeds.gov.uk/business/environmental-health-for-business/air-quality/daily-charges-clean-air-charging-zone"
               - column:
-                  name: HOURS_OF_OPERATION_URL
+                  name: OPERATION_HOURS_URL
                   value: "https://www.leeds.gov.uk/business/environmental-health-for-business/air-quality"
               - column:
-                  name: EXEMPTION_OR_DISCOUNT_URL
+                  name: EXEMPTION_URL
                   value: "https://www.leeds.gov.uk/business/environmental-health-for-business/air-quality/exempt-vehicles-clean-air-charging-zone"
               - column:
                   name: PAY_CAZ_URL
-                  value: null
+                  value: "https://www.leeds.gov.uk/business/environmental-health-for-business/air-quality"
               - column:
                   name: BECOME_COMPLIANT_URL
                   value: "https://www.leeds.gov.uk/business/environmental-health-for-business/air-quality/exempt-vehicles-clean-air-charging-zone"
               - column:
                   name: FINANCIAL_ASSISTANCE_URL
                   value: "https://www.leeds.gov.uk/business/environmental-health-for-business/air-quality/support-for-buses-coaches-and-hgvs-clean-air-charging-zone"
-        - insert:
-            tableName: T_TARIFFS
-            columns:
-              - column:
-                  name: CLEAN_AIR_ZONE_ID
-                  value: "5cd7441d-766f-48ff-b8ad-1809586fea37"
-              - column:
-                  name: BUS
-                  value: "50"
-              - column:
-                  name: COACH
-                  value: "50"
-              - column:
-                  name: TAXI
-                  value: "8"
-              - column:
-                  name: PHV
-                  value: "8"
-              - column:
-                  name: HGV
-                  value: "50"
-              - column:
-                  name: LARGE_VAN
-                  value: "0"
-              - column:
-                  name: MINIBUS
-                  value: "50"
-              - column:
-                  name: SMALL_VAN
-                  value: "8"
-              - column:
-                  name: CAR
-                  value: "8"
-              - column:
-                  name: MOTORCYCLE
-                  value: "0"
-              - column:
-                  name: MOPED
-                  value: "0"
-        - insert:
-            tableName: T_TARIFFS
-            columns:
-              - column:
-                  name: CLEAN_AIR_ZONE_ID
-                  value: "39e54ed8-3ed2-441d-be3f-38fc9b70c8d3"
-              - column:
-                  name: BUS
-                  value: "50"
-              - column:
-                  name: COACH
-                  value: "50"
-              - column:
-                  name: TAXI
-                  value: "12.5"
-              - column:
-                  name: PHV
-                  value: "12.5"
-              - column:
-                  name: HGV
-                  value: "50"
-              - column:
-                  name: LARGE_VAN
-                  value: "0"
-              - column:
-                  name: MINIBUS
-                  value: "12.5"
-              - column:
-                  name: SMALL_VAN
-                  value: "0"
-              - column:
-                  name: CAR
-                  value: "0"
-              - column:
-                  name: MOTORCYCLE
-                  value: "0"
-              - column:
-                  name: MOPED
-                  value: "0"
