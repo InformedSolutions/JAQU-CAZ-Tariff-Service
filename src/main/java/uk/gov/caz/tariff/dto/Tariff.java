@@ -16,7 +16,7 @@ public class Tariff {
 
   @ApiModelProperty(value = "${swagger.model.descriptions.tariff.cleanAirZoneId}")
   @NotNull
-  Integer cleanAirZoneId;
+  int cleanAirZoneId;
 
   @ApiModelProperty(value = "${swagger.model.descriptions.tariff.name}")
   @NotNull

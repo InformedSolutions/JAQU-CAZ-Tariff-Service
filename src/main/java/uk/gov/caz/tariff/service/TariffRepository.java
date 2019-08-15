@@ -20,7 +20,7 @@ import uk.gov.caz.tariff.dto.Tariff;
 public class TariffRepository {
 
   @VisibleForTesting
-  static final String SELECT_BY_CLEAN_AIR_ZONE_ID_SQL = "SELECT cha.charge_definition_id, "
+  static final String SELECT_BY_CHARGE_DEFINITION_ID_SQL = "SELECT cha.charge_definition_id, "
       + "cha.caz_name, "
       + "cha.caz_category_code, "
       + "link.main_info_url, "
@@ -56,13 +56,13 @@ public class TariffRepository {
   /**
    * Finds {@link Tariff} by cleanAirZoneId.
    *
-   * @param cleanAirZoneId UUID of tariff that will be fetched.
+   * @param cleanAirZoneId ID of zone for which tariffs will be fetched.
    * @return An {@link Optional} of {@link Tariff}
    */
   public Optional<Tariff> findByCleanAirZoneId(Integer cleanAirZoneId) {
     try {
       return Optional.ofNullable(
-          jdbcTemplate.queryForObject(SELECT_BY_CLEAN_AIR_ZONE_ID_SQL, MAPPER, cleanAirZoneId));
+          jdbcTemplate.queryForObject(SELECT_BY_CHARGE_DEFINITION_ID_SQL, MAPPER, cleanAirZoneId));
     } catch (EmptyResultDataAccessException exc) {
       return Optional.empty();
     }

@@ -16,7 +16,7 @@ public class CleanAirZone {
 
   @ApiModelProperty(value = "${swagger.model.descriptions.cleanAirZone.cleanAirZoneId}")
   @NotNull
-  Integer cleanAirZoneId;
+  int cleanAirZoneId;
 
   @ApiModelProperty(value = "${swagger.model.descriptions.cleanAirZone.name}")
   @NotNull
