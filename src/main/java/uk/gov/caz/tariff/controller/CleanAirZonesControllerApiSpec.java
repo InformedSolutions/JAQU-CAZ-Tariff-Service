@@ -60,7 +60,7 @@ public interface CleanAirZonesControllerApiSpec {
    *
    * @param correlationId UUID formatted string to track the request through the enquiries
    *     stack.
-   * @param cleanAirZoneId ID of zone for which tariffs will be fetched.
+   * @param cleanAirZoneId UUID of zone for which tariffs will be fetched.
    * @return Tariff details.
    */
   @ApiOperation(
@@ -82,6 +82,6 @@ public interface CleanAirZonesControllerApiSpec {
   })
   @GetMapping("/{cleanAirZoneId}/tariff")
   @ResponseStatus(value = HttpStatus.OK)
-  ResponseEntity<Tariff> tariff(@PathVariable Integer cleanAirZoneId,
+  ResponseEntity<Tariff> tariff(@PathVariable String cleanAirZoneId,
       @RequestHeader(CORRELATION_ID_HEADER) String correlationId);
 }

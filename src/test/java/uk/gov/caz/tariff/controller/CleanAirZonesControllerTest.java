@@ -8,6 +8,7 @@ import static uk.gov.caz.tariff.util.Constants.CORRELATION_ID_HEADER;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,7 +27,7 @@ import uk.gov.caz.tariff.service.TariffRepository;
 @ExtendWith(MockitoExtension.class)
 class CleanAirZonesControllerTest {
 
-  private static final Integer SOME_CHARGE_DEFINITION_ID = 5;
+  private static final String SOME_CLEAN_AIR_ZONE_ID = "dc1efcaf-a2cf-41ec-aa37-ea4b28a20a1d";
 
   private static final String SOME_URL = "www.test.uk";
 
@@ -53,8 +54,8 @@ class CleanAirZonesControllerTest {
     assertThat(cleanAirZones.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
     assertThat(cleanAirZones.getBody().getCleanAirZones()).contains(
         CleanAirZone.builder()
-            .cleanAirZoneId(4)
-            .name("A")
+            .cleanAirZoneId(UUID.fromString("0d7ab5c4-5fff-4935-8c4e-56267c0c9493"))
+            .name("Birmingham")
             .boundaryUrl(URI.create(
                 "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/3"))
             .build()
@@ -79,11 +80,11 @@ class CleanAirZonesControllerTest {
   @Test
   public void shouldReturnSomeTariff() {
     // given
-    when(tariffRepository.findByCleanAirZoneId(SOME_CHARGE_DEFINITION_ID)).thenReturn(prepareTariff());
+    when(tariffRepository.findByCleanAirZoneId(UUID.fromString(SOME_CLEAN_AIR_ZONE_ID))).thenReturn(prepareTariff());
 
     // when
     ResponseEntity<Tariff> tariff = cleanAirZonesController
-        .tariff(SOME_CHARGE_DEFINITION_ID, "correlation-cleanAirZoneId");
+        .tariff(SOME_CLEAN_AIR_ZONE_ID, "correlation-cleanAirZoneId");
 
     // then
     assertThat(tariff).isNotNull();
@@ -97,7 +98,7 @@ class CleanAirZonesControllerTest {
 
     // when
     ResponseEntity<Tariff> tariff = cleanAirZonesController
-        .tariff(SOME_CHARGE_DEFINITION_ID, "correlation-cleanAirZoneId");
+        .tariff(SOME_CLEAN_AIR_ZONE_ID, "correlation-cleanAirZoneId");
 
     // then
     assertThat(tariff.getStatusCode()).isEqualByComparingTo(HttpStatus.NOT_FOUND);
@@ -122,11 +123,13 @@ class CleanAirZonesControllerTest {
         .moped(new BigDecimal("49.49"))
         .motorcycle(new BigDecimal("80.01"))
         .phv(new BigDecimal("80.10"))
+        .car(new BigDecimal("80.10"))
+        .miniBus(new BigDecimal("80.10"))
         .smallVan(new BigDecimal("80.00"))
         .taxi(new BigDecimal("2.00"))
         .build();
     Tariff tariff = Tariff.builder()
-        .cleanAirZoneId(SOME_CHARGE_DEFINITION_ID)
+        .cleanAirZoneId(UUID.fromString(SOME_CLEAN_AIR_ZONE_ID))
         .name("Leeds")
         .tariffClass('C')
         .informationUrls(informationUrls)
@@ -139,20 +142,20 @@ class CleanAirZonesControllerTest {
   private CleanAirZones prepareCleanAirZones() {
     return new CleanAirZones(
         newArrayList(
-            caz("A", 4,
+            caz("Birmingham", "0d7ab5c4-5fff-4935-8c4e-56267c0c9493",
                 "https://www.birmingham.gov.uk/info/20076/pollution/"
                     + "1763/a_clean_air_zone_for_birmingham/3"),
 
-            caz("B", 5,
+            caz("Leeds", "39e54ed8-3ed2-441d-be3f-38fc9b70c8d3",
                 "https://www.arcgis.com/home/webmap/viewer.html?webmap="
                     + "de0120ae980b473982a3149ab072fdfc&extent=-1.733%2c53.7378%2c-1.333%2c53.8621")
         ));
   }
 
-  private CleanAirZone caz(String cazName, Integer id, String boundaryUrl) {
+  private CleanAirZone caz(String cazName, String cleanAirZoneId, String boundaryUrl) {
     return CleanAirZone.builder()
         .name(cazName)
-        .cleanAirZoneId(id)
+        .cleanAirZoneId(UUID.fromString(cleanAirZoneId))
         .boundaryUrl(URI.create(boundaryUrl))
         .build();
   }

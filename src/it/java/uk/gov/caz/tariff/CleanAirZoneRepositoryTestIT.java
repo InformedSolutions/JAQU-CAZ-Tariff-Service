@@ -2,7 +2,6 @@ package uk.gov.caz.tariff;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,21 +22,19 @@ public class CleanAirZoneRepositoryTestIT {
   private CleanAirZonesRepository cleanAirZonesRepository;
 
   @BeforeEach
-  public void init() {
+  public void init() throws Exception {
     databaseInitializer.clear();
-  }
-
-  @AfterEach
-  public void clear() {
-    databaseInitializer.clear();
+    databaseInitializer.initSampleData();
   }
 
   @Test
-  public void shouldReturnCleanAirZones() throws Exception {
-    databaseInitializer.initSampleData();
+  public void shouldReturnCleanAirZones() {
+    // given
 
+    // when
     CleanAirZones cleanAirZones = cleanAirZonesRepository.findAll();
 
+    // then
     assertThat(cleanAirZones.getCleanAirZones()).hasSize(2);
   }
 }

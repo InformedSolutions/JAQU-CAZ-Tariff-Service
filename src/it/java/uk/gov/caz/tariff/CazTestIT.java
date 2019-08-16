@@ -1,5 +1,6 @@
 package uk.gov.caz.tariff;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -46,14 +47,14 @@ public class CazTestIT {
         .header(CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.cleanAirZones[0].cleanAirZoneId")
-            .value("1"))
-        .andExpect(jsonPath("$.cleanAirZones[0].name").value("Z"))
+            .value("0d7ab5c4-5fff-4935-8c4e-56267c0c9493"))
+        .andExpect(jsonPath("$.cleanAirZones[0].name").value("Birmingham"))
         .andExpect(jsonPath("$.cleanAirZones[0].boundaryUrl")
             .value("https://www.birmingham.gov.uk/info/20076/pollution/"
                 + "1763/a_clean_air_zone_for_birmingham/3"))
         .andExpect(jsonPath("$.cleanAirZones[1].cleanAirZoneId")
-            .value("2"))
-        .andExpect(jsonPath("$.cleanAirZones[1].name").value("X"))
+            .value("39e54ed8-3ed2-441d-be3f-38fc9b70c8d3"))
+        .andExpect(jsonPath("$.cleanAirZones[1].name").value("Leeds"))
         .andExpect(jsonPath("$.cleanAirZones[1].boundaryUrl")
             .value("https://www.arcgis.com/home/webmap/viewer.html?webmap="
                 + "de0120ae980b473982a3149ab072fdfc&extent=-1.733%2c53.7378%2c-1.333%2c53.8621"))
@@ -62,7 +63,7 @@ public class CazTestIT {
 
   @Test
   public void shouldReturnTariffAndStatusOk() throws Exception {
-    mockMvc.perform(get(tariffPathWithChargeDefinitionId(1))
+    mockMvc.perform(get(tariffWithCleanAirZoneId("0d7ab5c4-5fff-4935-8c4e-56267c0c9493"))
         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
         .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
         .header(CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
@@ -73,7 +74,7 @@ public class CazTestIT {
 
   @Test
   public void shouldReturnNotFoundWhenTariffNotExist() throws Exception {
-    mockMvc.perform(get(tariffPathWithChargeDefinitionId(3))
+    mockMvc.perform(get(tariffWithCleanAirZoneId("dc1efcaf-a2cf-41ec-aa37-ea4b28a20a1d"))
         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
         .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
         .header(CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
@@ -81,8 +82,24 @@ public class CazTestIT {
         .andExpect(header().string(CORRELATION_ID_HEADER, SOME_CORRELATION_ID));
   }
 
-  private static String tariffPathWithChargeDefinitionId(Integer chargeDefinitionId) {
-    return CleanAirZonesController.PATH + "/" + chargeDefinitionId + "/tariff";
+  @Test
+  public void shouldReturnNotFoundWhenInvalidUUID() throws Exception {
+    // when
+    Exception resolvedException = mockMvc.perform(get(tariffWithCleanAirZoneId("asd"))
+        .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+        .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
+        .header(CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
+        .andExpect(status().isNotFound())
+        .andReturn()
+        .getResolvedException();
+
+    // then
+    assertThat(resolvedException).isNotNull();
+    assertThat(resolvedException).isInstanceOf(IllegalArgumentException.class);
+  }
+
+  private static String tariffWithCleanAirZoneId(String cleanAirZoneId) {
+    return CleanAirZonesController.PATH + "/" + cleanAirZoneId + "/tariff";
   }
 
   private String readTariffJson() throws IOException {

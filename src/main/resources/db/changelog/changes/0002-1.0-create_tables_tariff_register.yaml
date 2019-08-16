@@ -4,17 +4,17 @@ databaseChangeLog:
       author: jaroslaw.piotrowski
       changes:
         - createTable:
-            tableName: T_CHARGE_CATEGORY
+            tableName: T_CAZ_CLASS
             columns:
               - column:
-                  name: CAZ_CATEGORY_CODE
+                  name: CAZ_CLASS
                   type: char(1)
                   constraints:
                     primaryKey: true
                     nullable: false
-                    primaryKeyName: caz_category_code_pkey
+                    primaryKeyName: caz_class_pkey
               - column:
-                  name: CAZ_CATEGORY_CODE_DESC
+                  name: CAZ_CLASS_DESC
                   type: text
               - column:
                   name: INSERT_TIMESTMP
@@ -35,31 +35,27 @@ databaseChangeLog:
                     primaryKeyName: charge_definition_id_pkey
               - column:
                   name: CAZ_NAME
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CAZ_CLASS
                   type: char(1)
                   constraints:
                     nullable: false
+                    references: T_CAZ_CLASS(CAZ_CLASS)
+                    foreignKeyName: caz_class_fk
               - column:
-                  name: CAZ_CATEGORY_CODE
-                  type: varchar(7)
-                  constraints:
-                    nullable: false
-                    references: T_CHARGE_CATEGORY(CAZ_CATEGORY_CODE)
-                    foreignKeyName: caz_category_code_fk
-              - column:
-                  name: CAZ_IDENTIFIER
-                  type: int(6)
+                  name: CLEAN_AIR_ZONE_ID
+                  type: uuid
                   constraints:
                     nullable: false
               - column:
                   name: ACTIVE_CHARGE_START_TIME
                   type: timestamp
-                  constraints:
-                    nullable: false
               - column:
                   name: ACTIVE_CHARGE_END_TIME
                   type: timestamp
-                  constraints:
-                    nullable: false
               - column:
                   name: INSERT_TIMESTMP
                   type: timestamp
@@ -92,6 +88,18 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: TAXI_ENTRANT_FEE
+                  type: numeric(18,2)
+                  defaultValue: 0.0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CAR_ENTRANT_FEE
+                  type: numeric(18,2)
+                  defaultValue: 0.0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: MINIBUS_ENTRANT_FEE
                   type: numeric(18,2)
                   defaultValue: 0.0
                   constraints:
@@ -201,6 +209,11 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: EMISSIONS_URL
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
                   name: BOUNDARY_URL
                   type: text
                   constraints:
@@ -220,8 +233,8 @@ databaseChangeLog:
             dbms: postgresql
             endDelimiter: ;GO
             splitStatements: true
-            sql: CREATE TRIGGER T_CHARGE_CATEGORY_AUDIT
-              AFTER INSERT OR UPDATE OR DELETE ON T_CHARGE_CATEGORY
+            sql: CREATE TRIGGER T_CAZ_CLASS_AUDIT
+              AFTER INSERT OR UPDATE OR DELETE ON T_CAZ_CLASS
               FOR EACH ROW EXECUTE PROCEDURE audit.if_modified_func();
 
               CREATE TRIGGER T_CHARGE_DEFINITION_AUDIT

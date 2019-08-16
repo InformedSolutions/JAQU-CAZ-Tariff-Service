@@ -1,6 +1,7 @@
 package uk.gov.caz.tariff.dto;
 
 import io.swagger.annotations.ApiModelProperty;
+import java.util.UUID;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Builder;
@@ -16,11 +17,11 @@ public class Tariff {
 
   @ApiModelProperty(value = "${swagger.model.descriptions.tariff.cleanAirZoneId}")
   @NotNull
-  int cleanAirZoneId;
+  UUID cleanAirZoneId;
 
   @ApiModelProperty(value = "${swagger.model.descriptions.tariff.name}")
   @NotNull
-  @Size(min = 1, max = 60)
+  @Size(min = 1, max = 50)
   String name;
 
   @ApiModelProperty(value = "${swagger.model.descriptions.tariff.tariffClass}")

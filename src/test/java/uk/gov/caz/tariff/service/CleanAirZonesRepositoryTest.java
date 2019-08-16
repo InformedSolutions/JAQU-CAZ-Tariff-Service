@@ -11,6 +11,7 @@ import java.net.URI;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +26,8 @@ import uk.gov.caz.tariff.service.CleanAirZonesRepository.CleanAirZoneRowMapper;
 @ExtendWith(MockitoExtension.class)
 class CleanAirZonesRepositoryTest {
 
-  private static final Integer SOME_CHARGE_DEFINITION_ID = 4;
+  private static final UUID SOME_CLEAN_AIR_ZONE_ID = UUID
+      .fromString("dc1efcaf-a2cf-41ec-aa37-ea4b28a20a1d");
 
   private static final String SOME_URL = "www.test.uk";
 
@@ -68,19 +70,20 @@ class CleanAirZonesRepositoryTest {
     @Test
     public void shouldMapResultSetToTariff() throws SQLException {
       String name = "Leeds";
-      ResultSet resultSet = mockResultSet(SOME_CHARGE_DEFINITION_ID, name);
+      ResultSet resultSet = mockResultSet(name);
 
       CleanAirZone cleanAirZone = rowMapper.mapRow(resultSet, 0);
 
       assertThat(cleanAirZone).isNotNull();
-      assertThat(cleanAirZone.getCleanAirZoneId()).isEqualTo(SOME_CHARGE_DEFINITION_ID);
+      assertThat(cleanAirZone.getCleanAirZoneId()).isEqualTo(SOME_CLEAN_AIR_ZONE_ID);
       assertThat(cleanAirZone.getName()).isEqualTo(name);
       assertThat(cleanAirZone.getBoundaryUrl().toString()).isEqualTo(SOME_URL);
     }
 
-    private ResultSet mockResultSet(Integer id, String name) throws SQLException {
+    private ResultSet mockResultSet(String name) throws SQLException {
       ResultSet resultSet = mock(ResultSet.class);
-      when(resultSet.getInt("charge_definition_id")).thenReturn(id);
+      when(resultSet.getObject("clean_air_zone_id", UUID.class))
+          .thenReturn(SOME_CLEAN_AIR_ZONE_ID);
 
       when(resultSet.getString(anyString())).thenAnswer(answer -> {
         String argument = answer.getArgument(0);
@@ -89,7 +92,6 @@ class CleanAirZonesRepositoryTest {
             return name;
           case "boundary_url":
             return SOME_URL;
-
         }
         throw new RuntimeException("Value not stubbed!");
       });
@@ -100,27 +102,28 @@ class CleanAirZonesRepositoryTest {
 
   private List<CleanAirZone> mockCleanAirZonesInDB() {
     List<CleanAirZone> cleanAirZones = prepareCleanAirZones();
-    when(jdbcTemplate.query(anyString(), any(CleanAirZoneRowMapper.class))).thenReturn(cleanAirZones);
+    when(jdbcTemplate.query(anyString(), any(CleanAirZoneRowMapper.class)))
+        .thenReturn(cleanAirZones);
     return cleanAirZones;
   }
 
   private List<CleanAirZone> prepareCleanAirZones() {
     return new CleanAirZones(
         newArrayList(
-            caz("Birmingham", 4,
+            caz("Birmingham", "0d7ab5c4-5fff-4935-8c4e-56267c0c9493",
                 "https://www.birmingham.gov.uk/info/20076/pollution/"
                     + "1763/a_clean_air_zone_for_birmingham/3"),
 
-            caz("Leeds", 5,
+            caz("Leeds", "39e54ed8-3ed2-441d-be3f-38fc9b70c8d3",
                 "https://www.arcgis.com/home/webmap/viewer.html?webmap="
                     + "de0120ae980b473982a3149ab072fdfc&extent=-1.733%2c53.7378%2c-1.333%2c53.8621")
         )).getCleanAirZones();
   }
 
-  private CleanAirZone caz(String cazName, Integer id, String boundaryUrl) {
+  private CleanAirZone caz(String cazName, String cleanAirZoneId, String boundaryUrl) {
     return CleanAirZone.builder()
         .name(cazName)
-        .cleanAirZoneId(id)
+        .cleanAirZoneId(UUID.fromString(cleanAirZoneId))
         .boundaryUrl(URI.create(boundaryUrl))
         .build();
   }

@@ -2,9 +2,11 @@ package uk.gov.caz.tariff.controller;
 
 import static uk.gov.caz.tariff.util.Constants.CORRELATION_ID_HEADER;
 
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,9 +44,9 @@ public class CleanAirZonesController implements CleanAirZonesControllerApiSpec {
   }
 
   @Override
-  public ResponseEntity<Tariff> tariff(@PathVariable Integer cleanAirZoneId,
+  public ResponseEntity<Tariff> tariff(@PathVariable String cleanAirZoneId,
       @RequestHeader(CORRELATION_ID_HEADER) String correlationId) {
-    return tariffRepository.findByCleanAirZoneId(cleanAirZoneId)
+    return tariffRepository.findByCleanAirZoneId(UUID.fromString(cleanAirZoneId))
         .map(tariff -> ResponseEntity
             .status(HttpStatus.OK)
             .header(CORRELATION_ID_HEADER, correlationId)
@@ -53,5 +55,11 @@ public class CleanAirZonesController implements CleanAirZonesControllerApiSpec {
             .status(HttpStatus.NOT_FOUND)
             .header(CORRELATION_ID_HEADER, correlationId)
             .build());
+  }
+
+  @ExceptionHandler(IllegalArgumentException.class)
+  ResponseEntity handleIllegalArgumentException(Exception e) {
+    log.error("Unhandled exception: ", e);
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
   }
 }

@@ -4,6 +4,7 @@ import com.google.common.annotations.VisibleForTesting;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -20,9 +21,10 @@ import uk.gov.caz.tariff.dto.Tariff;
 public class TariffRepository {
 
   @VisibleForTesting
-  static final String SELECT_BY_CHARGE_DEFINITION_ID_SQL = "SELECT cha.charge_definition_id, "
-      + "cha.caz_name, "
-      + "cha.caz_category_code, "
+  static final String SELECT_BY_CHARGE_DEFINITION_ID_SQL = "SELECT charge.clean_air_zone_id, "
+      + "charge.caz_name, "
+      + "charge.caz_class, "
+      + "link.emissions_url, "
       + "link.main_info_url, "
       + "link.pricing_url, "
       + "link.operation_hours_url, "
@@ -32,6 +34,8 @@ public class TariffRepository {
       + "link.financial_assistance_url, "
       + "link.boundary_url, "
       + "tar.hgv_entrant_fee, "
+      + "tar.minibus_entrant_fee, "
+      + "tar.car_entrant_fee, "
       + "tar.taxi_entrant_fee, "
       + "tar.phv_entrant_fee, "
       + "tar.bus_entrant_fee, "
@@ -40,10 +44,10 @@ public class TariffRepository {
       + "tar.large_van_entrant_fee, "
       + "tar.small_van_entrant_fee, "
       + "tar.moped_entrant_fee "
-      + "FROM t_tariff_definition tar, t_charge_definition cha, t_caz_link_detail link "
-      + "WHERE tar.charge_definition_id = cha.charge_definition_id "
-      + "AND link.charge_definition_id = cha.charge_definition_id "
-      + "AND cha.charge_definition_id = ?";
+      + "FROM t_tariff_definition tar, t_charge_definition charge, t_caz_link_detail link "
+      + "WHERE tar.charge_definition_id = charge.charge_definition_id "
+      + "AND link.charge_definition_id = charge.charge_definition_id "
+      + "AND charge.clean_air_zone_id = ?";
 
   private static final TariffRowMapper MAPPER = new TariffRowMapper();
 
@@ -56,10 +60,10 @@ public class TariffRepository {
   /**
    * Finds {@link Tariff} by cleanAirZoneId.
    *
-   * @param cleanAirZoneId ID of zone for which tariffs will be fetched.
+   * @param cleanAirZoneId UUID of zone for which tariffs will be fetched.
    * @return An {@link Optional} of {@link Tariff}
    */
-  public Optional<Tariff> findByCleanAirZoneId(Integer cleanAirZoneId) {
+  public Optional<Tariff> findByCleanAirZoneId(UUID cleanAirZoneId) {
     try {
       return Optional.ofNullable(
           jdbcTemplate.queryForObject(SELECT_BY_CHARGE_DEFINITION_ID_SQL, MAPPER, cleanAirZoneId));
@@ -73,9 +77,9 @@ public class TariffRepository {
     @Override
     public Tariff mapRow(ResultSet rs, int i) throws SQLException {
       return Tariff.builder()
-          .cleanAirZoneId(rs.getInt("charge_definition_id"))
+          .cleanAirZoneId(rs.getObject("clean_air_zone_id", UUID.class))
           .name(rs.getString("caz_name"))
-          .tariffClass(rs.getString("caz_category_code").charAt(0))
+          .tariffClass(rs.getString("caz_class").charAt(0))
           .informationUrls(InformationUrls.builder()
               .becomeCompliant(rs.getString("become_compliant_url"))
               .hoursOfOperation(rs.getString("operation_hours_url"))
@@ -85,9 +89,12 @@ public class TariffRepository {
               .payCaz(rs.getString("pay_caz_url"))
               .financialAssistance(rs.getString("financial_assistance_url"))
               .boundary(rs.getString("boundary_url"))
+              .emissionsStandards(rs.getString("emissions_url"))
               .build())
           .rates(Rates.builder()
               .bus(rs.getBigDecimal("bus_entrant_fee"))
+              .car(rs.getBigDecimal("car_entrant_fee"))
+              .miniBus(rs.getBigDecimal("minibus_entrant_fee"))
               .coach(rs.getBigDecimal("coach_entrant_fee"))
               .taxi(rs.getBigDecimal("taxi_entrant_fee"))
               .phv(rs.getBigDecimal("phv_entrant_fee"))

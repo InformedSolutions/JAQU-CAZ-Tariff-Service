@@ -1,9 +1,11 @@
 {
-  "cleanAirZoneId": 1,
-  "name": "Z",
-  "tariffClass": "A",
+  "cleanAirZoneId": "0d7ab5c4-5fff-4935-8c4e-56267c0c9493",
+  "name": "Birmingham",
+  "tariffClass": "D",
   "rates": {
     "bus": 8,
+    "car": 50,
+    "miniBus": 50,
     "coach": 0,
     "taxi": 50,
     "phv": 8,
@@ -14,6 +16,7 @@
     "moped": 8
   },
   "informationUrls": {
+    "emissionsStandards": "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/2",
     "mainInfo": "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham",
     "hoursOfOperation": "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/4",
     "pricing": "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/5",

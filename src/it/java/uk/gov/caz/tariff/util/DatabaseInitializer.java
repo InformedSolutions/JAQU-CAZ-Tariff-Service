@@ -31,7 +31,7 @@ public class DatabaseInitializer {
   }
 
   public void clear() {
-    jdbcTemplate.execute("TRUNCATE TABLE T_CHARGE_CATEGORY CASCADE");
+    jdbcTemplate.execute("TRUNCATE TABLE T_CAZ_CLASS CASCADE");
     jdbcTemplate.execute("TRUNCATE TABLE T_CHARGE_DEFINITION CASCADE");
     jdbcTemplate.execute("TRUNCATE TABLE T_TARIFF_DEFINITION CASCADE");
     jdbcTemplate.execute("TRUNCATE TABLE T_CAZ_LINK_DETAIL CASCADE");

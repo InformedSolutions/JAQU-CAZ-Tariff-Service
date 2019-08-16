@@ -4,35 +4,53 @@ databaseChangeLog:
       author: jaroslaw.piotrowski
       changes:
         - insert:
-            tableName: T_CHARGE_CATEGORY
+            tableName: T_CAZ_CLASS
             columns:
               - column:
-                  name: CAZ_CATEGORY_CODE
+                  name: CAZ_CLASS
                   value: 'A'
               - column:
-                  name: CAZ_CATEGORY_CODE_DESC
-                  value: "Class A"
+                  name: CAZ_CLASS_DESC
+                  value: "Buses, coaches, taxis and private hire vehicles (PHVs)"
         - insert:
-            tableName: T_CHARGE_CATEGORY
+            tableName: T_CAZ_CLASS
             columns:
               - column:
-                  name: CAZ_CATEGORY_CODE
+                  name: CAZ_CLASS
                   value: 'B'
               - column:
-                  name: CAZ_CATEGORY_CODE_DESC
-                  value: "Class B"
+                  name: CAZ_CLASS_DESC
+                  value: "Buses, coaches, taxis, PHVs and heavy goods vehicles (HGVs)"
+        - insert:
+            tableName: T_CAZ_CLASS
+            columns:
+              - column:
+                  name: CAZ_CLASS
+                  value: 'C'
+              - column:
+                  name: CAZ_CLASS_DESC
+                  value: "Buses, coaches, taxis, PHVs, HGVs and light goods vehicles (LGVs)"
+        - insert:
+            tableName: T_CAZ_CLASS
+            columns:
+              - column:
+                  name: CAZ_CLASS
+                  value: 'D'
+              - column:
+                  name: CAZ_CLASS_DESC
+                  value: "Buses, coaches, taxis, PHVs, HGVs LGVs and cars"
         - insert:
             tableName: T_CHARGE_DEFINITION
             columns:
               - column:
                   name: CAZ_NAME
-                  value: "Z"
+                  value: "Birmingham"
               - column:
-                  name: CAZ_CATEGORY_CODE
-                  value: "A"
+                  name: CAZ_CLASS
+                  value: 'D'
               - column:
-                  name: CAZ_IDENTIFIER
-                  value: "111111"
+                  name: CLEAN_AIR_ZONE_ID
+                  value: "0d7ab5c4-5fff-4935-8c4e-56267c0c9493"
               - column:
                   name: ACTIVE_CHARGE_START_TIME
                   value: "2019-08-20"
@@ -44,13 +62,13 @@ databaseChangeLog:
             columns:
               - column:
                   name: CAZ_NAME
-                  value: "X"
+                  value: "Leeds"
               - column:
-                  name: CAZ_CATEGORY_CODE
-                  value: "B"
+                  name: CAZ_CLASS
+                  value: 'B'
               - column:
-                  name: CAZ_IDENTIFIER
-                  value: "222222"
+                  name: CLEAN_AIR_ZONE_ID
+                  value: "39e54ed8-3ed2-441d-be3f-38fc9b70c8d3"
               - column:
                   name: ACTIVE_CHARGE_START_TIME
                   value: "2019-07-20"
@@ -65,6 +83,12 @@ databaseChangeLog:
                   value: "1"
               - column:
                   name: HGV_ENTRANT_FEE
+                  value: "50"
+              - column:
+                  name: CAR_ENTRANT_FEE
+                  value: "50"
+              - column:
+                  name: MINIBUS_ENTRANT_FEE
                   value: "50"
               - column:
                   name: TAXI_ENTRANT_FEE
@@ -100,6 +124,12 @@ databaseChangeLog:
                   name: HGV_ENTRANT_FEE
                   value: "50"
               - column:
+                  name: CAR_ENTRANT_FEE
+                  value: "50"
+              - column:
+                  name: MINIBUS_ENTRANT_FEE
+                  value: "50"
+              - column:
                   name: TAXI_ENTRANT_FEE
                   value: "50"
               - column:
@@ -131,7 +161,10 @@ databaseChangeLog:
                   value: "1"
               - column:
                   name: CAZ_IDENTIFIER
-                  value: "111111"
+                  value: "111"
+              - column:
+                  name: EMISSIONS_URL
+                  value: "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/2"
               - column:
                   name: BOUNDARY_URL
                   value: "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/3"
@@ -164,7 +197,10 @@ databaseChangeLog:
                   value: "2"
               - column:
                   name: CAZ_IDENTIFIER
-                  value: "222222"
+                  value: "222"
+              - column:
+                  name: EMISSIONS_URL
+                  value: "https://www.leeds.gov.uk/business/environmental-health-for-business/air-quality/minimum-emissions-standards-clean-air-charging-zone"
               - column:
                   name: BOUNDARY_URL
                   value: "https://www.arcgis.com/home/webmap/viewer.html?webmap=de0120ae980b473982a3149ab072fdfc&extent=-1.733%2c53.7378%2c-1.333%2c53.8621"

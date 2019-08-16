@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +25,8 @@ import uk.gov.caz.tariff.service.TariffRepository.TariffRowMapper;
 @ExtendWith(MockitoExtension.class)
 class TariffRepositoryTest {
 
-  private static final Integer SOME_CHARGE_DEFINITION_ID = 5;
+  private static final UUID SOME_CLEAN_AIR_ZONE_ID = UUID
+      .fromString("dc1efcaf-a2cf-41ec-aa37-ea4b28a20a1d");
 
   private static final String SOME_URL = "www.test.uk";
 
@@ -40,7 +42,7 @@ class TariffRepositoryTest {
     Tariff tariff = mockTariffInDB();
 
     // when
-    Optional<Tariff> result = tariffRepository.findByCleanAirZoneId(SOME_CHARGE_DEFINITION_ID);
+    Optional<Tariff> result = tariffRepository.findByCleanAirZoneId(SOME_CLEAN_AIR_ZONE_ID);
 
     // then
     assertThat(result).isPresent();
@@ -52,7 +54,7 @@ class TariffRepositoryTest {
     // given
 
     // when
-    Optional<Tariff> result = tariffRepository.findByCleanAirZoneId(SOME_CHARGE_DEFINITION_ID);
+    Optional<Tariff> result = tariffRepository.findByCleanAirZoneId(SOME_CLEAN_AIR_ZONE_ID);
 
     // then
     assertThat(result).isEmpty();
@@ -65,7 +67,7 @@ class TariffRepositoryTest {
         .thenThrow(EmptyResultDataAccessException.class);
 
     // when
-    Optional<Tariff> result = tariffRepository.findByCleanAirZoneId(SOME_CHARGE_DEFINITION_ID);
+    Optional<Tariff> result = tariffRepository.findByCleanAirZoneId(SOME_CLEAN_AIR_ZONE_ID);
 
     // then
     assertThat(result).isEmpty();
@@ -78,17 +80,19 @@ class TariffRepositoryTest {
 
     @Test
     public void shouldMapResultSetToTariff() throws SQLException {
-      String name = "A";
+      String name = "Leeds";
       ResultSet resultSet = mockResultSet(name);
 
       Tariff tariff = rowMapper.mapRow(resultSet, 0);
 
       assertThat(tariff).isNotNull();
-      assertThat(tariff.getCleanAirZoneId()).isEqualTo(SOME_CHARGE_DEFINITION_ID);
+      assertThat(tariff.getCleanAirZoneId()).isEqualTo(SOME_CLEAN_AIR_ZONE_ID);
       assertThat(tariff.getName()).isEqualTo(name);
       assertThat(tariff.getTariffClass()).isEqualTo('C');
       assertThat(tariff.getInformationUrls().getBecomeCompliant()).isEqualTo(SOME_URL);
       assertThat(tariff.getRates().getBus()).isEqualTo("50.55");
+      assertThat(tariff.getRates().getCar()).isEqualTo("23.55");
+      assertThat(tariff.getRates().getMiniBus()).isEqualTo("44.55");
       assertThat(tariff.getRates().getCoach()).isEqualTo("50.00");
       assertThat(tariff.getRates().getTaxi()).isEqualTo("15.10");
       assertThat(tariff.getRates().getPhv()).isEqualTo("15.35");
@@ -101,16 +105,17 @@ class TariffRepositoryTest {
 
     private ResultSet mockResultSet(String name) throws SQLException {
       ResultSet resultSet = mock(ResultSet.class);
-      when(resultSet.getInt("charge_definition_id")).thenReturn(SOME_CHARGE_DEFINITION_ID);
+      when(resultSet.getObject("clean_air_zone_id", UUID.class)).thenReturn(SOME_CLEAN_AIR_ZONE_ID);
 
       when(resultSet.getString(anyString())).thenAnswer(answer -> {
         String argument = answer.getArgument(0);
         switch (argument) {
           case "caz_name":
             return name;
-          case "caz_category_code":
+          case "caz_class":
             return String.valueOf('C');
           case "become_compliant_url":
+          case "emissions_url":
           case "operation_hours_url":
           case "main_info_url":
           case "pricing_url":
@@ -129,6 +134,10 @@ class TariffRepositoryTest {
         switch (argument) {
           case "bus_entrant_fee":
             return new BigDecimal("50.55");
+          case "car_entrant_fee":
+            return new BigDecimal("23.55");
+          case "minibus_entrant_fee":
+            return new BigDecimal("44.55");
           case "coach_entrant_fee":
             return new BigDecimal("50.00");
           case "taxi_entrant_fee":
@@ -156,7 +165,7 @@ class TariffRepositoryTest {
 
   private Tariff mockTariffInDB() {
     Tariff tariff = Tariff.builder()
-        .cleanAirZoneId(SOME_CHARGE_DEFINITION_ID)
+        .cleanAirZoneId(SOME_CLEAN_AIR_ZONE_ID)
         .name("Leeds")
         .build();
     when(jdbcTemplate.queryForObject(anyString(), any(TariffRowMapper.class), any())).thenReturn(
