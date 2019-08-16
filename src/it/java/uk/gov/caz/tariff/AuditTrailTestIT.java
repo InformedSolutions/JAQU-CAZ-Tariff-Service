@@ -2,45 +2,51 @@ package uk.gov.caz.tariff;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.UUID;
+import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import uk.gov.caz.tariff.annotation.IntegrationTest;
+import uk.gov.caz.tariff.util.DatabaseInitializer;
 
 @IntegrationTest
+@Import(DatabaseInitializer.class)
 class AuditTrailTestIT {
 
   private static final String AUDIT_LOGGED_ACTIONS_TABLE = "audit.logged_actions";
+
+  @Autowired
+  private DatabaseInitializer databaseInitializer;
 
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
   @Test
   void testInsertUpdateDeleteOperationsAgainstAuditTrailTable() {
-    clear();
+    databaseInitializer.clear();
     atTheBeginningAuditLoggedActionsTableShouldBeEmpty();
+    LocalDate date = LocalDate.of(2019, 8, 14);
 
     // INSERT case
-    UUID uuid = UUID.randomUUID();
-    whenWeInsertSomeSampleDataIntoCleanAirZonesTable(uuid, "Leeds");
+    whenWeInsertSomeSampleDataIntoCazClassTable('A', "Class A", date);
 
-    thenNumberOfRowsInAuditLoggedActionsTableForCleanAirZonesShouldBe(1);
+    thenNumberOfRowsInAuditLoggedActionsTableForCazClassShouldBe(1);
     andThereShouldBeExactlyOneInsertActionLogged();
-    withNewData("(" + uuid + ",Leeds,,,,,,,,,,,)");
+    withNewData("(A,\"Class A\",\"2019-08-14 00:00:00\")");
 
     // UPDATE case
-    whenWeUpdateCleanAirZonesTableTo("Birmingham");
+    whenWeUpdateCazClassTableTo("Classs A");
 
-    thenNumberOfRowsInAuditLoggedActionsTableForCleanAirZonesShouldBe(2);
+    thenNumberOfRowsInAuditLoggedActionsTableForCazClassShouldBe(2);
     andThereShouldBeExactlyOneUpdateActionLogged();
-    withNewData("(" + uuid + ",Birmingham,,,,,,,,,,,)");
+    withNewData("(A,\"Classs A\",\"2019-08-14 00:00:00\")");
 
     // DELETE case
-    whenWeDeleteRowFromCleanAirZonesTable();
+    whenWeDeleteRowFromCazClassTable();
 
-    thenNumberOfRowsInAuditLoggedActionsTableForCleanAirZonesShouldBe(3);
+    thenNumberOfRowsInAuditLoggedActionsTableForCazClassShouldBe(3);
     andThereShouldBeExactlyOneDeleteActionLogged();
     withNewDataEqualToNull();
   }
@@ -49,17 +55,17 @@ class AuditTrailTestIT {
     checkIfAuditTableContainsNumberOfRows(0);
   }
 
-  private void whenWeInsertSomeSampleDataIntoCleanAirZonesTable(UUID uuid,
-      String cleanAirZoneName) {
+  private void whenWeInsertSomeSampleDataIntoCazClassTable(char cazClass,
+      String cazClassDesc, LocalDate date) {
     jdbcTemplate.update(
-        "INSERT INTO public.t_clean_air_zones (clean_air_zone_id, name) VALUES (?, ?)",
-        uuid, cleanAirZoneName);
+        "INSERT INTO public.t_caz_class (caz_class, caz_class_desc, insert_timestmp) VALUES (?, ?, ?)",
+        cazClass, cazClassDesc, date);
   }
 
-  private void thenNumberOfRowsInAuditLoggedActionsTableForCleanAirZonesShouldBe(
+  private void thenNumberOfRowsInAuditLoggedActionsTableForCazClassShouldBe(
       int expectedNumberOfRows) {
     checkIfAuditTableContainsNumberOfRows(expectedNumberOfRows,
-        "TABLE_NAME = 't_clean_air_zones'");
+        "TABLE_NAME = 't_caz_class'");
   }
 
   private void andThereShouldBeExactlyOneInsertActionLogged() {
@@ -70,18 +76,18 @@ class AuditTrailTestIT {
     checkIfAuditTableContainsNumberOfRows(1, "new_data = '" + expectedNewData + "'");
   }
 
-  private void whenWeUpdateCleanAirZonesTableTo(String vehicleType) {
+  private void whenWeUpdateCazClassTableTo(String cazClassDesc) {
     jdbcTemplate.update(
-        "UPDATE public.t_clean_air_zones set name = ?",
-        vehicleType);
+        "UPDATE public.t_caz_class set caz_class_desc = ?",
+        cazClassDesc);
   }
 
   private void andThereShouldBeExactlyOneUpdateActionLogged() {
     checkIfAuditTableContainsNumberOfRows(1, "action = 'U'");
   }
 
-  private void whenWeDeleteRowFromCleanAirZonesTable() {
-    jdbcTemplate.update("DELETE from public.t_clean_air_zones");
+  private void whenWeDeleteRowFromCazClassTable() {
+    jdbcTemplate.update("DELETE from public.t_caz_class");
   }
 
   private void andThereShouldBeExactlyOneDeleteActionLogged() {
@@ -110,10 +116,5 @@ class AuditTrailTestIT {
                 + " table matching where clause '%s'",
             expectedNumberOfRowsInAuditTable, whereClause)
         .isEqualTo(expectedNumberOfRowsInAuditTable);
-  }
-
-  private void clear() {
-    jdbcTemplate.execute("TRUNCATE TABLE T_CLEAN_AIR_ZONES CASCADE");
-    jdbcTemplate.execute("TRUNCATE TABLE audit.logged_actions CASCADE");
   }
 }

@@ -25,7 +25,8 @@ import uk.gov.caz.tariff.service.TariffRepository.TariffRowMapper;
 @ExtendWith(MockitoExtension.class)
 class TariffRepositoryTest {
 
-  private static final UUID SOME_CLEAN_AIR_ZONE_ID = UUID.randomUUID();
+  private static final UUID SOME_CLEAN_AIR_ZONE_ID = UUID
+      .fromString("dc1efcaf-a2cf-41ec-aa37-ea4b28a20a1d");
 
   private static final String SOME_URL = "www.test.uk";
 
@@ -80,7 +81,7 @@ class TariffRepositoryTest {
     @Test
     public void shouldMapResultSetToTariff() throws SQLException {
       String name = "Leeds";
-      ResultSet resultSet = mockResultSet(SOME_CLEAN_AIR_ZONE_ID, name);
+      ResultSet resultSet = mockResultSet(name);
 
       Tariff tariff = rowMapper.mapRow(resultSet, 0);
 
@@ -88,39 +89,37 @@ class TariffRepositoryTest {
       assertThat(tariff.getCleanAirZoneId()).isEqualTo(SOME_CLEAN_AIR_ZONE_ID);
       assertThat(tariff.getName()).isEqualTo(name);
       assertThat(tariff.getTariffClass()).isEqualTo('C');
-      assertThat(tariff.isMotorcyclesChargeable()).isEqualTo(false);
       assertThat(tariff.getInformationUrls().getBecomeCompliant()).isEqualTo(SOME_URL);
       assertThat(tariff.getRates().getBus()).isEqualTo("50.55");
+      assertThat(tariff.getRates().getCar()).isEqualTo("23.55");
+      assertThat(tariff.getRates().getMiniBus()).isEqualTo("44.55");
       assertThat(tariff.getRates().getCoach()).isEqualTo("50.00");
       assertThat(tariff.getRates().getTaxi()).isEqualTo("15.10");
       assertThat(tariff.getRates().getPhv()).isEqualTo("15.35");
       assertThat(tariff.getRates().getHgv()).isEqualTo("5.30");
       assertThat(tariff.getRates().getLargeVan()).isEqualTo("80.30");
-      assertThat(tariff.getRates().getMiniBus()).isEqualTo("100.30");
       assertThat(tariff.getRates().getSmallVan()).isEqualTo("100.00");
-      assertThat(tariff.getRates().getCar()).isEqualTo("25.01");
       assertThat(tariff.getRates().getMotorcycle()).isEqualTo("25.10");
       assertThat(tariff.getRates().getMoped()).isEqualTo("49.49");
     }
 
-    private ResultSet mockResultSet(UUID uuid, String name) throws SQLException {
+    private ResultSet mockResultSet(String name) throws SQLException {
       ResultSet resultSet = mock(ResultSet.class);
-      when(resultSet.getObject("clean_air_zone_id", UUID.class)).thenReturn(uuid);
-      when(resultSet.getBoolean("motorcycles_chargeable")).thenReturn(false);
+      when(resultSet.getObject("clean_air_zone_id", UUID.class)).thenReturn(SOME_CLEAN_AIR_ZONE_ID);
 
       when(resultSet.getString(anyString())).thenAnswer(answer -> {
         String argument = answer.getArgument(0);
         switch (argument) {
-          case "name":
+          case "caz_name":
             return name;
-          case "tariff_class":
+          case "caz_class":
             return String.valueOf('C');
           case "become_compliant_url":
-          case "hours_of_operation_url":
-          case "emissions_standards_url":
+          case "emissions_url":
+          case "operation_hours_url":
           case "main_info_url":
           case "pricing_url":
-          case "exemption_or_discount_url":
+          case "exemption_url":
           case "pay_caz_url":
           case "financial_assistance_url":
           case "boundary_url":
@@ -133,27 +132,27 @@ class TariffRepositoryTest {
       when(resultSet.getBigDecimal(any())).thenAnswer(answer -> {
         String argument = answer.getArgument(0);
         switch (argument) {
-          case "bus":
+          case "bus_entrant_fee":
             return new BigDecimal("50.55");
-          case "coach":
+          case "car_entrant_fee":
+            return new BigDecimal("23.55");
+          case "minibus_entrant_fee":
+            return new BigDecimal("44.55");
+          case "coach_entrant_fee":
             return new BigDecimal("50.00");
-          case "taxi":
+          case "taxi_entrant_fee":
             return new BigDecimal("15.10");
-          case "phv":
+          case "phv_entrant_fee":
             return new BigDecimal("15.35");
-          case "hgv":
+          case "hgv_entrant_fee":
             return new BigDecimal("5.30");
-          case "large_van":
+          case "large_van_entrant_fee":
             return new BigDecimal("80.30");
-          case "minibus":
-            return new BigDecimal("100.30");
-          case "small_van":
+          case "small_van_entrant_fee":
             return new BigDecimal("100.00");
-          case "car":
-            return new BigDecimal("25.01");
-          case "motorcycle":
+          case "motorcycle_ent_fee":
             return new BigDecimal("25.10");
-          case "moped":
+          case "moped_entrant_fee":
             return new BigDecimal("49.49");
 
         }

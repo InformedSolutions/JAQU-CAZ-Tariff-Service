@@ -21,7 +21,7 @@ public class CleanAirZone {
 
   @ApiModelProperty(value = "${swagger.model.descriptions.cleanAirZone.name}")
   @NotNull
-  @Size(min = 1, max = 60)
+  @Size(min = 1, max = 50)
   String name;
 
   @ApiModelProperty(value = "${swagger.model.descriptions.cleanAirZone.boundaryUrl}")

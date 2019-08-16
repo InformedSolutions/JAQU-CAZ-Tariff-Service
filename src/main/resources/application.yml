@@ -36,7 +36,6 @@ swagger:
       name: Name of Tariff
       traiffClass: Tariff Class
       rates: Rates
-      motorcyclesChargeable: Motorcycles chargeable
       informationUrls: URLs information
     informationUrl:
       emissionsStandardsUrl: URL provided by zone operators, emissions standards
@@ -67,7 +66,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/caz-tariff
     username: postgres
     password: postgres
-    
+
 springfox:
   documentation:
     swagger:

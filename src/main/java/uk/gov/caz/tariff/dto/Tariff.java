@@ -21,14 +21,11 @@ public class Tariff {
 
   @ApiModelProperty(value = "${swagger.model.descriptions.tariff.name}")
   @NotNull
-  @Size(min = 1, max = 60)
+  @Size(min = 1, max = 50)
   String name;
 
   @ApiModelProperty(value = "${swagger.model.descriptions.tariff.tariffClass}")
   char tariffClass;
-
-  @ApiModelProperty(value = "${swagger.model.descriptions.tariff.motorcyclesChargeable}")
-  boolean motorcyclesChargeable;
 
   @ApiModelProperty(value = "${swagger.model.descriptions.tariff.rates}")
   Rates rates;

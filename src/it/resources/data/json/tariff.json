@@ -1,30 +1,29 @@
 {
-  "cleanAirZoneId" : "8ed3580b-f155-4f6d-ab12-5a96b071a0a7",
-  "name" : "Leeds",
-  "tariffClass" : "C",
-  "motorcyclesChargeable" : false,
-  "rates" : {
-    "bus" : 5.5,
-    "coach" : 15.6,
-    "taxi" : 2,
-    "phv" : 80.1,
-    "hgv" : 5.69,
-    "largeVan" : 100,
-    "miniBus" : 25.5,
-    "smallVan" : 80,
-    "car" : 50,
-    "motorcycle" : 80.01,
-    "moped" : 49.49
+  "cleanAirZoneId": "5cd7441d-766f-48ff-b8ad-1809586fea37",
+  "name": "Birmingham",
+  "tariffClass": "D",
+  "rates": {
+    "bus": 50,
+    "car": 8,
+    "miniBus": 50,
+    "coach": 50,
+    "taxi": 8,
+    "phv": 8,
+    "hgv": 50,
+    "largeVan": 50,
+    "smallVan": 8,
+    "motorcycle": 0,
+    "moped": 0
   },
-  "informationUrls" : {
-    "emissionsStandards" : "www.test.uk",
-    "mainInfo" : "www.test.uk",
-    "hoursOfOperation" : "www.test.uk",
-    "pricing" : "www.test.uk",
-    "exemptionOrDiscount" : "www.test.uk",
-    "payCaz" : "www.test.uk",
-    "becomeCompliant" : "www.test.uk",
-    "financialAssistance" : "www.test.uk",
-    "boundary" : "www.test.uk"
+  "informationUrls": {
+    "emissionsStandards": "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/2",
+    "mainInfo": "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham",
+    "hoursOfOperation": "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/4",
+    "pricing": "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/5",
+    "exemptionOrDiscount": "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/6",
+    "payCaz": "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/3",
+    "becomeCompliant": "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/7",
+    "financialAssistance": "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/7",
+    "boundary": "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/3"
   }
 }

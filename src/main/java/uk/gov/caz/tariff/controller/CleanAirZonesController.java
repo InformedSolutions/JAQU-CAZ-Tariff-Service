@@ -1,9 +1,12 @@
 package uk.gov.caz.tariff.controller;
 
+import static uk.gov.caz.tariff.util.Constants.CORRELATION_ID_HEADER;
+
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +22,7 @@ import uk.gov.caz.tariff.service.TariffRepository;
 @Slf4j
 public class CleanAirZonesController implements CleanAirZonesControllerApiSpec {
 
-  static final String PATH = "/v1/clean-air-zones";
+  public static final String PATH = "/v1/clean-air-zones";
 
   private final TariffRepository tariffRepository;
 
@@ -33,24 +36,30 @@ public class CleanAirZonesController implements CleanAirZonesControllerApiSpec {
 
   @Override
   public ResponseEntity<CleanAirZones> cleanAirZones(
-      @RequestHeader("X-Correlation-ID") String correlationId) {
+      @RequestHeader(CORRELATION_ID_HEADER) String correlationId) {
     return ResponseEntity
         .status(HttpStatus.OK)
-        .header("X-Correlation-ID", correlationId)
+        .header(CORRELATION_ID_HEADER, correlationId)
         .body(cleanAirZonesRepository.findAll());
   }
 
   @Override
-  public ResponseEntity<Tariff> tariff(@PathVariable UUID cleanAirZoneId,
-      @RequestHeader("X-Correlation-ID") String correlationId) {
-    return tariffRepository.findByCleanAirZoneId(cleanAirZoneId)
+  public ResponseEntity<Tariff> tariff(@PathVariable String cleanAirZoneId,
+      @RequestHeader(CORRELATION_ID_HEADER) String correlationId) {
+    return tariffRepository.findByCleanAirZoneId(UUID.fromString(cleanAirZoneId))
         .map(tariff -> ResponseEntity
             .status(HttpStatus.OK)
-            .header("X-Correlation-ID", correlationId)
+            .header(CORRELATION_ID_HEADER, correlationId)
             .body(tariff))
         .orElseGet(() -> ResponseEntity
             .status(HttpStatus.NOT_FOUND)
-            .header("X-Correlation-ID", correlationId)
+            .header(CORRELATION_ID_HEADER, correlationId)
             .build());
+  }
+
+  @ExceptionHandler(IllegalArgumentException.class)
+  ResponseEntity handleIllegalArgumentException(Exception e) {
+    log.error("Unhandled exception: ", e);
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
   }
 }
