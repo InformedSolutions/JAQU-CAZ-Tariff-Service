@@ -32,7 +32,7 @@ public class TariffRepositoryTestIT {
   @Test
   public void shouldReturnSampleTariff() {
     // given
-    UUID cleanAirZoneId = UUID.fromString("0d7ab5c4-5fff-4935-8c4e-56267c0c9493");
+    UUID cleanAirZoneId = UUID.fromString("5cd7441d-766f-48ff-b8ad-1809586fea37");
 
     // when
     Tariff tariff = tariffRepository.findByCleanAirZoneId(cleanAirZoneId).get();

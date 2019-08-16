@@ -50,7 +50,7 @@ databaseChangeLog:
                   value: 'D'
               - column:
                   name: CLEAN_AIR_ZONE_ID
-                  value: "0d7ab5c4-5fff-4935-8c4e-56267c0c9493"
+                  value: "5cd7441d-766f-48ff-b8ad-1809586fea37"
               - column:
                   name: ACTIVE_CHARGE_START_TIME
                   value: "2019-08-20"
@@ -86,25 +86,25 @@ databaseChangeLog:
                   value: "50"
               - column:
                   name: CAR_ENTRANT_FEE
-                  value: "50"
+                  value: "8"
               - column:
                   name: MINIBUS_ENTRANT_FEE
                   value: "50"
               - column:
                   name: TAXI_ENTRANT_FEE
-                  value: "50"
+                  value: "8"
               - column:
                   name: PHV_ENTRANT_FEE
                   value: "8"
               - column:
                   name: BUS_ENTRANT_FEE
-                  value: "8"
-              - column:
-                  name: MOTORCYCLE_ENT_FEE
                   value: "50"
               - column:
-                  name: COACH_ENTRANT_FEE
+                  name: MOTORCYCLE_ENT_FEE
                   value: "0"
+              - column:
+                  name: COACH_ENTRANT_FEE
+                  value: "50"
               - column:
                   name: LARGE_VAN_ENTRANT_FEE
                   value: "50"
@@ -113,7 +113,7 @@ databaseChangeLog:
                   value: "8"
               - column:
                   name: MOPED_ENTRANT_FEE
-                  value: "8"
+                  value: "0"
         - insert:
             tableName: T_TARIFF_DEFINITION
             columns:
@@ -125,28 +125,28 @@ databaseChangeLog:
                   value: "50"
               - column:
                   name: CAR_ENTRANT_FEE
-                  value: "50"
+                  value: "0"
               - column:
                   name: MINIBUS_ENTRANT_FEE
-                  value: "50"
+                  value: "12.5"
               - column:
                   name: TAXI_ENTRANT_FEE
-                  value: "50"
+                  value: "12.5"
               - column:
                   name: PHV_ENTRANT_FEE
                   value: "12.5"
               - column:
                   name: BUS_ENTRANT_FEE
-                  value: "12.5"
-              - column:
-                  name: MOTORCYCLE_ENT_FEE
                   value: "50"
               - column:
-                  name: COACH_ENTRANT_FEE
+                  name: MOTORCYCLE_ENT_FEE
                   value: "0"
               - column:
+                  name: COACH_ENTRANT_FEE
+                  value: "50"
+              - column:
                   name: LARGE_VAN_ENTRANT_FEE
-                  value: "12.5"
+                  value: "0"
               - column:
                   name: SMALL_VAN_ENTRANT_FEE
                   value: "0"

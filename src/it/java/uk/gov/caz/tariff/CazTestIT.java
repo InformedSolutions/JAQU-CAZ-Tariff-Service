@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static uk.gov.caz.tariff.util.Constants.CORRELATION_ID_HEADER;
 
@@ -46,28 +45,17 @@ public class CazTestIT {
         .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
         .header(CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.cleanAirZones[0].cleanAirZoneId")
-            .value("0d7ab5c4-5fff-4935-8c4e-56267c0c9493"))
-        .andExpect(jsonPath("$.cleanAirZones[0].name").value("Birmingham"))
-        .andExpect(jsonPath("$.cleanAirZones[0].boundaryUrl")
-            .value("https://www.birmingham.gov.uk/info/20076/pollution/"
-                + "1763/a_clean_air_zone_for_birmingham/3"))
-        .andExpect(jsonPath("$.cleanAirZones[1].cleanAirZoneId")
-            .value("39e54ed8-3ed2-441d-be3f-38fc9b70c8d3"))
-        .andExpect(jsonPath("$.cleanAirZones[1].name").value("Leeds"))
-        .andExpect(jsonPath("$.cleanAirZones[1].boundaryUrl")
-            .value("https://www.arcgis.com/home/webmap/viewer.html?webmap="
-                + "de0120ae980b473982a3149ab072fdfc&extent=-1.733%2c53.7378%2c-1.333%2c53.8621"))
+        .andExpect(content().json(cleanAirZonesJson()))
         .andExpect(header().string(CORRELATION_ID_HEADER, SOME_CORRELATION_ID));
   }
 
   @Test
   public void shouldReturnTariffAndStatusOk() throws Exception {
-    mockMvc.perform(get(tariffWithCleanAirZoneId("0d7ab5c4-5fff-4935-8c4e-56267c0c9493"))
+    mockMvc.perform(get(tariffWithCleanAirZoneId("5cd7441d-766f-48ff-b8ad-1809586fea37"))
         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
         .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
         .header(CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
-        .andExpect(content().json(readTariffJson()))
+        .andExpect(content().json(tariffJson()))
         .andExpect(status().isOk())
         .andExpect(header().string(CORRELATION_ID_HEADER, SOME_CORRELATION_ID));
   }
@@ -102,7 +90,15 @@ public class CazTestIT {
     return CleanAirZonesController.PATH + "/" + cleanAirZoneId + "/tariff";
   }
 
-  private String readTariffJson() throws IOException {
-    return Resources.toString(Resources.getResource("data/json/real-tariff.json"), Charsets.UTF_8);
+  private String tariffJson() throws IOException {
+    return readJsonFile("data/json/tariff.json");
+  }
+
+  private String cleanAirZonesJson() throws IOException {
+    return readJsonFile("data/json/clean-air-zones.json");
+  }
+
+  private String readJsonFile(String path) throws IOException {
+    return Resources.toString(Resources.getResource(path), Charsets.UTF_8);
   }
 }
