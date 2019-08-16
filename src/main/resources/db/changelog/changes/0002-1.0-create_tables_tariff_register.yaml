@@ -75,7 +75,7 @@ databaseChangeLog:
                     primaryKeyName: tariff_id_pkey
               - column:
                   name: CHARGE_DEFINITION_ID
-                  type: int(18)
+                  type: int(5)
                   constraints:
                     nullable: false
                     references: T_CHARGE_DEFINITION(CHARGE_DEFINITION_ID)
