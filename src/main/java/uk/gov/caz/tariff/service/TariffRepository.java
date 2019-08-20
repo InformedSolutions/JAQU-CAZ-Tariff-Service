@@ -47,7 +47,9 @@ public class TariffRepository {
       + "FROM t_tariff_definition tar, t_charge_definition charge, t_caz_link_detail link "
       + "WHERE tar.charge_definition_id = charge.charge_definition_id "
       + "AND link.charge_definition_id = charge.charge_definition_id "
-      + "AND charge.clean_air_zone_id = ?";
+      + "AND charge.clean_air_zone_id = ? "
+      + "ORDER BY tar.tariff_id DESC "
+      + "LIMIT 1";
 
   private static final TariffRowMapper MAPPER = new TariffRowMapper();
 
