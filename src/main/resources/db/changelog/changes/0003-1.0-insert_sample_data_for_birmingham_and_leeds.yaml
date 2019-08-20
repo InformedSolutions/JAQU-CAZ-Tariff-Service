@@ -83,45 +83,6 @@ databaseChangeLog:
                   value: "1"
               - column:
                   name: HGV_ENTRANT_FEE
-                  value: "100"
-              - column:
-                  name: CAR_ENTRANT_FEE
-                  value: "100"
-              - column:
-                  name: MINIBUS_ENTRANT_FEE
-                  value: "100"
-              - column:
-                  name: TAXI_ENTRANT_FEE
-                  value: "100"
-              - column:
-                  name: PHV_ENTRANT_FEE
-                  value: "8"
-              - column:
-                  name: BUS_ENTRANT_FEE
-                  value: "50"
-              - column:
-                  name: MOTORCYCLE_ENT_FEE
-                  value: "0"
-              - column:
-                  name: COACH_ENTRANT_FEE
-                  value: "50"
-              - column:
-                  name: LARGE_VAN_ENTRANT_FEE
-                  value: "50"
-              - column:
-                  name: SMALL_VAN_ENTRANT_FEE
-                  value: "8"
-              - column:
-                  name: MOPED_ENTRANT_FEE
-                  value: "0"
-        - insert:
-            tableName: T_TARIFF_DEFINITION
-            columns:
-              - column:
-                  name: CHARGE_DEFINITION_ID
-                  value: "1"
-              - column:
-                  name: HGV_ENTRANT_FEE
                   value: "50"
               - column:
                   name: CAR_ENTRANT_FEE
