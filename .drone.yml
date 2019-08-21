@@ -40,6 +40,13 @@ steps:
   # Unit test
   - name: unit test
     image: maven-base
+    environment:
+      JAQU_NEXUS_URL:
+        from_secret: nexus_url
+      JAQU_NEXUS_USER:
+        from_secret: nexus_username
+      JAQU_NEXUS_PASSWORD:
+        from_secret: nexus_password
     volumes:
       - name: package_directory
         path: /drone/src/target
@@ -52,6 +59,13 @@ steps:
   # IT test
   - name: IT test
     image: maven-base
+    environment:
+      JAQU_NEXUS_URL:
+        from_secret: nexus_url
+      JAQU_NEXUS_USER:
+        from_secret: nexus_username
+      JAQU_NEXUS_PASSWORD:
+        from_secret: nexus_password
     volumes:
       - name: package_directory
         path: /drone/src/target
@@ -68,6 +82,13 @@ steps:
   # Package
   - name: package deployable zip
     image: maven-base
+    environment:
+      JAQU_NEXUS_URL:
+        from_secret: nexus_url
+      JAQU_NEXUS_USER:
+        from_secret: nexus_username
+      JAQU_NEXUS_PASSWORD:
+        from_secret: nexus_password
     volumes:
       - name: package_directory
         path: /drone/src/target
