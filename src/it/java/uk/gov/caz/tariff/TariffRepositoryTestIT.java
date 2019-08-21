@@ -2,6 +2,7 @@ package uk.gov.caz.tariff;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,6 +42,14 @@ public class TariffRepositoryTestIT {
     assertThat(tariff.getCleanAirZoneId()).isEqualTo(cleanAirZoneId);
     assertThat(tariff.getName()).isEqualTo("Birmingham");
     assertThat(tariff.getTariffClass()).isEqualTo('D');
+    assertThat(tariff.getRates().getHgv()).isEqualTo(rate(50.00));
+    assertThat(tariff.getRates().getCar()).isEqualTo(rate(8.00));
+    assertThat(tariff.getRates().getMiniBus()).isEqualTo(rate(50.00));
+    assertThat(tariff.getRates().getTaxi()).isEqualTo(rate(8.00));
+  }
+
+  private BigDecimal rate(double rate) {
+    return new BigDecimal(rate).setScale(2);
   }
 
   @Test
