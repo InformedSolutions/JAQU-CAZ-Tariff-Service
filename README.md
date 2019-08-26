@@ -1,6 +1,44 @@
 # JAQU-CAZ-Tariff-Service
 JAQU CAZ Tariff Service
 
+## Data validation
+
+* tariff type: can be only 'A' 'B' 'C' or 'D'
+* hgv entrant fee should be more or equal 0
+* taxi entrant fee should be more or equal 0
+* phv entrant fee should be more or equal 0
+* bus entrant fee should be more or equal 0
+* minibus entrant fee should be more or equal 0
+* car entrant fee should be more or equal 0
+* motorcycle ent fee should be more or equal 0
+* coach entrant fee should be more or equal 0
+* large van entrant fee should be more or equal 0
+* small van entrant fee should be more or equal 0
+* moped entrant fee should be more or equal 0
+* caz name must be string
+* caz name can not be longer than 50 characters
+* caz name can not be empty
+* clear air zone must be uuid
+* clear air zone can not be empty
+* main info url must be string
+* main info url can not be empty
+* pricing url must be string
+* pricing url can not be empty
+* operation hours url must be string
+* operation hours url can not be empty
+* exemption url must be string
+* exemption url can not be empty
+* pay caz url must be string
+* pay caz url can not be empty
+* become compliant url must be string
+* become compliant url can not be empty
+* financial assistance url must be string
+* financial assistance url can not be empty
+* emissions url must be string
+* emissions url can not be empty
+* boundary url must be string
+* boundary url can not be empty
+
 ## First steps in Tariff Service
 
 ### Configuring code style formatter

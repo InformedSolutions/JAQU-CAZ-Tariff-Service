@@ -1,6 +1,6 @@
 package uk.gov.caz.tariff.controller;
 
-import static uk.gov.caz.tariff.util.Constants.CORRELATION_ID_HEADER;
+import static uk.gov.caz.correlationId.Constants.X_CORRELATION_ID_HEADER;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -13,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import uk.gov.caz.tariff.dto.CleanAirZones;
@@ -29,8 +28,6 @@ public interface CleanAirZonesControllerApiSpec {
   /**
    * Returns list of available CAZs (Clean Air Zones).
    *
-   * @param correlationId UUID formatted string to track the request through the enquiries
-   *     stack.
    * @return List of POJOs with available CAZs (Clean Air Zones).
    */
   @ApiOperation(
@@ -45,21 +42,18 @@ public interface CleanAirZonesControllerApiSpec {
       @ApiResponse(code = 400, message = "Bad Request, for example required HTTP Header missing"),
   })
   @ApiImplicitParams({
-      @ApiImplicitParam(name = CORRELATION_ID_HEADER,
+      @ApiImplicitParam(name = X_CORRELATION_ID_HEADER,
           required = true,
           value = "UUID formatted string to track the request through the enquiries stack",
           paramType = "header")
   })
   @GetMapping
   @ResponseStatus(value = HttpStatus.OK)
-  ResponseEntity<CleanAirZones> cleanAirZones(
-      @RequestHeader(CORRELATION_ID_HEADER) String correlationId);
+  ResponseEntity<CleanAirZones> cleanAirZones();
 
   /**
    * Returns details of Tariff.
    *
-   * @param correlationId UUID formatted string to track the request through the enquiries
-   *     stack.
    * @param cleanAirZoneId UUID of zone for which tariffs will be fetched.
    * @return Tariff details.
    */
@@ -75,13 +69,12 @@ public interface CleanAirZonesControllerApiSpec {
       @ApiResponse(code = 400, message = "Bad Request, for example required HTTP Header missing"),
   })
   @ApiImplicitParams({
-      @ApiImplicitParam(name = CORRELATION_ID_HEADER,
+      @ApiImplicitParam(name = X_CORRELATION_ID_HEADER,
           required = true,
           value = "UUID formatted string to track the request through the enquiries stack",
           paramType = "header")
   })
   @GetMapping("/{cleanAirZoneId}/tariff")
   @ResponseStatus(value = HttpStatus.OK)
-  ResponseEntity<Tariff> tariff(@PathVariable String cleanAirZoneId,
-      @RequestHeader(CORRELATION_ID_HEADER) String correlationId);
+  ResponseEntity<Tariff> tariff(@PathVariable String cleanAirZoneId);
 }

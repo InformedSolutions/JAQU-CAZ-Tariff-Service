@@ -4,14 +4,12 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.caz.tariff.util.Constants.CORRELATION_ID_HEADER;
+import static uk.gov.caz.correlationId.Constants.X_CORRELATION_ID_HEADER;
+import static uk.gov.caz.tariff.util.JsonReader.sampleCleanAirZonesJson;
+import static uk.gov.caz.tariff.util.JsonReader.sampleTariffJson;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.Optional;
@@ -21,7 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import uk.gov.caz.GlobalExceptionHandlerConfiguration;
+import uk.gov.caz.correlationId.Configuration;
 import uk.gov.caz.tariff.dto.CleanAirZone;
 import uk.gov.caz.tariff.dto.CleanAirZones;
 import uk.gov.caz.tariff.dto.InformationUrls;
@@ -30,14 +31,16 @@ import uk.gov.caz.tariff.dto.Tariff;
 import uk.gov.caz.tariff.service.CleanAirZonesRepository;
 import uk.gov.caz.tariff.service.TariffRepository;
 
-@WebMvcTest(CleanAirZonesController.class)
+@ContextConfiguration(classes = {GlobalExceptionHandlerConfiguration.class, Configuration.class,
+    CleanAirZonesController.class})
+@WebMvcTest
 class CleanAirZonesControllerTestIT {
 
   private static final String SOME_URL = "www.test.uk";
 
-  private static final String SOME_CORRELATION_ID = "63be7528-7efd-4f31-ae68-11a6b709ff1c";
-
   private static final String CLEAN_AIR_ZONE_ID = "dc1efcaf-a2cf-41ec-aa37-ea4b28a20a1d";
+
+  private static final String SOME_CORRELATION_ID = UUID.randomUUID().toString();
 
   @MockBean
   private TariffRepository tariffRepository;
@@ -49,27 +52,26 @@ class CleanAirZonesControllerTestIT {
   private MockMvc mockMvc;
 
   @Test
+  public void missingCorrelationIdShouldResultIn400AndValidMessage() throws Exception {
+    given(cleanAirZonesRepository.findAll()).willReturn(prepareCleanAirZones());
+
+    mockMvc.perform(get(CleanAirZonesController.PATH)
+        .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+        .accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.message").value("Missing request header 'X-Correlation-ID'"));
+  }
+
+  @Test
   public void shouldReturnListOfCleanAirZones() throws Exception {
     given(cleanAirZonesRepository.findAll()).willReturn(prepareCleanAirZones());
 
     mockMvc.perform(get(CleanAirZonesController.PATH)
         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
         .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
-        .header(CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
+        .header(X_CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.cleanAirZones[0].cleanAirZoneId")
-            .value("0d7ab5c4-5fff-4935-8c4e-56267c0c9493"))
-        .andExpect(jsonPath("$.cleanAirZones[0].name").value("Birmingham"))
-        .andExpect(jsonPath("$.cleanAirZones[0].boundaryUrl")
-            .value("https://www.birmingham.gov.uk/info/20076/pollution/"
-                + "1763/a_clean_air_zone_for_birmingham/3"))
-        .andExpect(jsonPath("$.cleanAirZones[1].cleanAirZoneId")
-            .value("39e54ed8-3ed2-441d-be3f-38fc9b70c8d3"))
-        .andExpect(jsonPath("$.cleanAirZones[1].name").value("Leeds"))
-        .andExpect(jsonPath("$.cleanAirZones[1].boundaryUrl")
-            .value("https://www.arcgis.com/home/webmap/viewer.html?webmap="
-                + "de0120ae980b473982a3149ab072fdfc&extent=-1.733%2c53.7378%2c-1.333%2c53.8621"))
-        .andExpect(header().string(CORRELATION_ID_HEADER, SOME_CORRELATION_ID));
+        .andExpect(content().json(sampleCleanAirZonesJson()));
   }
 
   @Test
@@ -80,10 +82,9 @@ class CleanAirZonesControllerTestIT {
     mockMvc.perform(get(tariffWithCleanAirZoneId(CLEAN_AIR_ZONE_ID))
         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
         .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
-        .header(CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
-        .andExpect(content().json(readTariffJson()))
-        .andExpect(status().isOk())
-        .andExpect(header().string(CORRELATION_ID_HEADER, SOME_CORRELATION_ID));
+        .header(X_CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
+        .andExpect(content().json(sampleTariffJson()))
+        .andExpect(status().isOk());
   }
 
   @Test
@@ -91,9 +92,8 @@ class CleanAirZonesControllerTestIT {
     mockMvc.perform(get(tariffWithCleanAirZoneId(CLEAN_AIR_ZONE_ID))
         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
         .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
-        .header(CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
-        .andExpect(status().isNotFound())
-        .andExpect(header().string(CORRELATION_ID_HEADER, SOME_CORRELATION_ID));
+        .header(X_CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
+        .andExpect(status().isNotFound());
   }
 
   @Test
@@ -101,7 +101,7 @@ class CleanAirZonesControllerTestIT {
     mockMvc.perform(get(tariffWithCleanAirZoneId("asd"))
         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
         .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
-        .header(CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
+        .header(X_CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
         .andExpect(status().isNotFound());
   }
 
@@ -163,10 +163,5 @@ class CleanAirZonesControllerTestIT {
         .cleanAirZoneId(UUID.fromString(cleanAirZoneId))
         .boundaryUrl(URI.create(boundaryUrl))
         .build();
-  }
-
-  private String readTariffJson() throws IOException {
-    return Resources
-        .toString(Resources.getResource("data/json/sample-tariff.json"), Charsets.UTF_8);
   }
 }
