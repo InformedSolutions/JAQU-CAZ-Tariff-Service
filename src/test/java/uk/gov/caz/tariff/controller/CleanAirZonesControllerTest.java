@@ -3,7 +3,6 @@ package uk.gov.caz.tariff.controller;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
-import static uk.gov.caz.tariff.util.Constants.CORRELATION_ID_HEADER;
 
 import java.math.BigDecimal;
 import java.net.URI;
@@ -16,6 +15,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ContextConfiguration;
+import uk.gov.caz.GlobalExceptionHandlerConfiguration;
+import uk.gov.caz.correlationId.Configuration;
 import uk.gov.caz.tariff.dto.CleanAirZone;
 import uk.gov.caz.tariff.dto.CleanAirZones;
 import uk.gov.caz.tariff.dto.InformationUrls;
@@ -25,6 +27,7 @@ import uk.gov.caz.tariff.service.CleanAirZonesRepository;
 import uk.gov.caz.tariff.service.TariffRepository;
 
 @ExtendWith(MockitoExtension.class)
+@ContextConfiguration(classes = {GlobalExceptionHandlerConfiguration.class, Configuration.class})
 class CleanAirZonesControllerTest {
 
   private static final String SOME_CLEAN_AIR_ZONE_ID = "dc1efcaf-a2cf-41ec-aa37-ea4b28a20a1d";
@@ -46,8 +49,7 @@ class CleanAirZonesControllerTest {
     when(cleanAirZonesRepository.findAll()).thenReturn(prepareCleanAirZones());
 
     // when
-    ResponseEntity<CleanAirZones> cleanAirZones = cleanAirZonesController
-        .cleanAirZones("correlation-cleanAirZoneId");
+    ResponseEntity<CleanAirZones> cleanAirZones = cleanAirZonesController.cleanAirZones();
 
     // then
     assertThat(cleanAirZones).isNotNull();
@@ -67,24 +69,21 @@ class CleanAirZonesControllerTest {
     // given
 
     // when
-    ResponseEntity<CleanAirZones> cleanAirZones = cleanAirZonesController
-        .cleanAirZones("correlation-cleanAirZoneId");
+    ResponseEntity<CleanAirZones> cleanAirZones = cleanAirZonesController.cleanAirZones();
 
     // then
     assertThat(cleanAirZones).isNotNull();
     assertThat(cleanAirZones.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
-    assertThat(cleanAirZones.getHeaders())
-        .containsEntry(CORRELATION_ID_HEADER, newArrayList("correlation-cleanAirZoneId"));
   }
 
   @Test
   public void shouldReturnSomeTariff() {
     // given
-    when(tariffRepository.findByCleanAirZoneId(UUID.fromString(SOME_CLEAN_AIR_ZONE_ID))).thenReturn(prepareTariff());
+    when(tariffRepository.findByCleanAirZoneId(UUID.fromString(SOME_CLEAN_AIR_ZONE_ID)))
+        .thenReturn(prepareTariff());
 
     // when
-    ResponseEntity<Tariff> tariff = cleanAirZonesController
-        .tariff(SOME_CLEAN_AIR_ZONE_ID, "correlation-cleanAirZoneId");
+    ResponseEntity<Tariff> tariff = cleanAirZonesController.tariff(SOME_CLEAN_AIR_ZONE_ID);
 
     // then
     assertThat(tariff).isNotNull();
@@ -97,8 +96,7 @@ class CleanAirZonesControllerTest {
     // given
 
     // when
-    ResponseEntity<Tariff> tariff = cleanAirZonesController
-        .tariff(SOME_CLEAN_AIR_ZONE_ID, "correlation-cleanAirZoneId");
+    ResponseEntity<Tariff> tariff = cleanAirZonesController.tariff(SOME_CLEAN_AIR_ZONE_ID);
 
     // then
     assertThat(tariff.getStatusCode()).isEqualByComparingTo(HttpStatus.NOT_FOUND);

@@ -5,27 +5,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import uk.gov.caz.tariff.annotation.IntegrationTest;
-import uk.gov.caz.tariff.util.DatabaseInitializer;
 
 @IntegrationTest
-@Import(DatabaseInitializer.class)
+@Sql(scripts = "classpath:data/sql/clear.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 class AuditTrailTestIT {
 
   private static final String AUDIT_LOGGED_ACTIONS_TABLE = "audit.logged_actions";
-
-  @Autowired
-  private DatabaseInitializer databaseInitializer;
 
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
   @Test
   void testInsertUpdateDeleteOperationsAgainstAuditTrailTable() {
-    databaseInitializer.clear();
     atTheBeginningAuditLoggedActionsTableShouldBeEmpty();
     LocalDate date = LocalDate.of(2019, 8, 14);
 
