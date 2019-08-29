@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.caz.correlationId.Constants.X_CORRELATION_ID_HEADER;
+import static uk.gov.caz.correlationid.Constants.X_CORRELATION_ID_HEADER;
 import static uk.gov.caz.tariff.util.JsonReader.sampleCleanAirZonesJson;
 import static uk.gov.caz.tariff.util.JsonReader.sampleTariffJson;
 
@@ -22,7 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import uk.gov.caz.GlobalExceptionHandlerConfiguration;
-import uk.gov.caz.correlationId.Configuration;
+import uk.gov.caz.correlationid.Configuration;
 import uk.gov.caz.tariff.dto.CleanAirZone;
 import uk.gov.caz.tariff.dto.CleanAirZones;
 import uk.gov.caz.tariff.dto.InformationUrls;

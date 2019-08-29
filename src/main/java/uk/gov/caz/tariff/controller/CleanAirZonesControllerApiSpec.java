@@ -1,6 +1,6 @@
 package uk.gov.caz.tariff.controller;
 
-import static uk.gov.caz.correlationId.Constants.X_CORRELATION_ID_HEADER;
+import static uk.gov.caz.correlationid.Constants.X_CORRELATION_ID_HEADER;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;

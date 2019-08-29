@@ -17,7 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import uk.gov.caz.GlobalExceptionHandlerConfiguration;
-import uk.gov.caz.correlationId.Configuration;
+import uk.gov.caz.correlationid.Configuration;
 import uk.gov.caz.tariff.dto.CleanAirZone;
 import uk.gov.caz.tariff.dto.CleanAirZones;
 import uk.gov.caz.tariff.dto.InformationUrls;
