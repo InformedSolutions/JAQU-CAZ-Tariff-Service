@@ -134,8 +134,7 @@ steps:
         from_secret: aws_access_key_id
       TF_VAR_secret_key:
         from_secret: aws_secret_access_key
-      TF_VAR_db_user:
-        from_secret: db_user
+      TF_VAR_db_user: 
       TF_VAR_db_password:
         from_secret: db_password
     volumes:
@@ -163,3 +162,65 @@ trigger:
   event:
     - pull_request
     - push
+
+---
+kind: secret
+name: aws_access_key_id
+get:
+  path: /secrets/drone.global
+  name: awsAccessKeyId
+  
+---
+kind: secret
+name: aws_secret_access_key
+get:
+  path: /secrets/drone.global
+  name: awsSecretAccessKey
+  
+---
+kind: secret
+name: sonar_host
+get:
+  path: /secrets/drone.global
+  name: sonarHost
+  
+---
+kind: secret
+name: sonar_token
+get:
+  path: /secrets/drone.global
+  name: sonarToken
+
+---
+kind: secret
+name: github_private_key
+get:
+  path: /secrets/drone.global
+  name: githubPrivateKey
+
+---
+kind: secret
+name: nexus_url
+get:
+  path: /secrets/drone.global
+  name: nexusUrl
+
+---
+kind: secret
+name: nexus_username
+get:
+  path: /secrets/drone.global
+  name: nexusUsername
+
+---
+kind: secret
+name: nexus_password
+get:
+  path: /secrets/drone.global
+  name: nexusPassword
+  
+---
+kind: secret
+name: db_password
+get:
+  path: /secret/tariffs.dev/db-password
