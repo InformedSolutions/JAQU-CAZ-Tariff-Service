@@ -167,7 +167,7 @@ steps:
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC/terraform/projects/tariffs-api/environments/sit
       - export TF_VAR_lambda_file=$(ls /opt/package/*.zip | tail -1)
-      - terraform init
+      - terraform init || terraform workspace new sit
       - terraform workspace select sit
       - terraform apply -auto-approve
     environment:
