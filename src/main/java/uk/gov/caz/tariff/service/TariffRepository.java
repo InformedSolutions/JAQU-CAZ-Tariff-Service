@@ -24,6 +24,7 @@ public class TariffRepository {
   static final String SELECT_BY_CHARGE_DEFINITION_ID_SQL = "SELECT charge.clean_air_zone_id, "
       + "charge.caz_name, "
       + "charge.caz_class, "
+      + "charge.charge_identifier, "
       + "link.emissions_url, "
       + "link.main_info_url, "
       + "link.pricing_url, "
@@ -74,6 +75,9 @@ public class TariffRepository {
     }
   }
 
+  /**
+   * RowMapper for {@link Tariff}.
+   */
   public static class TariffRowMapper implements RowMapper<Tariff> {
 
     @Override
@@ -82,6 +86,7 @@ public class TariffRepository {
           .cleanAirZoneId(rs.getObject("clean_air_zone_id", UUID.class))
           .name(rs.getString("caz_name"))
           .tariffClass(rs.getString("caz_class").charAt(0))
+          .chargeIdentifier(rs.getString("charge_identifier"))
           .informationUrls(InformationUrls.builder()
               .becomeCompliant(rs.getString("become_compliant_url"))
               .hoursOfOperation(rs.getString("operation_hours_url"))

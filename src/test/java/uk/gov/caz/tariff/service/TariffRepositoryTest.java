@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
@@ -19,6 +20,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import uk.gov.caz.tariff.dto.InformationUrls;
+import uk.gov.caz.tariff.dto.Rates;
 import uk.gov.caz.tariff.dto.Tariff;
 import uk.gov.caz.tariff.service.TariffRepository.TariffRowMapper;
 
@@ -29,6 +32,10 @@ class TariffRepositoryTest {
       .fromString("dc1efcaf-a2cf-41ec-aa37-ea4b28a20a1d");
 
   private static final String SOME_URL = "www.test.uk";
+
+  private static final String SOME_CHARGE_IDENTIFIER = "LCC01";
+
+  private static final String LEEDS = "Leeds";
 
   @Mock
   private JdbcTemplate jdbcTemplate;
@@ -45,8 +52,9 @@ class TariffRepositoryTest {
     Optional<Tariff> result = tariffRepository.findByCleanAirZoneId(SOME_CLEAN_AIR_ZONE_ID);
 
     // then
-    assertThat(result).isPresent();
-    assertThat(result).contains(tariff);
+    assertThat(result)
+        .isPresent()
+        .contains(tariff);
   }
 
   @Test
@@ -80,30 +88,14 @@ class TariffRepositoryTest {
 
     @Test
     public void shouldMapResultSetToTariff() throws SQLException {
-      String name = "Leeds";
-      ResultSet resultSet = mockResultSet(name);
+      ResultSet resultSet = mockResultSet();
 
       Tariff tariff = rowMapper.mapRow(resultSet, 0);
 
-      assertThat(tariff).isNotNull();
-      assertThat(tariff.getCleanAirZoneId()).isEqualTo(SOME_CLEAN_AIR_ZONE_ID);
-      assertThat(tariff.getName()).isEqualTo(name);
-      assertThat(tariff.getTariffClass()).isEqualTo('C');
-      assertThat(tariff.getInformationUrls().getBecomeCompliant()).isEqualTo(SOME_URL);
-      assertThat(tariff.getRates().getBus()).isEqualTo("50.55");
-      assertThat(tariff.getRates().getCar()).isEqualTo("23.55");
-      assertThat(tariff.getRates().getMiniBus()).isEqualTo("44.55");
-      assertThat(tariff.getRates().getCoach()).isEqualTo("50.00");
-      assertThat(tariff.getRates().getTaxi()).isEqualTo("15.10");
-      assertThat(tariff.getRates().getPhv()).isEqualTo("15.35");
-      assertThat(tariff.getRates().getHgv()).isEqualTo("5.30");
-      assertThat(tariff.getRates().getLargeVan()).isEqualTo("80.30");
-      assertThat(tariff.getRates().getSmallVan()).isEqualTo("100.00");
-      assertThat(tariff.getRates().getMotorcycle()).isEqualTo("25.10");
-      assertThat(tariff.getRates().getMoped()).isEqualTo("49.49");
+      assertThat(tariff).isEqualToComparingFieldByFieldRecursively(expectedTariff());
     }
 
-    private ResultSet mockResultSet(String name) throws SQLException {
+    private ResultSet mockResultSet() throws SQLException {
       ResultSet resultSet = mock(ResultSet.class);
       when(resultSet.getObject("clean_air_zone_id", UUID.class)).thenReturn(SOME_CLEAN_AIR_ZONE_ID);
 
@@ -111,7 +103,9 @@ class TariffRepositoryTest {
         String argument = answer.getArgument(0);
         switch (argument) {
           case "caz_name":
-            return name;
+            return LEEDS;
+          case "charge_identifier":
+            return SOME_CHARGE_IDENTIFIER;
           case "caz_class":
             return String.valueOf('C');
           case "become_compliant_url":
@@ -171,5 +165,44 @@ class TariffRepositoryTest {
     when(jdbcTemplate.queryForObject(anyString(), any(TariffRowMapper.class), any())).thenReturn(
         tariff);
     return tariff;
+  }
+
+  private Tariff expectedTariff() {
+    InformationUrls informationUrls = InformationUrls.builder()
+        .mainInfo(SOME_URL)
+        .emissionsStandards(SOME_URL)
+        .hoursOfOperation(SOME_URL)
+        .pricing(SOME_URL)
+        .exemptionOrDiscount(SOME_URL)
+        .payCaz(SOME_URL)
+        .becomeCompliant(SOME_URL)
+        .financialAssistance(SOME_URL)
+        .boundary(SOME_URL)
+        .build();
+    Rates rates = Rates.builder()
+        .bus(rate(50.55))
+        .car(rate(23.55))
+        .miniBus(rate(44.55))
+        .coach(rate(50.00))
+        .taxi(rate(15.10))
+        .phv(rate(15.35))
+        .hgv(rate(5.30))
+        .largeVan(rate(80.30))
+        .smallVan(rate(100.00))
+        .motorcycle(rate(25.10))
+        .moped(rate(49.49))
+        .build();
+    return Tariff.builder()
+        .cleanAirZoneId(SOME_CLEAN_AIR_ZONE_ID)
+        .name(LEEDS)
+        .tariffClass('C')
+        .chargeIdentifier(SOME_CHARGE_IDENTIFIER)
+        .rates(rates)
+        .informationUrls(informationUrls)
+        .build();
+  }
+
+  private BigDecimal rate(double rate) {
+    return new BigDecimal(rate).setScale(2, RoundingMode.HALF_UP);
   }
 }

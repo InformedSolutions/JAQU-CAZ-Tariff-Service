@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import uk.gov.caz.tariff.annotation.IntegrationTest;
+import uk.gov.caz.tariff.dto.Rates;
 import uk.gov.caz.tariff.dto.Tariff;
 import uk.gov.caz.tariff.service.TariffRepository;
 
@@ -20,29 +21,23 @@ import uk.gov.caz.tariff.service.TariffRepository;
     executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 public class TariffRepositoryTestIT {
 
+  private static final UUID CLEAN_AIR_ZONE_ID = UUID
+      .fromString("5cd7441d-766f-48ff-b8ad-1809586fea37");
+
   @Autowired
   private TariffRepository tariffRepository;
 
   @Test
   public void shouldReturnSampleTariff() {
     // given
-    UUID cleanAirZoneId = UUID.fromString("5cd7441d-766f-48ff-b8ad-1809586fea37");
 
     // when
-    Tariff tariff = tariffRepository.findByCleanAirZoneId(cleanAirZoneId).get();
+    Tariff tariff = tariffRepository.findByCleanAirZoneId(CLEAN_AIR_ZONE_ID).get();
 
     // then
-    assertThat(tariff.getCleanAirZoneId()).isEqualTo(cleanAirZoneId);
-    assertThat(tariff.getName()).isEqualTo("Birmingham");
-    assertThat(tariff.getTariffClass()).isEqualTo('D');
-    assertThat(tariff.getRates().getHgv()).isEqualTo(rate(50.00));
-    assertThat(tariff.getRates().getCar()).isEqualTo(rate(8.00));
-    assertThat(tariff.getRates().getMiniBus()).isEqualTo(rate(50.00));
-    assertThat(tariff.getRates().getTaxi()).isEqualTo(rate(8.00));
-  }
-
-  private BigDecimal rate(double rate) {
-    return new BigDecimal(rate).setScale(2);
+    assertThat(tariff)
+        .isEqualToComparingOnlyGivenFields(expectedTariff(), "cleanAirZoneId", "name", "tariffClass",
+            "chargeIdentifier", "rates.hgv", "rates.car", "rates.miniBus", "rates.taxi");
   }
 
   @Test
@@ -55,5 +50,25 @@ public class TariffRepositoryTestIT {
 
     // then
     assertThat(tariff).isEmpty();
+  }
+
+  private Tariff expectedTariff() {
+    Rates rates = Rates.builder()
+        .hgv(rate(50.00))
+        .car(rate(8.00))
+        .miniBus(rate(50.00))
+        .taxi(rate(8.00))
+        .build();
+    return Tariff.builder()
+        .cleanAirZoneId(CLEAN_AIR_ZONE_ID)
+        .name("Birmingham")
+        .tariffClass('D')
+        .chargeIdentifier("BCC01")
+        .rates(rates)
+        .build();
+  }
+
+  private BigDecimal rate(double rate) {
+    return new BigDecimal(rate).setScale(2);
   }
 }

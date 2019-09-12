@@ -2,6 +2,7 @@
   "cleanAirZoneId": "5cd7441d-766f-48ff-b8ad-1809586fea37",
   "name": "Birmingham",
   "tariffClass": "D",
+  "chargeIdentifier": "BCC01",
   "rates": {
     "bus": 50,
     "car": 8,
