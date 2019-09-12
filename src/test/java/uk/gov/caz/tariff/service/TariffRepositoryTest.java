@@ -166,4 +166,43 @@ class TariffRepositoryTest {
         tariff);
     return tariff;
   }
+
+  private Tariff expectedTariff() {
+    InformationUrls informationUrls = InformationUrls.builder()
+        .mainInfo(SOME_URL)
+        .emissionsStandards(SOME_URL)
+        .hoursOfOperation(SOME_URL)
+        .pricing(SOME_URL)
+        .exemptionOrDiscount(SOME_URL)
+        .payCaz(SOME_URL)
+        .becomeCompliant(SOME_URL)
+        .financialAssistance(SOME_URL)
+        .boundary(SOME_URL)
+        .build();
+    Rates rates = Rates.builder()
+        .bus(rate(50.55))
+        .car(rate(23.55))
+        .miniBus(rate(44.55))
+        .coach(rate(50.00))
+        .taxi(rate(15.10))
+        .phv(rate(15.35))
+        .hgv(rate(5.30))
+        .largeVan(rate(80.30))
+        .smallVan(rate(100.00))
+        .motorcycle(rate(25.10))
+        .moped(rate(49.49))
+        .build();
+    return Tariff.builder()
+        .cleanAirZoneId(SOME_CLEAN_AIR_ZONE_ID)
+        .name(LEEDS)
+        .tariffClass('C')
+        .chargeIdentifier(SOME_CHARGE_IDENTIFIER)
+        .rates(rates)
+        .informationUrls(informationUrls)
+        .build();
+  }
+
+  private BigDecimal rate(double rate) {
+    return new BigDecimal(rate).setScale(2, RoundingMode.HALF_UP);
+  }
 }
