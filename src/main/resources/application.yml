@@ -35,6 +35,7 @@ swagger:
       cleanAirZoneId: ID of the zone
       name: Name of Tariff
       traiffClass: Tariff Class
+      chargeIdentifier: Charge Identifier
       rates: Rates
       informationUrls: URLs information
     informationUrl:

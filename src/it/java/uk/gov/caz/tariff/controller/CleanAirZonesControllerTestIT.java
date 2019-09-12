@@ -139,6 +139,7 @@ class CleanAirZonesControllerTestIT {
         .cleanAirZoneId(UUID.fromString(CLEAN_AIR_ZONE_ID))
         .name("Leeds")
         .tariffClass('A')
+        .chargeIdentifier("LCC01")
         .informationUrls(informationUrls)
         .rates(rates)
         .build());

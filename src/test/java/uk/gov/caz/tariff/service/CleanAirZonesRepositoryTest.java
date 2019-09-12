@@ -31,6 +31,8 @@ class CleanAirZonesRepositoryTest {
 
   private static final String SOME_URL = "www.test.uk";
 
+  private  static final String LEEDS = "Leeds";
+
   @Mock
   private JdbcTemplate jdbcTemplate;
 
@@ -46,9 +48,9 @@ class CleanAirZonesRepositoryTest {
     CleanAirZones result = cleanAirZonesRepository.findAll();
 
     // then
-    assertThat(result.getCleanAirZones()).hasSize(2);
-    assertThat(result.getCleanAirZones().get(0)).isEqualTo(cleanAirZones.get(0));
-    assertThat(result.getCleanAirZones().get(1)).isEqualTo(cleanAirZones.get(1));
+    assertThat(result.getCleanAirZones())
+        .hasSize(2)
+        .contains(cleanAirZones.get(0), cleanAirZones.get(1));
   }
 
   @Test
@@ -69,18 +71,16 @@ class CleanAirZonesRepositoryTest {
 
     @Test
     public void shouldMapResultSetToTariff() throws SQLException {
-      String name = "Leeds";
-      ResultSet resultSet = mockResultSet(name);
+      ResultSet resultSet = mockResultSet();
 
       CleanAirZone cleanAirZone = rowMapper.mapRow(resultSet, 0);
 
-      assertThat(cleanAirZone).isNotNull();
-      assertThat(cleanAirZone.getCleanAirZoneId()).isEqualTo(SOME_CLEAN_AIR_ZONE_ID);
-      assertThat(cleanAirZone.getName()).isEqualTo(name);
-      assertThat(cleanAirZone.getBoundaryUrl().toString()).isEqualTo(SOME_URL);
+      assertThat(cleanAirZone)
+          .isNotNull()
+          .isEqualToComparingFieldByFieldRecursively(expectedCleanAirZone());
     }
 
-    private ResultSet mockResultSet(String name) throws SQLException {
+    private ResultSet mockResultSet() throws SQLException {
       ResultSet resultSet = mock(ResultSet.class);
       when(resultSet.getObject("clean_air_zone_id", UUID.class))
           .thenReturn(SOME_CLEAN_AIR_ZONE_ID);
@@ -89,7 +89,7 @@ class CleanAirZonesRepositoryTest {
         String argument = answer.getArgument(0);
         switch (argument) {
           case "caz_name":
-            return name;
+            return LEEDS;
           case "boundary_url":
             return SOME_URL;
         }
@@ -125,6 +125,14 @@ class CleanAirZonesRepositoryTest {
         .name(cazName)
         .cleanAirZoneId(UUID.fromString(cleanAirZoneId))
         .boundaryUrl(URI.create(boundaryUrl))
+        .build();
+  }
+
+  private CleanAirZone expectedCleanAirZone() {
+    return CleanAirZone.builder()
+        .cleanAirZoneId(SOME_CLEAN_AIR_ZONE_ID)
+        .name(LEEDS)
+        .boundaryUrl(URI.create(SOME_URL))
         .build();
   }
 }

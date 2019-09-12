@@ -33,10 +33,19 @@ public class CleanAirZonesRepository {
     this.jdbcTemplate = jdbcTemplate;
   }
 
+  /**
+   * Finds every {@link CleanAirZone}.
+   *
+   * @return {@link CleanAirZones} list of {@link CleanAirZone}
+   */
   public CleanAirZones findAll() {
     return new CleanAirZones(jdbcTemplate.query(SELECT_ALL_SQL, MAPPER));
   }
 
+
+  /**
+   * RowMapper for {@link CleanAirZone}.
+   */
   public static class CleanAirZoneRowMapper implements RowMapper<CleanAirZone> {
 
     @Override

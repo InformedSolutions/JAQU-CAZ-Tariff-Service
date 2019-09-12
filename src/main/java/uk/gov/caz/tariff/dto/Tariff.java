@@ -27,10 +27,12 @@ public class Tariff {
   @ApiModelProperty(value = "${swagger.model.descriptions.tariff.tariffClass}")
   char tariffClass;
 
+  @ApiModelProperty(value = "${swagger.model.descriptions.tariff.chargeIdentifier}")
+  String chargeIdentifier;
+
   @ApiModelProperty(value = "${swagger.model.descriptions.tariff.rates}")
   Rates rates;
 
   @ApiModelProperty(value = "${swagger.model.descriptions.tariff.informationUrls}")
   InformationUrls informationUrls;
-
 }
