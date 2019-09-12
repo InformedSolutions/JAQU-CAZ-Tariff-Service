@@ -23,3 +23,8 @@ databaseChangeLog:
               SET CHARGE_IDENTIFIER = 'BCC01'
               WHERE CAZ_NAME = 'Birmingham';
             stripComments: true
+        - addNotNullConstraint:
+            columnDataType: VARCHAR(5)
+            columnName: CHARGE_IDENTIFIER
+            schemaName: public
+            tableName: T_CHARGE_DEFINITION
