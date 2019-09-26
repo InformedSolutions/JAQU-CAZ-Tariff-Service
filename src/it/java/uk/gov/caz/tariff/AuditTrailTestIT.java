@@ -34,23 +34,23 @@ class AuditTrailTestIT {
     atTheBeginningAuditLoggedActionsTableShouldBeEmpty();
 
     // INSERT case
-    whenWeInsertSomeSampleDataIntoCazClassTable('A', "Class A");
+    whenWeInsertSomeSampleDataIntoTestTable('A', "Class A");
 
-    thenNumberOfRowsInAuditLoggedActionsTableForCazClassShouldBe(1);
+    thenNumberOfRowsInAuditLoggedActionsTableForTestTableShouldBe(1);
     andThereShouldBeExactlyOneInsertActionLogged();
     withNewData("A", "Class A");
 
     // UPDATE case
     whenWeUpdateCazClassTableTo("Classs A");
 
-    thenNumberOfRowsInAuditLoggedActionsTableForCazClassShouldBe(2);
+    thenNumberOfRowsInAuditLoggedActionsTableForTestTableShouldBe(2);
     andThereShouldBeExactlyOneUpdateActionLogged();
     withNewData("A", "Classs A");
 
     // DELETE case
     whenWeDeleteRowFromCazClassTable();
 
-    thenNumberOfRowsInAuditLoggedActionsTableForCazClassShouldBe(3);
+    thenNumberOfRowsInAuditLoggedActionsTableForTestTableShouldBe(3);
     andThereShouldBeExactlyOneDeleteActionLogged();
     withNewDataEqualToNull();
   }
@@ -59,14 +59,14 @@ class AuditTrailTestIT {
     checkIfAuditTableContainsNumberOfRows(0);
   }
 
-  private void whenWeInsertSomeSampleDataIntoCazClassTable(char cazClass,
+  private void whenWeInsertSomeSampleDataIntoTestTable(char cazClass,
       String cazClassDesc) {
     jdbcTemplate
         .update("INSERT INTO public.table_for_audit_test (caz_class, caz_class_desc) VALUES (?, ?)",
             cazClass, cazClassDesc);
   }
 
-  private void thenNumberOfRowsInAuditLoggedActionsTableForCazClassShouldBe(
+  private void thenNumberOfRowsInAuditLoggedActionsTableForTestTableShouldBe(
       int expectedNumberOfRows) {
     checkIfAuditTableContainsNumberOfRows(expectedNumberOfRows,
         "TABLE_NAME = 'table_for_audit_test'");
