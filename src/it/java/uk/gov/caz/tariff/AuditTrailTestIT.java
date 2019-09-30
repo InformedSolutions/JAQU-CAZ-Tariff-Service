@@ -2,9 +2,7 @@ package uk.gov.caz.tariff;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableMap;
-import lombok.SneakyThrows;
+import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,17 +12,10 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import uk.gov.caz.tariff.annotation.IntegrationTest;
 
 @IntegrationTest
-@Sql(scripts = {
-    "classpath:data/sql/clear.sql",
-    "classpath:data/sql/add-audit-log-data.sql"},
-    executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(scripts = "classpath:data/sql/delete-audit-log-data.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(scripts = "classpath:data/sql/clear.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 class AuditTrailTestIT {
 
   private static final String AUDIT_LOGGED_ACTIONS_TABLE = "audit.logged_actions";
-
-  @Autowired
-  private ObjectMapper objectMapper;
 
   @Autowired
   private JdbcTemplate jdbcTemplate;
@@ -32,25 +23,26 @@ class AuditTrailTestIT {
   @Test
   void testInsertUpdateDeleteOperationsAgainstAuditTrailTable() {
     atTheBeginningAuditLoggedActionsTableShouldBeEmpty();
+    LocalDate date = LocalDate.of(2019, 8, 14);
 
     // INSERT case
-    whenWeInsertSomeSampleDataIntoTestTable('A', "Class A");
+    whenWeInsertSomeSampleDataIntoCazClassTable('A', "Class A", date);
 
-    thenNumberOfRowsInAuditLoggedActionsTableForTestTableShouldBe(1);
+    thenNumberOfRowsInAuditLoggedActionsTableForCazClassShouldBe(1);
     andThereShouldBeExactlyOneInsertActionLogged();
-    withNewData("A", "Class A");
+    withNewData("(A,\"Class A\",\"2019-08-14 00:00:00\")");
 
     // UPDATE case
     whenWeUpdateCazClassTableTo("Classs A");
 
-    thenNumberOfRowsInAuditLoggedActionsTableForTestTableShouldBe(2);
+    thenNumberOfRowsInAuditLoggedActionsTableForCazClassShouldBe(2);
     andThereShouldBeExactlyOneUpdateActionLogged();
-    withNewData("A", "Classs A");
+    withNewData("(A,\"Classs A\",\"2019-08-14 00:00:00\")");
 
     // DELETE case
     whenWeDeleteRowFromCazClassTable();
 
-    thenNumberOfRowsInAuditLoggedActionsTableForTestTableShouldBe(3);
+    thenNumberOfRowsInAuditLoggedActionsTableForCazClassShouldBe(3);
     andThereShouldBeExactlyOneDeleteActionLogged();
     withNewDataEqualToNull();
   }
@@ -59,31 +51,30 @@ class AuditTrailTestIT {
     checkIfAuditTableContainsNumberOfRows(0);
   }
 
-  private void whenWeInsertSomeSampleDataIntoTestTable(char cazClass,
-      String cazClassDesc) {
-    jdbcTemplate
-        .update("INSERT INTO public.table_for_audit_test (caz_class, caz_class_desc) VALUES (?, ?)",
-            cazClass, cazClassDesc);
+  private void whenWeInsertSomeSampleDataIntoCazClassTable(char cazClass,
+      String cazClassDesc, LocalDate date) {
+    jdbcTemplate.update(
+        "INSERT INTO public.t_caz_class (caz_class, caz_class_desc, insert_timestmp) VALUES (?, ?, ?)",
+        cazClass, cazClassDesc, date);
   }
 
-  private void thenNumberOfRowsInAuditLoggedActionsTableForTestTableShouldBe(
+  private void thenNumberOfRowsInAuditLoggedActionsTableForCazClassShouldBe(
       int expectedNumberOfRows) {
     checkIfAuditTableContainsNumberOfRows(expectedNumberOfRows,
-        "TABLE_NAME = 'table_for_audit_test'");
+        "TABLE_NAME = 't_caz_class'");
   }
 
   private void andThereShouldBeExactlyOneInsertActionLogged() {
     checkIfAuditTableContainsNumberOfRows(1, "action = 'I'");
   }
 
-  private void withNewData(String cazClass, String cazClassDesc) {
-    checkIfAuditTableContainsNumberOfRows(1,
-        "'" + toJson(cazClass, cazClassDesc) + "'::jsonb @> new_data");
+  private void withNewData(String expectedNewData) {
+    checkIfAuditTableContainsNumberOfRows(1, "new_data = '" + expectedNewData + "'");
   }
 
   private void whenWeUpdateCazClassTableTo(String cazClassDesc) {
     jdbcTemplate.update(
-        "UPDATE public.table_for_audit_test set caz_class_desc = ?",
+        "UPDATE public.t_caz_class set caz_class_desc = ?",
         cazClassDesc);
   }
 
@@ -92,7 +83,7 @@ class AuditTrailTestIT {
   }
 
   private void whenWeDeleteRowFromCazClassTable() {
-    jdbcTemplate.update("DELETE from public.table_for_audit_test");
+    jdbcTemplate.update("DELETE from public.t_caz_class");
   }
 
   private void andThereShouldBeExactlyOneDeleteActionLogged() {
@@ -121,11 +112,5 @@ class AuditTrailTestIT {
                 + " table matching where clause '%s'",
             expectedNumberOfRowsInAuditTable, whereClause)
         .isEqualTo(expectedNumberOfRowsInAuditTable);
-  }
-
-  @SneakyThrows
-  private String toJson(String cazClass, String cazClassDesc) {
-    return objectMapper
-        .writeValueAsString(ImmutableMap.of("caz_class", cazClass, "caz_class_desc", cazClassDesc));
   }
 }
