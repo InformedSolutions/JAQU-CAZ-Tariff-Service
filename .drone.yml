@@ -204,6 +204,11 @@ trigger:
       - name: docker_sock
         path: /var/run/docker.sock
 
+volumes:
+  - name: docker_sock
+    host:
+      path: /var/run/docker.sock
+
 
 # Note the below values are pulled from AWS Secrets Manager via the aws-secrets Drone plugin
 ---
