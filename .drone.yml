@@ -1,5 +1,6 @@
 kind: pipeline
-name: ci
+type: docker
+name: tariffs-ci
 trigger:
   branch:
   - develop
@@ -189,6 +190,7 @@ volumes:
 ---
 
 kind: pipeline
+type: docker
 name: cron-jobs
 trigger:
   event:
