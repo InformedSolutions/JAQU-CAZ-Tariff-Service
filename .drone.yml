@@ -203,9 +203,6 @@ trigger:
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
-    when:
-      event:
-      - cron
 
 
 # Note the below values are pulled from AWS Secrets Manager via the aws-secrets Drone plugin
