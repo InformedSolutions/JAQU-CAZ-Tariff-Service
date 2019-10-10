@@ -20,6 +20,17 @@ services:
 steps:
 
   # Clean agent images and containers to prevent disk space overuse!
+  - name: cron test
+    image: docker
+    commands:
+      - echo 'cron-test'
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      cron: [ test ]
+
+  # Clean agent images and containers to prevent disk space overuse!
   - name: clean agent
     image: docker
     commands:
