@@ -189,12 +189,10 @@ volumes:
 ---
 
 kind: pipeline
-name: minute
+name: cron-jobs
 trigger:
   event:
   - cron
-  cron:
-  - minute
 
 
   # Clean agent images and containers to prevent disk space overuse!
