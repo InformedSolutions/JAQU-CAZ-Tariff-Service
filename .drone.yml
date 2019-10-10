@@ -2,11 +2,11 @@ kind: pipeline
 name: ci
 trigger:
   branch:
-    - develop
-    - release/*
+  - develop
+  - release/*
   event:
-    - pull_request
-    - push
+  - pull_request
+  - push
 
 services:
   - name: postgres
@@ -193,6 +193,8 @@ name: cron-test
 trigger:
   event:
   - cron
+  cron:
+  - nightly
 
 
   # Clean agent images and containers to prevent disk space overuse!
