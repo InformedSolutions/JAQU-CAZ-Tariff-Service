@@ -28,7 +28,8 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
     when:
-      cron: [ hourly ]
+      event:
+      - cron
 
   # Clean agent images and containers to prevent disk space overuse!
   - name: clean agent
