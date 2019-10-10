@@ -198,7 +198,7 @@ trigger:
     - pull_request
     - push
     - cron
-    cron:
+  cron:
     - hourly
 
 
