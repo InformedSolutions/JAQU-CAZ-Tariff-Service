@@ -1,3 +1,22 @@
+  ################################################### YAML Anchors ########################################################
+
+  # Note that these are used when common environment variables are present in a step to reduce repetition - see terraform steps
+
+global-variables:
+  environment: &shared_terraform_credentials
+    TF_VAR_access_key:
+      from_secret: aws_access_key_id
+    TF_VAR_secret_key:
+      from_secret: aws_secret_access_key
+    TF_VAR_account_id:
+      from_secret: aws_account_id
+    GIT_PRIVATE_SSH:
+      from_secret: github_private_key
+
+  ################################################# End YAML Anchors ########################################################
+
+
+
 kind: pipeline
 type: docker
 name: tariffs-ci
@@ -45,7 +64,7 @@ steps:
 
   ################################################### DEV/SIT Steps ########################################################
 
-  # Clean agent images and containers to prevent disk space overuse!
+  # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
     image: docker
     commands:
@@ -172,16 +191,21 @@ steps:
       JAQU_NEXUS_PASSWORD:
         from_secret: nexus_password
     when:
-      exclude:
+      event:
+        exclude:
         - pull_request
-      branch: 
-        - develop
 
   # Invoke terraform apply
   - name: deploy to dev
     image: hashicorp/terraform:0.12.3
     commands:
       - apk update && apk add bash
+      - mkdir ~/.ssh
+      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
       - export TF_VAR_lambda_file=$(ls /opt/package/*.zip | tail -1)
@@ -204,13 +228,7 @@ steps:
       - tf workspace select dev
       - tf apply -auto-approve
     environment:
-      TF_VAR_access_key:
-        from_secret: aws_access_key_id
-      TF_VAR_secret_key:
-        from_secret: aws_secret_access_key
-      TF_VAR_db_user: tariffservice
-      GIT_PRIVATE_SSH:
-        from_secret: github_private_key
+      <<: *shared_terraform_credentials
     volumes:
       - name: package_directory
         path: /opt/package
@@ -225,7 +243,7 @@ steps:
 
 
 
-  ################################################ Secrets #########################################################
+  #################################################### Secrets #####################################################################
   
 
 # Note the below values are pulled from AWS Secrets Manager via the aws-secrets Drone plugin
