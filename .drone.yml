@@ -56,6 +56,13 @@ steps:
     pull: never
     commands:
       - mvn test -P jacoco --no-transfer-progress
+    environment:
+      JAQU_NEXUS_URL:
+        from_secret: nexus_url
+      JAQU_NEXUS_USER:
+        from_secret: nexus_username
+      JAQU_NEXUS_PASSWORD:
+        from_secret: nexus_password
 
   # IT test
   - name: IT test
@@ -67,6 +74,12 @@ steps:
         path: /root/.m2
     pull: never
     environment:
+      JAQU_NEXUS_URL:
+        from_secret: nexus_url
+      JAQU_NEXUS_USER:
+        from_secret: nexus_username
+      JAQU_NEXUS_PASSWORD:
+        from_secret: nexus_password
       BUILD_ID: ${DRONE_BUILD_NUMBER}
       POSTGRES_URL: postgres:5432
       AWS_S3_URL: localstack:4572
