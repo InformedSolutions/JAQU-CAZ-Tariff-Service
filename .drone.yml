@@ -195,7 +195,7 @@ steps:
         - develop
       event:
         exclude:
-        - pull_request
+          - pull_request
 
   # Invoke terraform apply
   - name: deploy to dev
@@ -235,10 +235,11 @@ steps:
       - name: package_directory
         path: /opt/package
     when:
+      branch: 
+        - develop
       event:
         exclude:
           - pull_request
-      branch: develop
 
   ################################################ End Dev Only Steps ############################################################
 
