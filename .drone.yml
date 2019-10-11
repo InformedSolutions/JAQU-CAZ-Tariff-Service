@@ -191,6 +191,8 @@ steps:
       JAQU_NEXUS_PASSWORD:
         from_secret: nexus_password
     when:
+      branch: 
+        - develop
       event:
         exclude:
         - pull_request
