@@ -193,9 +193,6 @@ steps:
     when:
       branch: 
         - develop
-      event:
-        exclude:
-          - pull_request
 
   # Invoke terraform apply
   - name: deploy to dev
