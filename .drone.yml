@@ -121,6 +121,13 @@ steps:
         -Dsonar.login=$sonar_token
         -Dsonar.coverage.jacoco.xmlReportPaths=/drone/src/target/site/jacoco-aggregate/jacoco.xml
         -Dsonar.tests=src/test/java,src/it/java --no-transfer-progress
+    environment:
+      JAQU_NEXUS_URL:
+        from_secret: nexus_url
+      JAQU_NEXUS_USER:
+        from_secret: nexus_username
+      JAQU_NEXUS_PASSWORD:
+        from_secret: nexus_password
 
   # Invoke terraform apply
   - name: deploy to dev
