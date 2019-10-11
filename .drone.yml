@@ -82,7 +82,7 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
     when:
-      branch: 
+      branch:
         - develop
         - release/*
 
@@ -105,7 +105,7 @@ steps:
       JAQU_NEXUS_PASSWORD:
         from_secret: nexus_password
     when:
-      branch: 
+      branch:
         - develop
         - release/*
 
@@ -131,7 +131,7 @@ steps:
     commands:
       - mvn verify -DskipUnitTests -P jacoco --no-transfer-progress
     when:
-      branch: 
+      branch:
         - develop
         - release/*
 
@@ -149,13 +149,12 @@ steps:
     commands:
       - mvn package -DskipUnitTests --no-transfer-progress
     when:
-      branch: 
+      branch:
         - develop
         - release/*
-        
+
 
   ################################################ End DEV/SIT Steps ########################################################
-
 
 
 
@@ -191,7 +190,7 @@ steps:
       JAQU_NEXUS_PASSWORD:
         from_secret: nexus_password
     when:
-      branch: 
+      branch:
         - develop
 
   # Invoke terraform apply
@@ -232,7 +231,7 @@ steps:
       - name: package_directory
         path: /opt/package
     when:
-      branch: 
+      branch:
         - develop
       event:
         exclude:
@@ -241,10 +240,58 @@ steps:
   ################################################ End Dev Only Steps ############################################################
 
 
+  ################################################ SIT Only Steps ############################################################
+
+  # Invoke terraform scripts to deploy lambda function in SIT
+  - name: deploy to sit
+    image: hashicorp/terraform:0.12.3
+    commands:
+      - apk update && apk add bash
+      - mkdir ~/.ssh
+      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
+      - cd JAQU-CAZ-IAC
+      - export TF_VAR_lambda_file=$(ls /opt/package/*.zip | tail -1)
+      - cd terraform/projects/tariffs/layers/00.global
+      - PATH=$PATH:../../../../bin/
+      - chmod +x ../../../../bin/tf
+      - tf init
+      - tf workspace select default
+      - tf apply -auto-approve
+      - cd ../01.networking
+      - tf init
+      - tf workspace select sit
+      - tf apply -auto-approve
+      - cd ../02.backends
+      - tf init
+      - tf workspace select sit
+      - tf apply -auto-approve
+      - cd ../03.api
+      - tf init
+      - tf workspace select sit
+      - tf apply -auto-approve
+    environment:
+      <<: *shared_terraform_credentials
+    volumes:
+      - name: package_directory
+        path: /opt/package
+    when:
+      branch:
+        - release/*
+      event:
+        exclude:
+          - pull_request
+
+  ################################################ End SIT  Only Steps ############################################################
+
 
 
   #################################################### Secrets #####################################################################
-  
+
 
 # Note the below values are pulled from AWS Secrets Manager via the aws-secrets Drone plugin
 ---
@@ -253,21 +300,21 @@ name: aws_access_key_id
 get:
   path: /secret/drone.global
   name: awsAccessKeyId
-  
+
 ---
 kind: secret
 name: aws_secret_access_key
 get:
   path: /secret/drone.global
   name: awsSecretAccessKey
-  
+
 ---
 kind: secret
 name: sonar_host
 get:
   path: /secret/drone.global
   name: sonarHost
-  
+
 ---
 kind: secret
 name: sonar_token
@@ -302,7 +349,7 @@ name: nexus_password
 get:
   path: /secret/drone.global
   name: nexusPassword
-  
+
 ---
 kind: secret
 name: db_password
