@@ -187,30 +187,6 @@ volumes:
   - name: m2_repo
     temp: {}
 
----
-
-kind: pipeline
-type: docker
-name: cron-jobs
-trigger:
-  event:
-  - cron
-
-
-  # Clean agent images and containers to prevent disk space overuse!
-  - name: cron test
-    image: docker
-    commands:
-      - echo 'cron-test'
-    volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
-
-volumes:
-  - name: docker_sock
-    host:
-      path: /var/run/docker.sock
-
 
 # Note the below values are pulled from AWS Secrets Manager via the aws-secrets Drone plugin
 ---
