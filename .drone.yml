@@ -332,35 +332,6 @@ steps:
       event:
         - push
 
-  # Scan with sonar
-  - name: sonar scan
-    image: maven-base
-    volumes:
-      - name: package_directory
-        path: /drone/src/target
-      - name: m2_repo
-        path: /root/.m2
-    environment:
-      sonar_host:
-        from_secret: sonar_host
-      sonar_token:
-        from_secret: sonar_token
-    pull: never
-    commands:
-      - mvn sonar:sonar -Dsonar.host.url=$sonar_host
-        -Dsonar.projectKey=${DRONE_REPO}
-        -Dsonar.projectName=${DRONE_REPO}
-        -Dsonar.login=$sonar_token
-        -Dsonar.coverage.jacoco.xmlReportPaths=/drone/src/target/site/jacoco-aggregate/jacoco.xml
-        -Dsonar.tests=src/test/java,src/it/java --no-transfer-progress
-    environment:
-      JAQU_NEXUS_URL:
-        from_secret: nexus_url
-      JAQU_NEXUS_USER:
-        from_secret: nexus_username
-      JAQU_NEXUS_PASSWORD:
-        from_secret: nexus_password
-
   # Invoke terraform apply
   - name: plan updates in sit
     image: hashicorp/terraform:0.12.3
