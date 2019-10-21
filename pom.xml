@@ -19,13 +19,13 @@
 
     <artifactFinalName>${project.artifactId}-${project.version}</artifactFinalName>
 
-    <internal.libraries.version>1.4-SNAPSHOT</internal.libraries.version>
+    <internal.libraries.version>1.5.1-SNAPSHOT</internal.libraries.version>
 
     <codeCoverage.minCoveredRatio>0.90</codeCoverage.minCoveredRatio>
     <codeCoverage.classMaxMissedCount>0</codeCoverage.classMaxMissedCount>
     <sonar.coverage.exclusions>
       **/configuration/**/*.java,**/Application.java,**/amazonaws/StreamLambdaHandler.java,
-      **/util/AwsHelpers.java,**/dto/**/*.java
+      **/util/AwsHelpers.java,**/dto/**/*.java,**/Application.java
     </sonar.coverage.exclusions>
     <sonar.coverage.jacoco.xmlReportPaths>
       ./target/site/jacoco-aggregate/jacoco.xml
@@ -463,6 +463,7 @@
                 <exclude>**/amazonaws/StreamLambdaHandler.class</exclude>
                 <exclude>**/util/AwsHelpers.class</exclude>
                 <exclude>**/dto/**/*.class</exclude>
+                <exclude>**/Application.class</exclude>
               </excludes>
               <rules>
                 <rule>
