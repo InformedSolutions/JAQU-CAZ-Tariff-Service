@@ -67,6 +67,8 @@ spring:
     url: jdbc:postgresql://localhost:5432/caz-tariff
     username: postgres
     password: postgres
+    hikari:
+      maximum-pool-size: 1
 
 springfox:
   documentation:

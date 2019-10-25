@@ -3,6 +3,8 @@
 spring:
   datasource:
     url: jdbc:postgresql://${postgres.url:localhost:9999}/caz-tariff
+    hikari:
+      maximum-pool-size: 10
 
 aws:
   s3:
