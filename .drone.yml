@@ -602,7 +602,7 @@ steps:
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
       - git checkout release/vccs-preprod
-      - cd terraform/projects/ntr/layers/00.global
+      - cd terraform/projects/tariffs/layers/00.global
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
       - tf init
