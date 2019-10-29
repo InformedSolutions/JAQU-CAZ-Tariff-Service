@@ -25,11 +25,42 @@
     <codeCoverage.classMaxMissedCount>0</codeCoverage.classMaxMissedCount>
     <sonar.coverage.exclusions>
       **/configuration/**/*.java,**/Application.java,**/amazonaws/StreamLambdaHandler.java,
-      **/util/AwsHelpers.java,**/dto/**/*.java,**/Application.java
+      **/dto/**/*.java,**/Application.java
     </sonar.coverage.exclusions>
     <sonar.coverage.jacoco.xmlReportPaths>
       ./target/site/jacoco-aggregate/jacoco.xml
     </sonar.coverage.jacoco.xmlReportPaths>
+    <sonar.issue.ignore.multicriteria>j1,j3,j4,j5,j6</sonar.issue.ignore.multicriteria>
+    <sonar.issue.ignore.multicriteria.j1.ruleKey>
+      squid:S1075
+    </sonar.issue.ignore.multicriteria.j1.ruleKey>
+    <sonar.issue.ignore.multicriteria.j1.resourceKey>
+      **/*.java
+    </sonar.issue.ignore.multicriteria.j1.resourceKey>
+    <sonar.issue.ignore.multicriteria.j3.ruleKey>
+      squid:S1700
+    </sonar.issue.ignore.multicriteria.j3.ruleKey>
+    <sonar.issue.ignore.multicriteria.j3.resourceKey>
+      **/CleanAirZones.java
+    </sonar.issue.ignore.multicriteria.j3.resourceKey>
+    <sonar.issue.ignore.multicriteria.j4.ruleKey>
+      squid:S5304
+    </sonar.issue.ignore.multicriteria.j4.ruleKey>
+    <sonar.issue.ignore.multicriteria.j4.resourceKey>
+      **/*.java
+    </sonar.issue.ignore.multicriteria.j4.resourceKey>
+    <sonar.issue.ignore.multicriteria.j5.ruleKey>
+      squid:S00112
+    </sonar.issue.ignore.multicriteria.j5.ruleKey>
+    <sonar.issue.ignore.multicriteria.j5.resourceKey>
+      **/StreamLambdaHandler.java
+    </sonar.issue.ignore.multicriteria.j5.resourceKey>
+    <sonar.issue.ignore.multicriteria.j6.ruleKey>
+      squid:S4823
+    </sonar.issue.ignore.multicriteria.j6.ruleKey>
+    <sonar.issue.ignore.multicriteria.j6.resourceKey>
+      **/Application.java
+    </sonar.issue.ignore.multicriteria.j6.resourceKey>
 
     <!-- to enable running only integration tests without unit tests -->
     <skipUnitTests>${skipTests}</skipUnitTests>
@@ -145,10 +176,10 @@
       <artifactId>liquibase-core</artifactId>
     </dependency>
     <dependency>
-	  <groupId>com.amazonaws.secretsmanager</groupId>
-	  <artifactId>aws-secretsmanager-jdbc</artifactId>
-	  <version>1.0.2</version>
-	</dependency>
+      <groupId>com.amazonaws.secretsmanager</groupId>
+      <artifactId>aws-secretsmanager-jdbc</artifactId>
+      <version>1.0.2</version>
+    </dependency>
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
@@ -461,7 +492,6 @@
                 <exclude>**/configuration/**/*.class</exclude>
                 <exclude>**/Application.class</exclude>
                 <exclude>**/amazonaws/StreamLambdaHandler.class</exclude>
-                <exclude>**/util/AwsHelpers.class</exclude>
                 <exclude>**/dto/**/*.class</exclude>
                 <exclude>**/Application.class</exclude>
               </excludes>
