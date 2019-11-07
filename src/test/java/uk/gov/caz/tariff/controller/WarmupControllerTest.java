@@ -1,6 +1,8 @@
 package uk.gov.caz.tariff.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
@@ -31,6 +33,8 @@ public class WarmupControllerTest {
             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
             .header("X-Correlation-ID", "CorrelationId")
             .accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(header().string("X-Correlation-ID", "CorrelationId"))
+        .andExpect(jsonPath("$.instanceId").exists());
   }
 }
