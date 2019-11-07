@@ -584,7 +584,7 @@ steps:
       - export TF_VAR_lambda_file=/opt/package/$LAMBDA_FUNCTION-$VERSION.zip
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
-      - git checkout release/vccs-preprod
+      - git checkout master
       - cd terraform/projects/tariffs/layers/00.global
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
@@ -652,7 +652,7 @@ steps:
       - export TF_VAR_lambda_file=/opt/package/$LAMBDA_FUNCTION-$VERSION.zip
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
-      - git checkout release/vccs-preprod
+      - git checkout master
       - cd terraform/projects/tariffs/layers/00.global
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
