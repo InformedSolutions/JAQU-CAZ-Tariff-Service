@@ -755,7 +755,7 @@ name: tariffs-api-prod
 
 trigger:
   branch:
-    - staging
+    - master
   event:
     - pull_request
     - push
