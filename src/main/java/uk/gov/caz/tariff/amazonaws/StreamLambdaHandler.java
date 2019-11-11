@@ -10,23 +10,28 @@ import com.amazonaws.serverless.proxy.spring.SpringBootLambdaContainerHandler;
 import com.amazonaws.serverless.proxy.spring.SpringBootProxyHandlerBuilder;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Preconditions;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import org.springframework.util.StreamUtils;
 import uk.gov.caz.tariff.Application;
-import uk.gov.caz.tariff.controller.WarmupController;
-import uk.gov.caz.tariff.dto.LambdaContainerStats;
 
 
 public class StreamLambdaHandler implements RequestStreamHandler {
 
+  private static final String KEEP_WARM_ACTION = "keep-warm";
   private static SpringBootLambdaContainerHandler<AwsProxyRequest, AwsProxyResponse> handler;
 
   static {
@@ -59,23 +64,77 @@ public class StreamLambdaHandler implements RequestStreamHandler {
   public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context)
       throws IOException {
     String input = StreamUtils.copyToString(inputStream, Charset.defaultCharset());
-    if (!isWarmupRequest(input)) {
-      LambdaContainerStats.setRequestTime(LocalDateTime.now());
+    if (isWarmupRequest(input)) {
+      if (LambdaContainerStats.getLatestRequestTime() == null) {
+        try {
+          //delay lambda response so that the subsequent keep-warm requests
+          //will be routed to a different lambda function instances.
+          Thread.sleep(Integer.parseInt(
+              Optional.ofNullable(
+                  System.getenv("thundra_lambda_warmup_warmupSleepDuration"))
+              .orElse("100")));
+        } catch (Exception e) {
+          throw new IOException(e);
+        }
+      }
+      try (Writer osw = new OutputStreamWriter(outputStream)) {
+        osw.write(LambdaContainerStats.getStats());
+      }
+    } else {
+      LambdaContainerStats.setLatestRequestTime(LocalDateTime.now());
+      handler.proxyStream(inputStream, outputStream, context);
     }
-    handler.proxyStream(inputStream, outputStream, context);
   }
   
-  private boolean isWarmupRequest(String input) {
-    ObjectMapper objectMapper = new ObjectMapper();
-    JsonNode node;
-    try {
-      node = objectMapper.readTree(input);
-      JsonNode path = node.get("path");
-      Preconditions.checkNotNull(path);
-      return WarmupController.PATH.equalsIgnoreCase(path.textValue());
-    } catch (IOException e) {
-      return false;
-    }
+  private boolean isWarmupRequest(String action) {
+    return action.indexOf(KEEP_WARM_ACTION) >= 0;
   }
 
+  /**
+   * Contain information about the lambda container.
+   */
+  static class LambdaContainerStats {
+    private static final String INSTANCE_ID = UUID.randomUUID().toString();
+    private static final DateTimeFormatter formatter =
+        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+    private static LocalDateTime latestRequestTime;
+
+    private LambdaContainerStats() {
+      throw new IllegalStateException("Utility class");
+    }
+
+    /**
+     * Set the time that the container serves a request.
+     */
+    public static void setLatestRequestTime(LocalDateTime dt) {
+      latestRequestTime = dt;
+    }
+
+    /**
+     * Get the time that the container last served a request.
+     */
+    public static LocalDateTime getLatestRequestTime() {
+      return latestRequestTime;
+    }
+
+    /**
+     * Get the container stats.
+     *
+     * @return a string that contains lambda container Id and (optionally) the time
+     *         that the container last serve a request.
+     */
+    public static String getStats() {
+      try {
+        ObjectMapper obj = new ObjectMapper();
+        Map<String, String> retVal = new HashMap<>();
+        retVal.put("instanceId", INSTANCE_ID);
+        if (latestRequestTime != null) {
+          retVal.put("latestRequestTime",latestRequestTime.format(formatter));
+        }
+        return obj.writeValueAsString(retVal);
+      } catch (JsonProcessingException ex) {
+        return String.format("\"instanceId\": \"%s\"", INSTANCE_ID);
+      }
+    }
+  }
 }
