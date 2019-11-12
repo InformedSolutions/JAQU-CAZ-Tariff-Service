@@ -12,12 +12,13 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -63,21 +64,33 @@ public class StreamLambdaHandler implements RequestStreamHandler {
   @Override
   public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context)
       throws IOException {
-    String input = StreamUtils.copyToString(inputStream, Charset.defaultCharset());
-    if (isWarmupRequest(input)) {
-      delayToAllowAnotherLambdaInstanceWarming();
-      try (Writer osw = new OutputStreamWriter(outputStream)) {
-        osw.write(LambdaContainerStats.getStats());
+    try {
+      byte[] inputBytes = StreamUtils.copyToByteArray(inputStream);
+      if (isWarmupRequest(toString(inputBytes))) {
+        delayToAllowAnotherLambdaInstanceWarming();
+        try (Writer osw = new OutputStreamWriter(outputStream)) {
+          osw.write(LambdaContainerStats.getStats());
+        }
+      } else {
+        LambdaContainerStats.setLatestRequestTime(LocalDateTime.now());
+        handler.proxyStream(new ByteArrayInputStream(inputBytes), outputStream, context);
       }
-    } else {
-      LambdaContainerStats.setLatestRequestTime(LocalDateTime.now());
-      handler.proxyStream(inputStream, outputStream, context);
+    } finally {
+      inputStream.close();
     }
   }
 
   /**
-   * Delay lambda response to allow subsequent keep-warm requests
-   * to be routed to a different lambda container.
+   * Converts {@code inputBytes} to an UTF-8 encoded string.
+   */
+  private String toString(byte[] inputBytes) {
+    return new String(inputBytes, StandardCharsets.UTF_8);
+  }
+
+  /**
+   * Delay lambda response to allow subsequent keep-warm requests to be routed to a different lambda
+   * container.
+   *
    * @throws IOException when it is impossible to pause the thread
    */
   private void delayToAllowAnotherLambdaInstanceWarming() throws IOException {
@@ -85,27 +98,27 @@ public class StreamLambdaHandler implements RequestStreamHandler {
       Thread.sleep(Integer.parseInt(
           Optional.ofNullable(
               System.getenv("thundra_lambda_warmup_warmupSleepDuration"))
-          .orElse("100")));
+              .orElse("100")));
     } catch (Exception e) {
       throw new IOException(e);
     }
   }
-  
+
   /**
    * Determine if the incoming request is a keep-warm one.
    *
    * @param action the request under examination.
-   * @return true if the incoming request is a keep-warm one
-   *         otherwise false.
+   * @return true if the incoming request is a keep-warm one otherwise false.
    */
   private boolean isWarmupRequest(String action) {
-    return action.indexOf(KEEP_WARM_ACTION) >= 0;
+    return action.contains(KEEP_WARM_ACTION);
   }
 
   /**
    * Contain information about the lambda container.
    */
   static class LambdaContainerStats {
+
     private static final String INSTANCE_ID = UUID.randomUUID().toString();
     private static final DateTimeFormatter formatter =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
@@ -132,8 +145,8 @@ public class StreamLambdaHandler implements RequestStreamHandler {
     /**
      * Get the container stats.
      *
-     * @return a string that contains lambda container Id and (optionally) the time
-     *         that the container last serve a request.
+     * @return a string that contains lambda container Id and (optionally) the time that the
+     *     container last serve a request.
      */
     public static String getStats() {
       try {
@@ -141,7 +154,7 @@ public class StreamLambdaHandler implements RequestStreamHandler {
         Map<String, String> retVal = new HashMap<>();
         retVal.put("instanceId", INSTANCE_ID);
         if (latestRequestTime != null) {
-          retVal.put("latestRequestTime",latestRequestTime.format(formatter));
+          retVal.put("latestRequestTime", latestRequestTime.format(formatter));
         }
         return obj.writeValueAsString(retVal);
       } catch (JsonProcessingException ex) {
