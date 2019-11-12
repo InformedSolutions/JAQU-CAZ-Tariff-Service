@@ -13,7 +13,6 @@ import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -30,7 +29,6 @@ import java.util.UUID;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.util.StreamUtils;
 import uk.gov.caz.tariff.Application;
 
@@ -71,7 +69,7 @@ public class StreamLambdaHandler implements RequestStreamHandler {
       throws IOException {
 
     String input = StreamUtils.copyToString(inputStream, Charset.defaultCharset());    
-    byte[] inputBytes = StreamUtils.copyToByteArray(inputStream);
+    
     if (isWarmupRequest(input)) {
       delayToAllowAnotherLambdaInstanceWarming();
       try (Writer osw = new OutputStreamWriter(outputStream)) {
@@ -79,21 +77,7 @@ public class StreamLambdaHandler implements RequestStreamHandler {
       }
     } else {
       LambdaContainerStats.setLatestRequestTime(LocalDateTime.now());
-      handler.proxyStream(toInputStream(inputBytes), outputStream, context);
-    }
-  }
-  
-  /**
-   * Converts byte array to {@link InputStream}.
-   *
-   * @param inputBytes Input byte array.
-   * @return {@link InputStream} over byte array.
-   * @throws IOException When unable to convert.
-   */
-  @NotNull
-  private InputStream toInputStream(byte[] inputBytes) throws IOException {
-    try (InputStream inputStream = new ByteArrayInputStream(inputBytes)) {
-      return inputStream;
+      handler.proxyStream(inputStream, outputStream, context);
     }
   }
 
