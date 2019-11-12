@@ -79,7 +79,7 @@ public class StreamLambdaHandler implements RequestStreamHandler {
     log.info("Incoming context: " + dump(context));
     
     byte[] inputBytes = StreamUtils.copyToByteArray(inputStream);
-    if (isWarmupRequest(toString(inputBytes))) {
+    if (isWarmupRequest(input)) {
       delayToAllowAnotherLambdaInstanceWarming();
       try (Writer osw = new OutputStreamWriter(outputStream)) {
         osw.write(LambdaContainerStats.getStats());
