@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.util.StreamUtils;
 import uk.gov.caz.tariff.Application;
 
@@ -64,19 +65,29 @@ public class StreamLambdaHandler implements RequestStreamHandler {
   @Override
   public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context)
       throws IOException {
-    try {
-      byte[] inputBytes = StreamUtils.copyToByteArray(inputStream);
-      if (isWarmupRequest(toString(inputBytes))) {
-        delayToAllowAnotherLambdaInstanceWarming();
-        try (Writer osw = new OutputStreamWriter(outputStream)) {
-          osw.write(LambdaContainerStats.getStats());
-        }
-      } else {
-        LambdaContainerStats.setLatestRequestTime(LocalDateTime.now());
-        handler.proxyStream(new ByteArrayInputStream(inputBytes), outputStream, context);
+    byte[] inputBytes = StreamUtils.copyToByteArray(inputStream);
+    if (isWarmupRequest(toString(inputBytes))) {
+      delayToAllowAnotherLambdaInstanceWarming();
+      try (Writer osw = new OutputStreamWriter(outputStream)) {
+        osw.write(LambdaContainerStats.getStats());
       }
-    } finally {
-      inputStream.close();
+    } else {
+      LambdaContainerStats.setLatestRequestTime(LocalDateTime.now());
+      handler.proxyStream(toInputStream(inputBytes), outputStream, context);
+    }
+  }
+
+  /**
+   * Converts byte array to {@link InputStream}.
+   *
+   * @param inputBytes Input byte array.
+   * @return {@link InputStream} over byte array.
+   * @throws IOException When unable to convert.
+   */
+  @NotNull
+  private InputStream toInputStream(byte[] inputBytes) throws IOException {
+    try (InputStream inputStream = new ByteArrayInputStream(inputBytes)) {
+      return inputStream;
     }
   }
 
