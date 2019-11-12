@@ -8,9 +8,11 @@ import com.amazonaws.serverless.proxy.model.AwsProxyRequest;
 import com.amazonaws.serverless.proxy.model.AwsProxyResponse;
 import com.amazonaws.serverless.proxy.spring.SpringBootLambdaContainerHandler;
 import com.amazonaws.serverless.proxy.spring.SpringBootProxyHandlerBuilder;
+import com.amazonaws.services.lambda.runtime.CognitoIdentity;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.ByteArrayInputStream;
@@ -31,6 +33,7 @@ import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 
 import org.jetbrains.annotations.NotNull;
+import org.springframework.boot.json.JsonParseException;
 import org.springframework.util.StreamUtils;
 
 import uk.gov.caz.tariff.Application;
@@ -38,7 +41,7 @@ import uk.gov.caz.tariff.Application;
 @Slf4j
 public class StreamLambdaHandler implements RequestStreamHandler {
 
-  private static final String KEEP_WARM_ACTION = "warmup";
+  private static final String KEEP_WARM_ACTION = "keep-warm";
   private static SpringBootLambdaContainerHandler<AwsProxyRequest, AwsProxyResponse> handler;
 
   static {
@@ -71,6 +74,10 @@ public class StreamLambdaHandler implements RequestStreamHandler {
   public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context)
       throws IOException {
     byte[] inputBytes = StreamUtils.copyToByteArray(inputStream);
+    
+    log.info("Incoming attributes: " + dump(new ByteArrayInputStream(inputBytes)));
+    log.info("Incoming context: " + dump(context));
+    
     if (isWarmupRequest(toString(inputBytes))) {
       delayToAllowAnotherLambdaInstanceWarming();
       try (Writer osw = new OutputStreamWriter(outputStream)) {
@@ -82,6 +89,26 @@ public class StreamLambdaHandler implements RequestStreamHandler {
     }
   }
 
+  private String dump(InputStream inputStream) {
+    try {
+      ObjectMapper obj = new ObjectMapper();
+      JsonNode node = obj.readTree(inputStream);
+      return node.toString();
+    } catch (Exception e) {
+      log.error("Error: ", e);
+      throw new JsonParseException(e);
+    }
+  }
+  
+  private String dump(Context context) {
+    StringBuilder sb = new StringBuilder();
+    CognitoIdentity ci = context.getIdentity();
+    sb.append("Full context: ").append(context.toString());
+    sb.append("IdentityId: ").append(ci.getIdentityId());
+    sb.append("IdentityPoolId: ").append(ci.getIdentityPoolId());
+    return sb.toString();
+  }
+  
   /**
    * Converts byte array to {@link InputStream}.
    *
