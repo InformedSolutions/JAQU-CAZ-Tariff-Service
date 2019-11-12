@@ -108,7 +108,7 @@ public class StreamLambdaHandler implements RequestStreamHandler {
     boolean isWarmupRequest = action.contains(KEEP_WARM_ACTION);
 
     if (isWarmupRequest) {
-      log.debug("Received lambda warmup request");
+      log.info("Received lambda warmup request");
     }
     
     return isWarmupRequest;
