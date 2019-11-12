@@ -125,13 +125,6 @@ public class StreamLambdaHandler implements RequestStreamHandler {
   }
 
   /**
-   * Converts {@code inputBytes} to an UTF-8 encoded string.
-   */
-  private String toString(byte[] inputBytes) {
-    return new String(inputBytes, StandardCharsets.UTF_8);
-  }
-
-  /**
    * Delay lambda response to allow subsequent keep-warm requests to be routed to a different lambda
    * container.
    *
