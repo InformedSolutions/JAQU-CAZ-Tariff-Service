@@ -38,7 +38,7 @@ import uk.gov.caz.tariff.Application;
 @Slf4j
 public class StreamLambdaHandler implements RequestStreamHandler {
 
-  private static final String KEEP_WARM_ACTION = "warmup";
+  private static final String KEEP_WARM_ACTION = "keep-warm";
   private static SpringBootLambdaContainerHandler<AwsProxyRequest, AwsProxyResponse> handler;
 
   static {
