@@ -6,6 +6,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static uk.gov.caz.correlationid.Constants.X_CORRELATION_ID_HEADER;
+import static uk.gov.caz.security.SecurityHeadersInjector.CACHE_CONTROL_HEADER;
+import static uk.gov.caz.security.SecurityHeadersInjector.CACHE_CONTROL_VALUE;
+import static uk.gov.caz.security.SecurityHeadersInjector.CONTENT_SECURITY_POLICY_HEADER;
+import static uk.gov.caz.security.SecurityHeadersInjector.CONTENT_SECURITY_POLICY_VALUE;
+import static uk.gov.caz.security.SecurityHeadersInjector.PRAGMA_HEADER;
+import static uk.gov.caz.security.SecurityHeadersInjector.PRAGMA_HEADER_VALUE;
+import static uk.gov.caz.security.SecurityHeadersInjector.STRICT_TRANSPORT_SECURITY_HEADER;
+import static uk.gov.caz.security.SecurityHeadersInjector.STRICT_TRANSPORT_SECURITY_VALUE;
+import static uk.gov.caz.security.SecurityHeadersInjector.X_CONTENT_TYPE_OPTIONS_HEADER;
+import static uk.gov.caz.security.SecurityHeadersInjector.X_CONTENT_TYPE_OPTIONS_VALUE;
+import static uk.gov.caz.security.SecurityHeadersInjector.X_FRAME_OPTIONS_HEADER;
+import static uk.gov.caz.security.SecurityHeadersInjector.X_FRAME_OPTIONS_VALUE;
 import static uk.gov.caz.tariff.util.JsonReader.cleanAirZonesJson;
 import static uk.gov.caz.tariff.util.JsonReader.tariffJson;
 
@@ -38,7 +50,19 @@ public class CazTestIT {
         .header(X_CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
         .andExpect(status().isOk())
         .andExpect(content().json(cleanAirZonesJson()))
-        .andExpect(header().string(X_CORRELATION_ID_HEADER, SOME_CORRELATION_ID));
+        .andExpect(header().string(X_CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
+        .andExpect(
+            header().string(STRICT_TRANSPORT_SECURITY_HEADER, STRICT_TRANSPORT_SECURITY_VALUE))
+        .andExpect(
+            header().string(PRAGMA_HEADER, PRAGMA_HEADER_VALUE))
+        .andExpect(
+            header().string(X_CONTENT_TYPE_OPTIONS_HEADER, X_CONTENT_TYPE_OPTIONS_VALUE))
+        .andExpect(
+            header().string(X_FRAME_OPTIONS_HEADER, X_FRAME_OPTIONS_VALUE))
+        .andExpect(
+            header().string(CONTENT_SECURITY_POLICY_HEADER, CONTENT_SECURITY_POLICY_VALUE))
+        .andExpect(
+            header().string(CACHE_CONTROL_HEADER, CACHE_CONTROL_VALUE));
   }
 
   @Test
