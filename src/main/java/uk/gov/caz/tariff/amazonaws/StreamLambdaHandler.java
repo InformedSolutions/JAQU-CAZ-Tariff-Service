@@ -12,7 +12,6 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,12 +26,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.jetbrains.annotations.NotNull;
 import org.springframework.util.StreamUtils;
-
 import uk.gov.caz.tariff.Application;
 
 @Slf4j
@@ -104,17 +100,22 @@ public class StreamLambdaHandler implements RequestStreamHandler {
   }
 
   /**
-   * Delay lambda response to allow subsequent keep-warm requests to be routed to a different lambda
-   * container.
+   * Delay lambda response if the container is new and cold
+   * to allow subsequent keep-warm requests to be routed to a different lambda container.
    *
    * @throws IOException when it is impossible to pause the thread
    */
   private void delayToAllowAnotherLambdaInstanceWarming() throws IOException {
     try {
-      Thread.sleep(Integer.parseInt(
-          Optional.ofNullable(
-              System.getenv("thundra_lambda_warmup_warmupSleepDuration"))
-              .orElse("100")));
+      if (LambdaContainerStats.getLatestRequestTime() == null) {
+        int sleepDuration = Integer.parseInt(Optional.ofNullable(
+                                  System.getenv("thundra_lambda_warmup_warmupSleepDuration"))
+                                  .orElse("100"));
+        log.info(String.format("Container %s go to sleep for %f seconds",
+            LambdaContainerStats.getInstanceId(),
+            (double)sleepDuration / 1000));
+        Thread.sleep(sleepDuration);
+      }      
     } catch (Exception e) {
       throw new IOException(e);
     }
@@ -162,6 +163,13 @@ public class StreamLambdaHandler implements RequestStreamHandler {
      */
     public static LocalDateTime getLatestRequestTime() {
       return latestRequestTime;
+    }
+
+    /**
+     * Get container instanceId.
+     */
+    public static String getInstanceId() {
+      return INSTANCE_ID;
     }
 
     /**
