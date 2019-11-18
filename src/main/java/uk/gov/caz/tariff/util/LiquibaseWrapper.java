@@ -1,6 +1,7 @@
 package uk.gov.caz.tariff.util;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.UUID;
 
 import javax.sql.DataSource;
@@ -29,8 +30,10 @@ public class LiquibaseWrapper {
   
   /**
    * Update db schema.
+   * @throws SQLException when unable to connect to DB
+   * @throws LiquibaseException when fail to perform DB upgrade
    */
-  public void update() throws Exception {
+  public void update() throws LiquibaseException, SQLException {
     String changelog = liquibaseChangeLog.startsWith("classpath")
         ? liquibaseChangeLog.substring(10) : liquibaseChangeLog;
     String dbTag = UUID.randomUUID().toString();
