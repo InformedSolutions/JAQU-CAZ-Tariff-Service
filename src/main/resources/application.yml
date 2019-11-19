@@ -48,6 +48,7 @@ swagger:
       becomeCompliantUrl: URL provided by zone operators, become compliant
       financialAssistanceUrl: URL provided by zone operators, financial assistance
       boundaryUrl: URL provided by zone operators, boundary
+      additionalInfoUrl: URL provided by zone operators, additional info
     rate:
       bus: Price for bus
       coach: Price for coach
