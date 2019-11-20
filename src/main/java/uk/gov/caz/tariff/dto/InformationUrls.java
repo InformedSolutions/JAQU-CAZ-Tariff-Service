@@ -38,4 +38,6 @@ public class InformationUrls {
   @ApiModelProperty(value = "${swagger.model.descriptions.informationUrl.boundaryUrl}")
   String boundary;
 
+  @ApiModelProperty(value = "${swagger.model.descriptions.informationUrl.additionalInfoUrl}")
+  String additionalInfo;
 }
