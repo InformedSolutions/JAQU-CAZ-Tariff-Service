@@ -117,6 +117,7 @@ class TariffRepositoryTest {
           case "pay_caz_url":
           case "financial_assistance_url":
           case "boundary_url":
+          case "additional_info_url":
             return SOME_URL;
 
         }
@@ -178,6 +179,7 @@ class TariffRepositoryTest {
         .becomeCompliant(SOME_URL)
         .financialAssistance(SOME_URL)
         .boundary(SOME_URL)
+        .additionalInfo(SOME_URL)
         .build();
     Rates rates = Rates.builder()
         .bus(rate(50.55))
