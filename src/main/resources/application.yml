@@ -48,6 +48,7 @@ swagger:
       becomeCompliantUrl: URL provided by zone operators, become compliant
       financialAssistanceUrl: URL provided by zone operators, financial assistance
       boundaryUrl: URL provided by zone operators, boundary
+      additionalInfoUrl: URL provided by zone operators, additional info
     rate:
       bus: Price for bus
       coach: Price for coach
@@ -62,6 +63,10 @@ swagger:
       moped: Price for moped
 
 spring:
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
+    drop-first: false
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/caz-tariff
