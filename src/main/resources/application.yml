@@ -23,6 +23,9 @@ swagger:
       description: Array containing Clean Air Zone (CAZ) detail objects
     tariff:
       description: Details about Tariff
+    db:
+      migration:
+        description: Evolve DB schema
 
   model.descriptions:
     cleanAirZones:
