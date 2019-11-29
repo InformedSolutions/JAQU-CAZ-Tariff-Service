@@ -56,8 +56,8 @@ class CleanAirZonesControllerTestIT {
     given(cleanAirZonesRepository.findAll()).willReturn(prepareCleanAirZones());
 
     mockMvc.perform(get(CleanAirZonesController.PATH)
-        .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-        .accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
+        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        .accept(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.message").value("Missing request header 'X-Correlation-ID'"));
   }
@@ -67,8 +67,8 @@ class CleanAirZonesControllerTestIT {
     given(cleanAirZonesRepository.findAll()).willReturn(prepareCleanAirZones());
 
     mockMvc.perform(get(CleanAirZonesController.PATH)
-        .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-        .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
+        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        .accept(MediaType.APPLICATION_JSON_VALUE)
         .header(X_CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
         .andExpect(status().isOk())
         .andExpect(content().json(sampleCleanAirZonesJson()));
@@ -80,8 +80,8 @@ class CleanAirZonesControllerTestIT {
         .willReturn(buildTariff());
 
     mockMvc.perform(get(tariffWithCleanAirZoneId(CLEAN_AIR_ZONE_ID))
-        .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-        .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
+        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        .accept(MediaType.APPLICATION_JSON_VALUE)
         .header(X_CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
         .andExpect(content().json(sampleTariffJson()))
         .andExpect(status().isOk());
@@ -90,8 +90,8 @@ class CleanAirZonesControllerTestIT {
   @Test
   public void shouldReturnNotFoundWhenTariffNotExist() throws Exception {
     mockMvc.perform(get(tariffWithCleanAirZoneId(CLEAN_AIR_ZONE_ID))
-        .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-        .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
+        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        .accept(MediaType.APPLICATION_JSON_VALUE)
         .header(X_CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
         .andExpect(status().isNotFound());
   }
@@ -99,8 +99,8 @@ class CleanAirZonesControllerTestIT {
   @Test
   public void shouldReturnNotFoundWhenInvalidUUID() throws Exception {
     mockMvc.perform(get(tariffWithCleanAirZoneId("asd"))
-        .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-        .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
+        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        .accept(MediaType.APPLICATION_JSON_VALUE)
         .header(X_CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
         .andExpect(status().isNotFound());
   }
