@@ -25,6 +25,7 @@ public class TariffRepository {
       + "charge.caz_name, "
       + "charge.caz_class, "
       + "charge.charge_identifier, "
+      + "charge.charging_disabled_vehicles, "
       + "link.emissions_url, "
       + "link.main_info_url, "
       + "link.pricing_url, "
@@ -88,6 +89,7 @@ public class TariffRepository {
           .name(rs.getString("caz_name"))
           .tariffClass(rs.getString("caz_class").charAt(0))
           .chargeIdentifier(rs.getString("charge_identifier"))
+          .chargingDisabledVehicles(rs.getBoolean("charging_disabled_vehicles"))
           .informationUrls(InformationUrls.builder()
               .becomeCompliant(rs.getString("become_compliant_url"))
               .hoursOfOperation(rs.getString("operation_hours_url"))

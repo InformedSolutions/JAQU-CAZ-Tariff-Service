@@ -41,6 +41,7 @@ swagger:
       chargeIdentifier: Charge Identifier
       rates: Rates
       informationUrls: URLs information
+      chargingDisabledVehicles: Indicates if vehicles with 'DISABLED' tax class are chargeable under this tariff
     informationUrl:
       emissionsStandardsUrl: URL provided by zone operators, emissions standards
       mainInfoUrl: URL provided by zone operators, clean air zone
