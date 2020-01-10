@@ -141,9 +141,7 @@ class TariffRepositoryTest {
             return new BigDecimal("15.35");
           case "hgv_entrant_fee":
             return new BigDecimal("5.30");
-          case "large_van_entrant_fee":
-            return new BigDecimal("80.30");
-          case "small_van_entrant_fee":
+          case "van_entrant_fee":
             return new BigDecimal("100.00");
           case "motorcycle_ent_fee":
             return new BigDecimal("25.10");
@@ -189,8 +187,7 @@ class TariffRepositoryTest {
         .taxi(rate(15.10))
         .phv(rate(15.35))
         .hgv(rate(5.30))
-        .largeVan(rate(80.30))
-        .smallVan(rate(100.00))
+        .van(rate(100.00))
         .motorcycle(rate(25.10))
         .moped(rate(49.49))
         .build();

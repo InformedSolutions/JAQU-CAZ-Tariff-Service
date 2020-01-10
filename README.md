@@ -22,10 +22,8 @@ JAQU CAZ Tariff Service
 | motorcycle ent fee           | Acceptable formats: „12”, „12.0”, „12.00”, „12.5”, „12.50”   | 
 | coach entrant fee            | should be more or equal 0                                    | 
 | coach entrant fee            | Acceptable formats: „12”, „12.0”, „12.00”, „12.5”, „12.50”   | 
-| large van entrant fee        | should be more or equal 0                                    | 
-| large van entrant fee        | Acceptable formats: „12”, „12.0”, „12.00”, „12.5”, „12.50”   | 
-| small van entrant fee        | should be more or equal 0                                    | 
-| small van entrant fee        | Acceptable formats: „12”, „12.0”, „12.00”, „12.5”, „12.50”   | 
+| van entrant fee              | should be more or equal 0                                    | 
+| van entrant fee              | Acceptable formats: „12”, „12.0”, „12.00”, „12.5”, „12.50”   | 
 | moped entrant fee            | should be more or equal 0                                    | 
 | moped entrant fee            | Acceptable formats: „12”, „12.0”, „12.00”, „12.5”, „12.50”   | 
 | caz name                     | must be string                                               | 
