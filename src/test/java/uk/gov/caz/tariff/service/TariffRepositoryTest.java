@@ -118,6 +118,7 @@ class TariffRepositoryTest {
           case "financial_assistance_url":
           case "boundary_url":
           case "additional_info_url":
+          case "public_transport_options_url":
             return SOME_URL;
 
         }
@@ -178,6 +179,7 @@ class TariffRepositoryTest {
         .financialAssistance(SOME_URL)
         .boundary(SOME_URL)
         .additionalInfo(SOME_URL)
+        .publicTransportOptions(SOME_URL)
         .build();
     Rates rates = Rates.builder()
         .bus(rate(50.55))

@@ -121,6 +121,7 @@ class CleanAirZonesControllerTestIT {
         .mainInfo(SOME_URL)
         .financialAssistance(SOME_URL)
         .additionalInfo(SOME_URL)
+        .publicTransportOptions(SOME_URL)
         .build();
     Rates rates = Rates.builder()
         .bus(new BigDecimal("5.50"))
