@@ -128,11 +128,10 @@ class CleanAirZonesControllerTestIT {
         .miniBus(new BigDecimal("25.00"))
         .coach(new BigDecimal("15.60"))
         .hgv(new BigDecimal("5.69"))
-        .largeVan(new BigDecimal("100.00"))
         .moped(new BigDecimal("49.49"))
         .motorcycle(new BigDecimal("80.01"))
         .phv(new BigDecimal("80.10"))
-        .smallVan(new BigDecimal("80.00"))
+        .van(new BigDecimal("80.00"))
         .taxi(new BigDecimal("2.00"))
         .build();
 

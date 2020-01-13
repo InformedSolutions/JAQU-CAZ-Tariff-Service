@@ -44,8 +44,7 @@ public class TariffRepository {
       + "tar.bus_entrant_fee, "
       + "tar.motorcycle_ent_fee, "
       + "tar.coach_entrant_fee, "
-      + "tar.large_van_entrant_fee, "
-      + "tar.small_van_entrant_fee, "
+      + "tar.van_entrant_fee, "
       + "tar.moped_entrant_fee "
       + "FROM t_tariff_definition tar, t_charge_definition charge, t_caz_link_detail link "
       + "WHERE tar.charge_definition_id = charge.charge_definition_id "
@@ -110,8 +109,7 @@ public class TariffRepository {
               .taxi(rs.getBigDecimal("taxi_entrant_fee"))
               .phv(rs.getBigDecimal("phv_entrant_fee"))
               .hgv(rs.getBigDecimal("hgv_entrant_fee"))
-              .largeVan(rs.getBigDecimal("large_van_entrant_fee"))
-              .smallVan(rs.getBigDecimal("small_van_entrant_fee"))
+              .van(rs.getBigDecimal("van_entrant_fee"))
               .motorcycle(rs.getBigDecimal("motorcycle_ent_fee"))
               .moped(rs.getBigDecimal("moped_entrant_fee"))
               .build())

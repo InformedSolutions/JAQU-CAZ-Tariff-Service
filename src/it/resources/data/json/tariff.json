@@ -11,8 +11,7 @@
     "taxi": 8,
     "phv": 8,
     "hgv": 50,
-    "largeVan": 50,
-    "smallVan": 8,
+    "van": 8,
     "motorcycle": 0,
     "moped": 0
   },

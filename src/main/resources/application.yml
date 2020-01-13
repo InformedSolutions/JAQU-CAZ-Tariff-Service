@@ -59,9 +59,8 @@ swagger:
       taxi: Price for taxi
       phv: Price for phv
       hgv: Price for hgv
-      largeVan: Price for largeVan
       miniBus: Price for miniBus
-      smallVan: Price for smallVan
+      van: Price for van
       car: Price for car
       motorcycle: Price for motorcycle
       moped: Price for moped
