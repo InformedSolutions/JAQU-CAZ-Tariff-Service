@@ -36,6 +36,7 @@ public class TariffRepository {
       + "link.financial_assistance_url, "
       + "link.boundary_url, "
       + "link.additional_info_url, "
+      + "link.public_transport_options_url, "
       + "tar.hgv_entrant_fee, "
       + "tar.minibus_entrant_fee, "
       + "tar.car_entrant_fee, "
@@ -100,6 +101,7 @@ public class TariffRepository {
               .boundary(rs.getString("boundary_url"))
               .additionalInfo(rs.getString("additional_info_url"))
               .emissionsStandards(rs.getString("emissions_url"))
+              .publicTransportOptions(rs.getString("public_transport_options_url"))
               .build())
           .rates(Rates.builder()
               .bus(rs.getBigDecimal("bus_entrant_fee"))

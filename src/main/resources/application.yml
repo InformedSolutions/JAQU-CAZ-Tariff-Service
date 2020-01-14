@@ -53,6 +53,7 @@ swagger:
       financialAssistanceUrl: URL provided by zone operators, financial assistance
       boundaryUrl: URL provided by zone operators, boundary
       additionalInfoUrl: URL provided by zone operators, additional info
+      publicTransportOptionsUrl: URL provided by zone operators, public transport options
     rate:
       bus: Price for bus
       coach: Price for coach
