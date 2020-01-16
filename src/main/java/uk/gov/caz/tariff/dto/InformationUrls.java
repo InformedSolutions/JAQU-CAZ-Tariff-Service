@@ -40,4 +40,8 @@ public class InformationUrls {
 
   @ApiModelProperty(value = "${swagger.model.descriptions.informationUrl.additionalInfoUrl}")
   String additionalInfo;
+
+  @ApiModelProperty(value =
+      "${swagger.model.descriptions.informationUrl.publicTransportOptionsUrl}")
+  String publicTransportOptions;
 }

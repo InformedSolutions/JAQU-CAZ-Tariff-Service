@@ -11,8 +11,7 @@
     "taxi": 2,
     "phv": 80.1,
     "hgv": 5.69,
-    "largeVan": 100,
-    "smallVan": 80,
+    "van": 80,
     "motorcycle": 80.01,
     "moped": 49.49
   },
@@ -26,6 +25,7 @@
     "becomeCompliant": "www.test.uk",
     "financialAssistance": "www.test.uk",
     "boundary": "www.test.uk",
-    "additionalInfo": "www.test.uk"
+    "additionalInfo": "www.test.uk",
+    "publicTransportOptions": "www.test.uk"
   }
 }
