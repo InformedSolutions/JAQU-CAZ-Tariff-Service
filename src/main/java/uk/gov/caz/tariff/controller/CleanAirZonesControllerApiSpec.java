@@ -20,7 +20,7 @@ import uk.gov.caz.tariff.dto.Tariff;
 
 @RequestMapping(
     value = CleanAirZonesController.PATH,
-    produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
+    produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
 )
 @Api(value = CleanAirZonesController.PATH)
 public interface CleanAirZonesControllerApiSpec {
