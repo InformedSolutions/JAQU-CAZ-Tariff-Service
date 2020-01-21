@@ -56,7 +56,7 @@ public class TariffRepositoryTestIT {
     Rates rates = Rates.builder()
         .hgv(rate(50.00))
         .car(rate(8.00))
-        .miniBus(rate(50.00))
+        .miniBus(rate(8.00))
         .taxi(rate(8.00))
         .build();
     return Tariff.builder()

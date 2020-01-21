@@ -6,7 +6,7 @@
   "rates": {
     "bus": 50,
     "car": 8,
-    "miniBus": 50,
+    "miniBus": 8,
     "coach": 50,
     "taxi": 8,
     "phv": 8,
