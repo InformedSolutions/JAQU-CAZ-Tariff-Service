@@ -112,6 +112,7 @@ class CleanAirZonesControllerTestIT {
   private Optional<Tariff> buildTariff() {
     InformationUrls informationUrls = InformationUrls.builder()
         .becomeCompliant(SOME_URL)
+        .becomeCompliantFleet(SOME_URL)
         .emissionsStandards(SOME_URL)
         .boundary(SOME_URL)
         .exemptionOrDiscount(SOME_URL)

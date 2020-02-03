@@ -33,6 +33,7 @@ public class TariffRepository {
       + "link.exemption_url, "
       + "link.pay_caz_url, "
       + "link.become_compliant_url, "
+      + "link.fleets_become_compliant_url, "
       + "link.financial_assistance_url, "
       + "link.boundary_url, "
       + "link.additional_info_url, "
@@ -92,6 +93,7 @@ public class TariffRepository {
           .chargingDisabledVehicles(rs.getBoolean("charging_disabled_vehicles"))
           .informationUrls(InformationUrls.builder()
               .becomeCompliant(rs.getString("become_compliant_url"))
+              .becomeCompliantFleet(rs.getString("fleets_become_compliant_url"))
               .hoursOfOperation(rs.getString("operation_hours_url"))
               .mainInfo(rs.getString("main_info_url"))
               .pricing(rs.getString("pricing_url"))

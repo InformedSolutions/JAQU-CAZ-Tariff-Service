@@ -109,6 +109,7 @@ class TariffRepositoryTest {
           case "caz_class":
             return String.valueOf('C');
           case "become_compliant_url":
+          case "fleets_become_compliant_url":
           case "emissions_url":
           case "operation_hours_url":
           case "main_info_url":
@@ -176,6 +177,7 @@ class TariffRepositoryTest {
         .exemptionOrDiscount(SOME_URL)
         .payCaz(SOME_URL)
         .becomeCompliant(SOME_URL)
+        .becomeCompliantFleet(SOME_URL)
         .financialAssistance(SOME_URL)
         .boundary(SOME_URL)
         .additionalInfo(SOME_URL)

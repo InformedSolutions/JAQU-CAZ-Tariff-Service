@@ -50,6 +50,7 @@ swagger:
       exemptionOrDiscountUrl: URL provided by zone operators, exemption or discount
       payCazUrl: URL provided by zone operators, pay
       becomeCompliantUrl: URL provided by zone operators, become compliant
+      becomeCompliantFleetUrl: URL provided by zone operators, become compliant for Fleets
       financialAssistanceUrl: URL provided by zone operators, financial assistance
       boundaryUrl: URL provided by zone operators, boundary
       additionalInfoUrl: URL provided by zone operators, additional info

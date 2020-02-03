@@ -32,6 +32,9 @@ public class InformationUrls {
   @ApiModelProperty(value = "${swagger.model.descriptions.informationUrl.becomeCompliantUrl}")
   String becomeCompliant;
 
+  @ApiModelProperty(value = "${swagger.model.descriptions.informationUrl.becomeCompliantFleetUrl}")
+  String becomeCompliantFleet;
+
   @ApiModelProperty(value = "${swagger.model.descriptions.informationUrl.financialAssistanceUrl}")
   String financialAssistance;
 

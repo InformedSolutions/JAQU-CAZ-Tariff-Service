@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0014.1-1.0
+      author: informed
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: fleets_become_compliant_url
+                  type: text
+            schemaName: public
+            tableName: T_CAZ_LINK_DETAIL
+  - changeSet:
+      id: 0014.2-1.0
+      author: informed
+      changes:
+        - sql:
+            comment: Update become compliant url
+            dbms: postgresql
+            endDelimiter: ;GO
+            splitStatements: true
+            sql:                
+                UPDATE public.T_CAZ_LINK_DETAIL
+                SET FLEETS_BECOME_COMPLIANT_URL = 'https://businessbreathes.co.uk/fleet-operator'
+                WHERE CHARGE_DEFINITION_ID = 1;
+
+                UPDATE public.T_CAZ_LINK_DETAIL
+                SET BECOME_COMPLIANT_URL = 'https://www.leeds.gov.uk/business/environmental-health-for-business/air-quality/support-for-taxis-and-private-hire-clean-air-charging-zone'
+                WHERE CHARGE_DEFINITION_ID = 2;
+
+                UPDATE public.T_CAZ_LINK_DETAIL
+                SET FLEETS_BECOME_COMPLIANT_URL = 'https://www.leeds.gov.uk/business/environmental-health-for-business/air-quality/support-for-buses-coaches-and-hgvs-clean-air-charging-zone'
+                WHERE CHARGE_DEFINITION_ID = 2;
+            stripComments: true
