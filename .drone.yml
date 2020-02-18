@@ -81,7 +81,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: caz-tariff
+      POSTGRES_DB: tariffs
     ports:
       - 5432
   - name: localstack
@@ -330,7 +330,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: caz-tariff
+      POSTGRES_DB: tariffs
     ports:
       - 5432
   - name: localstack
@@ -608,7 +608,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: caz-tariff
+      POSTGRES_DB: tariffs
     ports:
       - 5432
   - name: localstack
