@@ -1,8 +1,11 @@
 package uk.gov.caz.tariff.service;
 
 import com.google.common.annotations.VisibleForTesting;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -26,6 +29,7 @@ public class TariffRepository {
       + "charge.caz_class, "
       + "charge.charge_identifier, "
       + "charge.charging_disabled_vehicles, "
+      + "charge.active_charge_start_time, "
       + "link.emissions_url, "
       + "link.main_info_url, "
       + "link.pricing_url, "
@@ -82,6 +86,22 @@ public class TariffRepository {
    */
   public static class TariffRowMapper implements RowMapper<Tariff> {
 
+    /**
+     * Given results set, takes active_charge_start_time value and returns String representation.
+     * @param rs Result set.
+     * @return String representation of date.
+     * @throws SQLException if date was malformed.
+     */
+    private static String safelyGetActiveChargeStartDate(ResultSet rs) throws SQLException {
+      String chargeStartTime = "";
+      Date chargeStartTimeDt = rs.getDate("active_charge_start_time");
+      if (chargeStartTimeDt != null) {
+        LocalDate localDate = chargeStartTimeDt.toLocalDate();
+        chargeStartTime = localDate.format(DateTimeFormatter.ISO_DATE);
+      }
+      return chargeStartTime;
+    }
+
     @Override
     public Tariff mapRow(ResultSet rs, int i) throws SQLException {
       return Tariff.builder()
@@ -90,6 +110,7 @@ public class TariffRepository {
           .tariffClass(rs.getString("caz_class").charAt(0))
           .chargeIdentifier(rs.getString("charge_identifier"))
           .chargingDisabledVehicles(rs.getBoolean("charging_disabled_vehicles"))
+          .activeChargeStartDate(safelyGetActiveChargeStartDate(rs))
           .informationUrls(InformationUrls.builder()
               .becomeCompliant(rs.getString("become_compliant_url"))
               .hoursOfOperation(rs.getString("operation_hours_url"))
