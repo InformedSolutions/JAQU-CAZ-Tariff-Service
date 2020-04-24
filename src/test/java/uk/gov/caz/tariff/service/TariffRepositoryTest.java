@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
@@ -153,6 +154,9 @@ class TariffRepositoryTest {
         throw new RuntimeException("Value not stubbed!");
       });
 
+      when(resultSet.getDate("active_charge_start_time"))
+          .thenReturn(Date.valueOf("2020-01-01"));
+
       return resultSet;
     }
   }
@@ -200,6 +204,7 @@ class TariffRepositoryTest {
         .chargeIdentifier(SOME_CHARGE_IDENTIFIER)
         .rates(rates)
         .informationUrls(informationUrls)
+        .activeChargeStartDate("2020-01-01")
         .build();
   }
 

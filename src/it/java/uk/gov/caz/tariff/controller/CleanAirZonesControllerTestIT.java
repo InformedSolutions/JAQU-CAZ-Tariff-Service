@@ -141,6 +141,7 @@ class CleanAirZonesControllerTestIT {
         .name("Leeds")
         .tariffClass('A')
         .chargeIdentifier("LCC01")
+        .activeChargeStartDate("2020-04-24")
         .informationUrls(informationUrls)
         .rates(rates)
         .build());

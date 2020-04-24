@@ -131,6 +131,7 @@ class CleanAirZonesControllerTest {
         .tariffClass('C')
         .informationUrls(informationUrls)
         .rates(rates)
+        .activeChargeStartDate("2020-04-23")
         .build();
 
     return Optional.ofNullable(tariff);
