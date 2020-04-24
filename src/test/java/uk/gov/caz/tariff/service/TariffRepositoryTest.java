@@ -89,14 +89,24 @@ class TariffRepositoryTest {
 
     @Test
     public void shouldMapResultSetToTariff() throws SQLException {
-      ResultSet resultSet = mockResultSet();
+      ResultSet resultSet = mockResultSet(Date.valueOf("2020-01-01"));
 
       Tariff tariff = rowMapper.mapRow(resultSet, 0);
 
       assertThat(tariff).isEqualToComparingFieldByFieldRecursively(expectedTariff());
     }
 
-    private ResultSet mockResultSet() throws SQLException {
+    @Test
+    public void shouldReturnEmptyStringWhenChargeDateIsMissing() throws SQLException {
+      ResultSet resultSet = mockResultSet(null);
+
+      Tariff tariff = rowMapper.mapRow(resultSet, 0);
+
+      assertThat(tariff.getActiveChargeStartDate()).isEmpty();
+    }
+
+
+    private ResultSet mockResultSet(Date activeChargeStartDate) throws SQLException {
       ResultSet resultSet = mock(ResultSet.class);
       when(resultSet.getObject("clean_air_zone_id", UUID.class)).thenReturn(SOME_CLEAN_AIR_ZONE_ID);
 
@@ -155,7 +165,7 @@ class TariffRepositoryTest {
       });
 
       when(resultSet.getDate("active_charge_start_time"))
-          .thenReturn(Date.valueOf("2020-01-01"));
+          .thenReturn(activeChargeStartDate);
 
       return resultSet;
     }
