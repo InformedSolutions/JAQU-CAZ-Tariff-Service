@@ -238,6 +238,7 @@ steps:
       AWS_SECRET_ACCESS_KEY:
         from_secret: jaqu_lower_aws_secret_access_key
       AWS_DEFAULT_REGION: eu-west-2
+      AWS_ACCOUNT_ROLE: arn:aws:iam::311075478274:role/jaqu-lowerServiceRole
       PROJECT: tariffs
       DEPLOY_ENVIRONMENT: dev
       LAMBDA_BUCKET: jaqu-shared-project-lambda-bucket
