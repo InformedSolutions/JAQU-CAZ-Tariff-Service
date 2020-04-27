@@ -167,17 +167,14 @@ steps:
       - chmod +x ../../../../bin/tf
       - tf init
       - tf workspace select dev || tf workspace new dev
-      - tf init
       - tf apply -auto-approve
       - cd ../02.backends
       - tf init
       - tf workspace select dev || tf workspace new dev
-      - tf init
       - tf apply -auto-approve
       - cd ../03.api
       - tf init
       - tf workspace select dev || tf workspace new dev
-      - tf init
       - tf apply -auto-approve
     environment:
       TF_VAR_access_key:
