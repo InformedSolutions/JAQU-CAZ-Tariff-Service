@@ -167,17 +167,14 @@ steps:
       - chmod +x ../../../../bin/tf
       - tf init
       - tf workspace select dev || tf workspace new dev
-      - tf init
       - tf apply -auto-approve
       - cd ../02.backends
       - tf init
       - tf workspace select dev || tf workspace new dev
-      - tf init
       - tf apply -auto-approve
       - cd ../03.api
       - tf init
       - tf workspace select dev || tf workspace new dev
-      - tf init
       - tf apply -auto-approve
     environment:
       TF_VAR_access_key:
@@ -241,6 +238,7 @@ steps:
       AWS_SECRET_ACCESS_KEY:
         from_secret: jaqu_lower_aws_secret_access_key
       AWS_DEFAULT_REGION: eu-west-2
+      AWS_ACCOUNT_ROLE: arn:aws:iam::311075478274:role/jaqu-lowerServiceRole
       PROJECT: tariffs
       DEPLOY_ENVIRONMENT: dev
       LAMBDA_BUCKET: jaqu-shared-project-lambda-bucket
