@@ -7,7 +7,7 @@ name: tariffs-api-dev
 
 trigger:
   branch:
-    -
+    - iac-restructure-baseline
   event:
     - pull_request
     - push
