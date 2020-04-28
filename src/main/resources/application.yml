@@ -34,6 +34,7 @@ swagger:
       cleanAirZoneId: ID of the zone
       name: Name of Tariff
       boundaryUrl: URL provided by zone operators, boundary
+      activeChargeStartDate: ISO-8601 formatted date of when CAZ has effectively started to charge
     tariff:
       cleanAirZoneId: ID of the zone
       name: Name of Tariff
@@ -42,6 +43,7 @@ swagger:
       rates: Rates
       informationUrls: URLs information
       chargingDisabledVehicles: Indicates if vehicles with 'DISABLED' tax class are chargeable under this tariff
+      activeChargeStartDate: ISO-8601 formatted date of when CAZ has effectively started to charge
     informationUrl:
       mainInfoUrl: URL provided by zone operators, clean air zone
       exemptionOrDiscountUrl: URL provided by zone operators, exemption or discount
