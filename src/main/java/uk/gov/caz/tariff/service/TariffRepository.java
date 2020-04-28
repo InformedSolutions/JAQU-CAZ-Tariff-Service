@@ -30,14 +30,9 @@ public class TariffRepository {
       + "charge.charge_identifier, "
       + "charge.charging_disabled_vehicles, "
       + "charge.active_charge_start_time, "
-      + "link.emissions_url, "
       + "link.main_info_url, "
-      + "link.pricing_url, "
-      + "link.operation_hours_url, "
       + "link.exemption_url, "
-      + "link.pay_caz_url, "
       + "link.become_compliant_url, "
-      + "link.financial_assistance_url, "
       + "link.boundary_url, "
       + "link.additional_info_url, "
       + "link.public_transport_options_url, "
@@ -88,6 +83,7 @@ public class TariffRepository {
 
     /**
      * Given results set, takes active_charge_start_time value and returns String representation.
+     *
      * @param rs Result set.
      * @return String representation of date.
      * @throws SQLException if date was malformed.
@@ -113,15 +109,10 @@ public class TariffRepository {
           .activeChargeStartDate(safelyGetActiveChargeStartDate(rs))
           .informationUrls(InformationUrls.builder()
               .becomeCompliant(rs.getString("become_compliant_url"))
-              .hoursOfOperation(rs.getString("operation_hours_url"))
               .mainInfo(rs.getString("main_info_url"))
-              .pricing(rs.getString("pricing_url"))
               .exemptionOrDiscount(rs.getString("exemption_url"))
-              .payCaz(rs.getString("pay_caz_url"))
-              .financialAssistance(rs.getString("financial_assistance_url"))
               .boundary(rs.getString("boundary_url"))
               .additionalInfo(rs.getString("additional_info_url"))
-              .emissionsStandards(rs.getString("emissions_url"))
               .publicTransportOptions(rs.getString("public_transport_options_url"))
               .build())
           .rates(Rates.builder()

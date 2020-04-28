@@ -107,11 +107,7 @@ class CleanAirZonesControllerTest {
         .becomeCompliant(SOME_URL)
         .boundary(SOME_URL)
         .exemptionOrDiscount(SOME_URL)
-        .hoursOfOperation(SOME_URL)
-        .payCaz(SOME_URL)
-        .pricing(SOME_URL)
         .mainInfo(SOME_URL)
-        .financialAssistance(SOME_URL)
         .build();
     Rates rates = Rates.builder()
         .bus(new BigDecimal("5.50"))
