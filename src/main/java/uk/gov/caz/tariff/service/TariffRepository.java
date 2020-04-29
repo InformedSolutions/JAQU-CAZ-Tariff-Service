@@ -1,11 +1,10 @@
 package uk.gov.caz.tariff.service;
 
+import static uk.gov.caz.tariff.service.RepositoryUtils.safelyGetActiveChargeStartDate;
+
 import com.google.common.annotations.VisibleForTesting;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -80,23 +79,6 @@ public class TariffRepository {
    * RowMapper for {@link Tariff}.
    */
   public static class TariffRowMapper implements RowMapper<Tariff> {
-
-    /**
-     * Given results set, takes active_charge_start_time value and returns String representation.
-     *
-     * @param rs Result set.
-     * @return String representation of date.
-     * @throws SQLException if date was malformed.
-     */
-    private static String safelyGetActiveChargeStartDate(ResultSet rs) throws SQLException {
-      String chargeStartTime = "";
-      Date chargeStartTimeDt = rs.getDate("active_charge_start_time");
-      if (chargeStartTimeDt != null) {
-        LocalDate localDate = chargeStartTimeDt.toLocalDate();
-        chargeStartTime = localDate.format(DateTimeFormatter.ISO_DATE);
-      }
-      return chargeStartTime;
-    }
 
     @Override
     public Tariff mapRow(ResultSet rs, int i) throws SQLException {
