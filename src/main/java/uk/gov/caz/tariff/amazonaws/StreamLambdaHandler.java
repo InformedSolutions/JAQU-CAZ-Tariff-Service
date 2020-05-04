@@ -4,6 +4,7 @@ import static uk.gov.caz.awslambda.AwsHelpers.splitToArray;
 
 import com.amazonaws.serverless.exceptions.ContainerInitializationException;
 import com.amazonaws.serverless.proxy.internal.LambdaContainerHandler;
+import com.amazonaws.serverless.proxy.internal.testutils.AwsProxyRequestBuilder;
 import com.amazonaws.serverless.proxy.model.AwsProxyRequest;
 import com.amazonaws.serverless.proxy.model.AwsProxyResponse;
 import com.amazonaws.serverless.proxy.spring.SpringBootLambdaContainerHandler;
@@ -68,7 +69,7 @@ public class StreamLambdaHandler implements RequestStreamHandler {
       throws IOException {
     byte[] inputBytes = StreamUtils.copyToByteArray(inputStream);
     if (isWarmupRequest(toString(inputBytes))) {
-      delayToAllowAnotherLambdaInstanceWarming();
+      delayToAllowAnotherLambdaInstanceWarming(handler, context);
       try (Writer osw = new OutputStreamWriter(outputStream)) {
         osw.write(LambdaContainerStats.getStats());
       }
@@ -105,20 +106,43 @@ public class StreamLambdaHandler implements RequestStreamHandler {
    *
    * @throws IOException when it is impossible to pause the thread
    */
-  private void delayToAllowAnotherLambdaInstanceWarming() throws IOException {
+  private void delayToAllowAnotherLambdaInstanceWarming(
+        SpringBootLambdaContainerHandler<AwsProxyRequest, AwsProxyResponse> handler,
+        Context context) throws IOException {
     try {
       if (LambdaContainerStats.getLatestRequestTime() == null) {
-        int sleepDuration = Integer.parseInt(Optional.ofNullable(
+        long initStartTime = Instant.now().toEpochMilli();
+        AwsProxyRequest awsProxyRequest = buildHealthCheckRequest();
+        // force spring initialation to finish
+        handler.proxy(awsProxyRequest, context);
+        long initEndTime = Instant.now().toEpochMilli();
+        long initDuration = initEndTime - initStartTime;
+        long sleepDuration = Long.parseLong(Optional.ofNullable(
                                   System.getenv("thundra_lambda_warmup_warmupSleepDuration"))
                                   .orElse("100"));
-        log.info(String.format("Container %s go to sleep for %f seconds",
-            LambdaContainerStats.getInstanceId(),
-            (double)sleepDuration / 1000));
-        Thread.sleep(sleepDuration);
+        if (sleepDuration > initDuration) {
+          log.info(String.format("Container %s go to sleep for %f seconds",
+              LambdaContainerStats.getInstanceId(),
+              (double)(sleepDuration - initDuration) / 1000));
+          Thread.sleep(sleepDuration - initDuration);
+        }
       }      
     } catch (Exception e) {
       throw new IOException(e);
     }
+  }
+
+  /**
+   * Build a virtual health check request.
+   */
+  private AwsProxyRequest buildHealthCheckRequest() {
+    AwsProxyRequest awsProxyRequest =
+        new AwsProxyRequestBuilder("/virtual/health/check", "GET")
+            .header("X-Correlation-ID",UUID.randomUUID().toString())
+            .header("Content-Type","application/json")
+            .nullBody()
+            .build();
+    return awsProxyRequest;
   }
 
   /**
