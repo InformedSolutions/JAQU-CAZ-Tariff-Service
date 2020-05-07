@@ -24,7 +24,8 @@ public class CleanAirZonesRepository {
   static final String SELECT_ALL_SQL = "SELECT charge.clean_air_zone_id, "
       + "charge.caz_name, "
       + "charge.active_charge_start_time, "
-      + "link.boundary_url "
+      + "link.boundary_url, "
+      + "link.exemption_url "
       + "FROM t_charge_definition charge, t_caz_link_detail link "
       + "WHERE link.charge_definition_id = charge.charge_definition_id ";
 
@@ -57,6 +58,7 @@ public class CleanAirZonesRepository {
           .cleanAirZoneId(rs.getObject("clean_air_zone_id", UUID.class))
           .name(rs.getString("caz_name"))
           .boundaryUrl(URI.create(rs.getString("boundary_url")))
+          .exemptionUrl(URI.create(rs.getString("exemption_url")))
           .activeChargeStartDate(safelyGetActiveChargeStartDate(rs))
           .build();
     }
