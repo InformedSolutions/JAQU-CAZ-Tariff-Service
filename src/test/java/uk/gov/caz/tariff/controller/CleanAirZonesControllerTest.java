@@ -33,9 +33,7 @@ import uk.gov.caz.tariff.service.TariffRepository;
 class CleanAirZonesControllerTest {
 
   private static final String SOME_CLEAN_AIR_ZONE_ID = "dc1efcaf-a2cf-41ec-aa37-ea4b28a20a1d";
-
   private static LocalDate ACTIVE_CHARGE_START_DATE = LocalDate.of(2018, 10, 28);
-
   private static final String SOME_URL = "www.test.uk";
 
   @Mock
@@ -64,6 +62,7 @@ class CleanAirZonesControllerTest {
             .name("Birmingham")
             .boundaryUrl(URI.create(
                 "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/3"))
+            .exemptionUrl(URI.create("https://exemption.birmingham.gov.uk"))
             .activeChargeStartDate("2018-10-28")
             .build()
     );
@@ -144,21 +143,24 @@ class CleanAirZonesControllerTest {
             caz("Birmingham", "0d7ab5c4-5fff-4935-8c4e-56267c0c9493",
                 "https://www.birmingham.gov.uk/info/20076/pollution/"
                     + "1763/a_clean_air_zone_for_birmingham/3",
+                "https://exemption.birmingham.gov.uk",
                 ACTIVE_CHARGE_START_DATE),
 
             caz("Leeds", "39e54ed8-3ed2-441d-be3f-38fc9b70c8d3",
                 "https://www.arcgis.com/home/webmap/viewer.html?webmap="
                     + "de0120ae980b473982a3149ab072fdfc&extent=-1.733%2c53.7378%2c-1.333%2c53.8621",
+                "https://exemption.leeds.gov.uk",
                 ACTIVE_CHARGE_START_DATE)
         )).build();
   }
 
   private CleanAirZoneDto caz(String cazName, String cleanAirZoneId, String boundaryUrl,
-      LocalDate activeChargeStartDate) {
+      String exemptionUrl, LocalDate activeChargeStartDate) {
     return CleanAirZoneDto.builder()
         .name(cazName)
         .cleanAirZoneId(UUID.fromString(cleanAirZoneId))
         .boundaryUrl(URI.create(boundaryUrl))
+        .exemptionUrl(URI.create(exemptionUrl))
         .activeChargeStartDate(activeChargeStartDate.format(DateTimeFormatter.ISO_DATE))
         .build();
   }

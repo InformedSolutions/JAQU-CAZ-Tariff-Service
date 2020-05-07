@@ -34,6 +34,7 @@ swagger:
       cleanAirZoneId: ID of the zone
       name: Name of Tariff
       boundaryUrl: URL provided by zone operators, boundary
+      exemptionUrl: URL provided by zone operators, exemption
       activeChargeStartDate: ISO-8601 formatted date of when CAZ has effectively started to charge
     tariff:
       cleanAirZoneId: ID of the zone
