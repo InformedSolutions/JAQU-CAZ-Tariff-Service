@@ -34,6 +34,8 @@ swagger:
       cleanAirZoneId: ID of the zone
       name: Name of Tariff
       boundaryUrl: URL provided by zone operators, boundary
+      exemptionUrl: URL provided by zone operators, exemption
+      activeChargeStartDate: ISO-8601 formatted date of when CAZ has effectively started to charge
     tariff:
       cleanAirZoneId: ID of the zone
       name: Name of Tariff
@@ -42,15 +44,11 @@ swagger:
       rates: Rates
       informationUrls: URLs information
       chargingDisabledVehicles: Indicates if vehicles with 'DISABLED' tax class are chargeable under this tariff
+      activeChargeStartDate: ISO-8601 formatted date of when CAZ has effectively started to charge
     informationUrl:
-      emissionsStandardsUrl: URL provided by zone operators, emissions standards
       mainInfoUrl: URL provided by zone operators, clean air zone
-      hoursOfOperationUrl: URL provided by zone operators, hours of operation
-      pricingUrl: URL provided by zone operators, pricing
       exemptionOrDiscountUrl: URL provided by zone operators, exemption or discount
-      payCazUrl: URL provided by zone operators, pay
       becomeCompliantUrl: URL provided by zone operators, become compliant
-      financialAssistanceUrl: URL provided by zone operators, financial assistance
       boundaryUrl: URL provided by zone operators, boundary
       additionalInfoUrl: URL provided by zone operators, additional info
       publicTransportOptionsUrl: URL provided by zone operators, public transport options
@@ -78,6 +76,8 @@ spring:
     password: postgres
     hikari:
       maximum-pool-size: 1
+      connection-timeout: 5000 # in ms
+      max-lifetime: 0 # always keep the connection in the pool unless it has been closed
 
 springfox:
   documentation:

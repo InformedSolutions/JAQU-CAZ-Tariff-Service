@@ -1,11 +1,10 @@
 package uk.gov.caz.tariff.service;
 
+import static uk.gov.caz.tariff.service.RepositoryUtils.safelyGetActiveChargeStartDate;
+
 import com.google.common.annotations.VisibleForTesting;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -30,14 +29,9 @@ public class TariffRepository {
       + "charge.charge_identifier, "
       + "charge.charging_disabled_vehicles, "
       + "charge.active_charge_start_time, "
-      + "link.emissions_url, "
       + "link.main_info_url, "
-      + "link.pricing_url, "
-      + "link.operation_hours_url, "
       + "link.exemption_url, "
-      + "link.pay_caz_url, "
       + "link.become_compliant_url, "
-      + "link.financial_assistance_url, "
       + "link.boundary_url, "
       + "link.additional_info_url, "
       + "link.public_transport_options_url, "
@@ -86,22 +80,6 @@ public class TariffRepository {
    */
   public static class TariffRowMapper implements RowMapper<Tariff> {
 
-    /**
-     * Given results set, takes active_charge_start_time value and returns String representation.
-     * @param rs Result set.
-     * @return String representation of date.
-     * @throws SQLException if date was malformed.
-     */
-    private static String safelyGetActiveChargeStartDate(ResultSet rs) throws SQLException {
-      String chargeStartTime = "";
-      Date chargeStartTimeDt = rs.getDate("active_charge_start_time");
-      if (chargeStartTimeDt != null) {
-        LocalDate localDate = chargeStartTimeDt.toLocalDate();
-        chargeStartTime = localDate.format(DateTimeFormatter.ISO_DATE);
-      }
-      return chargeStartTime;
-    }
-
     @Override
     public Tariff mapRow(ResultSet rs, int i) throws SQLException {
       return Tariff.builder()
@@ -113,15 +91,10 @@ public class TariffRepository {
           .activeChargeStartDate(safelyGetActiveChargeStartDate(rs))
           .informationUrls(InformationUrls.builder()
               .becomeCompliant(rs.getString("become_compliant_url"))
-              .hoursOfOperation(rs.getString("operation_hours_url"))
               .mainInfo(rs.getString("main_info_url"))
-              .pricing(rs.getString("pricing_url"))
               .exemptionOrDiscount(rs.getString("exemption_url"))
-              .payCaz(rs.getString("pay_caz_url"))
-              .financialAssistance(rs.getString("financial_assistance_url"))
               .boundary(rs.getString("boundary_url"))
               .additionalInfo(rs.getString("additional_info_url"))
-              .emissionsStandards(rs.getString("emissions_url"))
               .publicTransportOptions(rs.getString("public_transport_options_url"))
               .build())
           .rates(Rates.builder()

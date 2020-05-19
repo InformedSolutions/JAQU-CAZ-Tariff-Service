@@ -120,13 +120,8 @@ class TariffRepositoryTest {
           case "caz_class":
             return String.valueOf('C');
           case "become_compliant_url":
-          case "emissions_url":
-          case "operation_hours_url":
           case "main_info_url":
-          case "pricing_url":
           case "exemption_url":
-          case "pay_caz_url":
-          case "financial_assistance_url":
           case "boundary_url":
           case "additional_info_url":
           case "public_transport_options_url":
@@ -184,13 +179,8 @@ class TariffRepositoryTest {
   private Tariff expectedTariff() {
     InformationUrls informationUrls = InformationUrls.builder()
         .mainInfo(SOME_URL)
-        .emissionsStandards(SOME_URL)
-        .hoursOfOperation(SOME_URL)
-        .pricing(SOME_URL)
         .exemptionOrDiscount(SOME_URL)
-        .payCaz(SOME_URL)
         .becomeCompliant(SOME_URL)
-        .financialAssistance(SOME_URL)
         .boundary(SOME_URL)
         .additionalInfo(SOME_URL)
         .publicTransportOptions(SOME_URL)
