@@ -203,7 +203,7 @@ steps:
 
   # Invokes lambda function with $LATEST alias to deploy schema migrations prior to code deploy rollover
   - name: apply db schema migrations
-    image: alpine:latest
+    image: alpine:3.11.6
     commands:
       - apk add --update bash python python-dev py-pip jq
       - pip install awscli
@@ -225,7 +225,7 @@ steps:
         - push
 
   - name: codedeploy api dev
-    image: alpine:latest
+    image: alpine:3.11.6
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
