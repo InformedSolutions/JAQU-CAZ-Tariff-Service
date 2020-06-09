@@ -9,14 +9,16 @@ VALUES ('D', 'Buses, coaches, taxis, PHVs, HGVs LGVs and cars');
 
 INSERT INTO public.T_CHARGE_DEFINITION (CHARGE_DEFINITION_ID, CAZ_NAME, CAZ_CLASS,
                                         CLEAN_AIR_ZONE_ID, CHARGE_IDENTIFIER,
-                                        ACTIVE_CHARGE_START_TIME, ACTIVE_CHARGE_END_TIME)
+                                        ACTIVE_CHARGE_START_TIME, ACTIVE_CHARGE_END_TIME,
+                                        CAZ_OPERATOR_NAME)
 VALUES (1, 'Birmingham', 'D', '5cd7441d-766f-48ff-b8ad-1809586fea37', 'BCC01', '2019-08-20',
-        '2019-12-20');
+        '2019-12-20', 'Birmingham City Council');
 INSERT INTO public.T_CHARGE_DEFINITION (CHARGE_DEFINITION_ID, CAZ_NAME, CAZ_CLASS,
                                         CLEAN_AIR_ZONE_ID, CHARGE_IDENTIFIER,
-                                        ACTIVE_CHARGE_START_TIME, ACTIVE_CHARGE_END_TIME)
+                                        ACTIVE_CHARGE_START_TIME, ACTIVE_CHARGE_END_TIME,
+                                        CAZ_OPERATOR_NAME)
 VALUES (2, 'Leeds', 'B', '39e54ed8-3ed2-441d-be3f-38fc9b70c8d3', 'LCC01', '2019-07-20',
-        '2019-11-20');
+        '2019-11-20', 'Leeds City Council');
 
 INSERT INTO public.T_TARIFF_DEFINITION (CHARGE_DEFINITION_ID, HGV_ENTRANT_FEE, CAR_ENTRANT_FEE,
                                         MINIBUS_ENTRANT_FEE, TAXI_ENTRANT_FEE, PHV_ENTRANT_FEE,
