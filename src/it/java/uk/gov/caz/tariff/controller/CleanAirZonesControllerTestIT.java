@@ -153,24 +153,25 @@ class CleanAirZonesControllerTestIT {
                 "https://www.birmingham.gov.uk/info/20076/pollution/"
                     + "1763/a_clean_air_zone_for_birmingham/3",
                 "https://exemption.birmingham.gov.uk",
-                ACTIVE_CHARGE_START_DATE),
+                ACTIVE_CHARGE_START_DATE, "Birmingham City Council"),
 
             caz("Leeds", "39e54ed8-3ed2-441d-be3f-38fc9b70c8d3",
                 "https://www.arcgis.com/home/webmap/viewer.html?webmap="
                     + "de0120ae980b473982a3149ab072fdfc&extent=-1.733%2c53.7378%2c-1.333%2c53.8621",
                 "https://exemption.leeds.gov.uk",
-                ACTIVE_CHARGE_START_DATE)
+                ACTIVE_CHARGE_START_DATE, "Leeds City Council")
         )).build();
   }
 
   private CleanAirZoneDto caz(String cazName, String cleanAirZoneId, String boundaryUrl,
-      String exemptionUrl, LocalDate activeChargeStartDate) {
+      String exemptionUrl, LocalDate activeChargeStartDate, String operatorName) {
     return CleanAirZoneDto.builder()
         .name(cazName)
         .cleanAirZoneId(UUID.fromString(cleanAirZoneId))
         .boundaryUrl(URI.create(boundaryUrl))
         .exemptionUrl(URI.create(exemptionUrl))
         .activeChargeStartDate(activeChargeStartDate.format(DateTimeFormatter.ISO_DATE))
+        .operatorName(operatorName)
         .build();
   }
 }
