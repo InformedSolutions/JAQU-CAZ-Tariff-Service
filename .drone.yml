@@ -267,7 +267,7 @@ steps:
         - push
 
   - name: codedeploy api dev
-    image: alpine:latest
+    image: alpine:3.11.6
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
@@ -544,7 +544,7 @@ steps:
         - push
 
   - name: codedeploy api st
-    image: alpine:latest
+    image: alpine:3.11.6
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
@@ -822,7 +822,7 @@ steps:
         - push
 
   - name: codedeploy api sit
-    image: alpine:latest
+    image: alpine:3.11.6
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
@@ -1100,7 +1100,7 @@ steps:
         - push
 
   - name: codedeploy api uat
-    image: alpine:latest
+    image: alpine:3.11.6
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
@@ -1332,7 +1332,7 @@ steps:
 
   # subscribe to operational monitoring alert in api preprod
   - name: subscribe to operational monitoring alert in api preprod
-    image: alpine:latest
+    image: alpine:3.11.6
     commands:
       - apk add --update python3 groff
       - pip3 install awscli
@@ -1559,7 +1559,7 @@ steps:
 
   # subscribe to operational monitoring alert in api prod
   - name: subscribe to operational monitoring alert in api prod
-    image: alpine:latest
+    image: alpine:3.11.6
     commands:
       - apk add --update python3 groff
       - pip3 install awscli
