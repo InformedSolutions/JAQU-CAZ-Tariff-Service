@@ -44,7 +44,7 @@ steps:
 
   # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
-    image: docker
+    image: docker:19.03.11-git
     commands:
       - docker system prune -f
     volumes:
@@ -53,7 +53,7 @@ steps:
 
   # Build Docker Image for Running Maven
   - name: build docker maven base
-    image: docker
+    image: docker:19.03.11-git
     commands:
       - docker build -t maven-base -f ci-cd-resources/Dockerfile.ci.base .
     volumes:
@@ -296,7 +296,7 @@ steps:
 
   # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
-    image: docker
+    image: docker:19.03.11-git
     commands:
       - docker system prune -f
     volumes:
@@ -305,7 +305,7 @@ steps:
 
   # Build Docker Image for Running Maven
   - name: build docker maven base
-    image: docker
+    image: docker:19.03.11-git
     commands:
       - docker build -t maven-base -f ci-cd-resources/Dockerfile.ci.base .
     volumes:
@@ -427,7 +427,7 @@ steps:
         - pull_request
 
   - name: provisioning warning
-    image: docker:git
+    image: docker:19.03.11-git
     commands:
       - echo "Pipeline failed. If a deployment is being made for the first time into an environment terraform backends will not yet exist which means this is to be expected. If not terraform related, please see logs for further details"
     when:
@@ -584,7 +584,7 @@ steps:
 
   # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
-    image: docker
+    image: docker:19.03.11-git
     commands:
       - docker system prune -f
     volumes:
@@ -593,7 +593,7 @@ steps:
 
   # Build Docker Image for Running Maven
   - name: build docker maven base
-    image: docker
+    image: docker:19.03.11-git
     commands:
       - docker build -t maven-base -f ci-cd-resources/Dockerfile.ci.base .
     volumes:
@@ -715,7 +715,7 @@ steps:
         - pull_request
 
   - name: provisioning warning
-    image: docker:git
+    image: docker:19.03.11-git
     commands:
       - echo "Pipeline failed. If a deployment is being made for the first time into an environment terraform backends will not yet exist which means this is to be expected. If not terraform related, please see logs for further details"
     when:
@@ -910,7 +910,7 @@ steps:
         - pull_request
 
   - name: provisioning warning
-    image: docker:git
+    image: docker:19.03.11-git
     commands:
       - echo "Pipeline failed. If a deployment is being made for the first time into an environment terraform backends will not yet exist which means this is to be expected. If not terraform related, please see logs for further details"
     when:
@@ -1114,7 +1114,7 @@ steps:
         - pull_request
 
   - name: provisioning warning
-    image: docker:git
+    image: docker:19.03.11-git
     commands:
       - echo "Pipeline failed. If a deployment is being made for the first time into an environment terraform backends will not yet exist which means this is to be expected. If not terraform related, please see logs for further details"
     when:
