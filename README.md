@@ -159,3 +159,6 @@ If one changeset file contains more than one change, please put consecutive numb
 
 Raw SQL files must be used from Liquibase Yaml changesets and put into `rawSql` subfolder.
 Please use existing files as an example.
+#### ERDs
+##### Physical model
+![ERD](documentation-assets/tariffs-erd.png)
