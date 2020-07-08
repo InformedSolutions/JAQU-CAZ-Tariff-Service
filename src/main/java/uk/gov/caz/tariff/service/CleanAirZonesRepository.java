@@ -26,7 +26,8 @@ public class CleanAirZonesRepository {
       + "charge.active_charge_start_time, "
       + "charge.caz_operator_name, "
       + "link.boundary_url, "
-      + "link.exemption_url "
+      + "link.exemption_url, "
+      + "link.main_info_url "
       + "FROM t_charge_definition charge, t_caz_link_detail link "
       + "WHERE link.charge_definition_id = charge.charge_definition_id ";
 
@@ -60,6 +61,7 @@ public class CleanAirZonesRepository {
           .name(rs.getString("caz_name"))
           .boundaryUrl(URI.create(rs.getString("boundary_url")))
           .exemptionUrl(URI.create(rs.getString("exemption_url")))
+          .mainInfoUrl(URI.create(rs.getString("main_info_url")))
           .activeChargeStartDate(safelyGetActiveChargeStartDate(rs))
           .operatorName(rs.getString("caz_operator_name"))
           .build();
