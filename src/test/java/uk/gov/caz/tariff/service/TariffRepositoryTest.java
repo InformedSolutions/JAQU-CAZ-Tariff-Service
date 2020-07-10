@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
@@ -88,14 +89,24 @@ class TariffRepositoryTest {
 
     @Test
     public void shouldMapResultSetToTariff() throws SQLException {
-      ResultSet resultSet = mockResultSet();
+      ResultSet resultSet = mockResultSet(Date.valueOf("2020-01-01"));
 
       Tariff tariff = rowMapper.mapRow(resultSet, 0);
 
       assertThat(tariff).isEqualToComparingFieldByFieldRecursively(expectedTariff());
     }
 
-    private ResultSet mockResultSet() throws SQLException {
+    @Test
+    public void shouldReturnEmptyStringWhenChargeDateIsMissing() throws SQLException {
+      ResultSet resultSet = mockResultSet(null);
+
+      Tariff tariff = rowMapper.mapRow(resultSet, 0);
+
+      assertThat(tariff.getActiveChargeStartDate()).isEmpty();
+    }
+
+
+    private ResultSet mockResultSet(Date activeChargeStartDate) throws SQLException {
       ResultSet resultSet = mock(ResultSet.class);
       when(resultSet.getObject("clean_air_zone_id", UUID.class)).thenReturn(SOME_CLEAN_AIR_ZONE_ID);
 
@@ -109,13 +120,8 @@ class TariffRepositoryTest {
           case "caz_class":
             return String.valueOf('C');
           case "become_compliant_url":
-          case "emissions_url":
-          case "operation_hours_url":
           case "main_info_url":
-          case "pricing_url":
           case "exemption_url":
-          case "pay_caz_url":
-          case "financial_assistance_url":
           case "boundary_url":
           case "additional_info_url":
           case "public_transport_options_url":
@@ -153,6 +159,9 @@ class TariffRepositoryTest {
         throw new RuntimeException("Value not stubbed!");
       });
 
+      when(resultSet.getDate("active_charge_start_time"))
+          .thenReturn(activeChargeStartDate);
+
       return resultSet;
     }
   }
@@ -170,13 +179,8 @@ class TariffRepositoryTest {
   private Tariff expectedTariff() {
     InformationUrls informationUrls = InformationUrls.builder()
         .mainInfo(SOME_URL)
-        .emissionsStandards(SOME_URL)
-        .hoursOfOperation(SOME_URL)
-        .pricing(SOME_URL)
         .exemptionOrDiscount(SOME_URL)
-        .payCaz(SOME_URL)
         .becomeCompliant(SOME_URL)
-        .financialAssistance(SOME_URL)
         .boundary(SOME_URL)
         .additionalInfo(SOME_URL)
         .publicTransportOptions(SOME_URL)
@@ -200,6 +204,7 @@ class TariffRepositoryTest {
         .chargeIdentifier(SOME_CHARGE_IDENTIFIER)
         .rates(rates)
         .informationUrls(informationUrls)
+        .activeChargeStartDate("2020-01-01")
         .build();
   }
 
