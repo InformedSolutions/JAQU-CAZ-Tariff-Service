@@ -732,7 +732,7 @@ steps:
       TF_VAR_master_access_key:
         from_secret: jaqu_master_aws_access_key_id
       TF_VAR_master_secret_key:
-        from_secret: jaqu_master_aws_secret_access_ke
+        from_secret: jaqu_master_aws_secret_access_key
       AWS_ACCESS_KEY_ID:
         from_secret: jaqu_controlled_aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
