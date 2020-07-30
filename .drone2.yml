@@ -866,7 +866,7 @@ name: staging
 
 trigger:
   branch:
-    - iac-restructure-staging-preprod
+    - staging
   event:
     - pull_request
     - push
