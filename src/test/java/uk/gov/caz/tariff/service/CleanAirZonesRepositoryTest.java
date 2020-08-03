@@ -8,8 +8,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.net.URI;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Nested;
@@ -19,8 +22,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jdbc.core.JdbcTemplate;
-import uk.gov.caz.tariff.dto.CleanAirZone;
-import uk.gov.caz.tariff.dto.CleanAirZones;
+import uk.gov.caz.definitions.dto.CleanAirZoneDto;
+import uk.gov.caz.definitions.dto.CleanAirZonesDto;
 import uk.gov.caz.tariff.service.CleanAirZonesRepository.CleanAirZoneRowMapper;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,7 +34,12 @@ class CleanAirZonesRepositoryTest {
 
   private static final String SOME_URL = "www.test.uk";
 
-  private  static final String LEEDS = "Leeds";
+  private static final String EXEMPTION_URL = "www.exemption.uk";
+
+  private static final String LEEDS = "Leeds";
+  private static final String LEEDS_OPERATOR_NAME = "Leeds City Council";
+
+  private static LocalDate ACTIVE_CHARGE_START_DATE = LocalDate.of(2018, 10, 28);
 
   @Mock
   private JdbcTemplate jdbcTemplate;
@@ -42,10 +50,10 @@ class CleanAirZonesRepositoryTest {
   @Test
   public void shouldFindCleanAirZones() {
     // given
-    List<CleanAirZone> cleanAirZones = mockCleanAirZonesInDB();
+    List<CleanAirZoneDto> cleanAirZones = mockCleanAirZonesInDB();
 
     // when
-    CleanAirZones result = cleanAirZonesRepository.findAll();
+    CleanAirZonesDto result = cleanAirZonesRepository.findAll();
 
     // then
     assertThat(result.getCleanAirZones())
@@ -58,7 +66,7 @@ class CleanAirZonesRepositoryTest {
     // given
 
     // when
-    CleanAirZones result = cleanAirZonesRepository.findAll();
+    CleanAirZonesDto result = cleanAirZonesRepository.findAll();
 
     // then
     assertThat(result.getCleanAirZones()).isEmpty();
@@ -73,7 +81,7 @@ class CleanAirZonesRepositoryTest {
     public void shouldMapResultSetToTariff() throws SQLException {
       ResultSet resultSet = mockResultSet();
 
-      CleanAirZone cleanAirZone = rowMapper.mapRow(resultSet, 0);
+      CleanAirZoneDto cleanAirZone = rowMapper.mapRow(resultSet, 0);
 
       assertThat(cleanAirZone)
           .isNotNull()
@@ -85,6 +93,9 @@ class CleanAirZonesRepositoryTest {
       when(resultSet.getObject("clean_air_zone_id", UUID.class))
           .thenReturn(SOME_CLEAN_AIR_ZONE_ID);
 
+      when(resultSet.getDate("active_charge_start_time"))
+          .thenReturn(Date.valueOf(ACTIVE_CHARGE_START_DATE));
+
       when(resultSet.getString(anyString())).thenAnswer(answer -> {
         String argument = answer.getArgument(0);
         switch (argument) {
@@ -92,6 +103,10 @@ class CleanAirZonesRepositoryTest {
             return LEEDS;
           case "boundary_url":
             return SOME_URL;
+          case "exemption_url":
+            return EXEMPTION_URL;
+          case "caz_operator_name":
+            return LEEDS_OPERATOR_NAME;
         }
         throw new RuntimeException("Value not stubbed!");
       });
@@ -100,39 +115,50 @@ class CleanAirZonesRepositoryTest {
     }
   }
 
-  private List<CleanAirZone> mockCleanAirZonesInDB() {
-    List<CleanAirZone> cleanAirZones = prepareCleanAirZones();
+  private List<CleanAirZoneDto> mockCleanAirZonesInDB() {
+    List<CleanAirZoneDto> cleanAirZones = prepareCleanAirZones();
     when(jdbcTemplate.query(anyString(), any(CleanAirZoneRowMapper.class)))
         .thenReturn(cleanAirZones);
     return cleanAirZones;
   }
 
-  private List<CleanAirZone> prepareCleanAirZones() {
-    return new CleanAirZones(
+  private List<CleanAirZoneDto> prepareCleanAirZones() {
+    return CleanAirZonesDto.builder().cleanAirZones(
         newArrayList(
             caz("Birmingham", "0d7ab5c4-5fff-4935-8c4e-56267c0c9493",
                 "https://www.birmingham.gov.uk/info/20076/pollution/"
-                    + "1763/a_clean_air_zone_for_birmingham/3"),
+                    + "1763/a_clean_air_zone_for_birmingham/3",
+                "https://exemptions.birmingham.gov.uk",
+                ACTIVE_CHARGE_START_DATE, "Birmingham City Council"),
 
             caz("Leeds", "39e54ed8-3ed2-441d-be3f-38fc9b70c8d3",
                 "https://www.arcgis.com/home/webmap/viewer.html?webmap="
-                    + "de0120ae980b473982a3149ab072fdfc&extent=-1.733%2c53.7378%2c-1.333%2c53.8621")
-        )).getCleanAirZones();
+                    + "de0120ae980b473982a3149ab072fdfc&extent=-1.733%2c53.7378%2c-1.333%2c53.8621",
+                "https://exemptions.leeds.gov.uk",
+                ACTIVE_CHARGE_START_DATE, "Leeds City Council")
+        )).build().getCleanAirZones();
   }
 
-  private CleanAirZone caz(String cazName, String cleanAirZoneId, String boundaryUrl) {
-    return CleanAirZone.builder()
+  private CleanAirZoneDto caz(String cazName, String cleanAirZoneId, String boundaryUrl,
+      String exemptionUrl, LocalDate activeChargeStartDate, String operatorName) {
+    return CleanAirZoneDto.builder()
         .name(cazName)
         .cleanAirZoneId(UUID.fromString(cleanAirZoneId))
         .boundaryUrl(URI.create(boundaryUrl))
+        .exemptionUrl(URI.create(exemptionUrl))
+        .activeChargeStartDate(activeChargeStartDate.format(DateTimeFormatter.ISO_DATE))
+        .operatorName(operatorName)
         .build();
   }
 
-  private CleanAirZone expectedCleanAirZone() {
-    return CleanAirZone.builder()
+  private CleanAirZoneDto expectedCleanAirZone() {
+    return CleanAirZoneDto.builder()
         .cleanAirZoneId(SOME_CLEAN_AIR_ZONE_ID)
         .name(LEEDS)
+        .operatorName(LEEDS_OPERATOR_NAME)
         .boundaryUrl(URI.create(SOME_URL))
+        .exemptionUrl(URI.create(EXEMPTION_URL))
+        .activeChargeStartDate(ACTIVE_CHARGE_START_DATE.format(DateTimeFormatter.ISO_DATE))
         .build();
   }
 }
