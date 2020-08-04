@@ -1,9 +1,39 @@
 databaseChangeLog:
   - changeSet:
-      id: 0021-1.0
+      id: 0020-1.0
       author: lukasz.kuczynski
       changes:
-
+        - insert:
+            tableName: T_CHARGE_DEFINITION
+            columns:
+              - column:
+                  name: CHARGE_DEFINITION_ID
+                  value: 3
+              - column:
+                  name: CAZ_NAME
+                  value: "Bath"
+              - column:
+                  name: CAZ_CLASS
+                  value: 'C'
+              - column:
+                  name: CLEAN_AIR_ZONE_ID
+                  value: "131af03c-f7f4-4aef-81ee-aae4f56dbeb5"
+              - column:
+                  name: ACTIVE_CHARGE_START_TIME
+                  value: "2019-08-20"
+              - column:
+                  name: ACTIVE_CHARGE_END_TIME
+                  value: "2019-12-20"
+              - column:
+                  name: CHARGE_IDENTIFIER
+                  value: "BAT01"
+              - column:
+                  name: CAZ_OPERATOR_NAME
+                  value: "Bath and North East Somerset Council"
+              - column:
+                  name: CHARGING_DISABLED_VEHICLES
+                  value: false
+                  
         - insert:
             tableName: T_TARIFF_DEFINITION
             columns:
