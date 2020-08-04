@@ -13,7 +13,6 @@ databaseChangeLog:
                 BEGIN
                     BEGIN
                         ALTER TABLE public.T_CHARGE_DEFINITION ADD CAZ_OPERATOR_NAME VARCHAR(50);
-                        ALTER TABLE public.T_CHARGE_DEFINITION ALTER COLUMN CAZ_OPERATOR_NAME SET NOT NULL;
                     EXCEPTION
                         WHEN duplicate_column THEN RAISE NOTICE 'column CAZ_OPERATOR_NAME already exists in T_CHARGE_DEFINITION.';
                     END;
@@ -31,4 +30,5 @@ databaseChangeLog:
               UPDATE T_CHARGE_DEFINITION
               SET CAZ_OPERATOR_NAME = 'Bath and North East Somerset Council'
               WHERE CAZ_NAME = 'Bath';
-
+              
+              ALTER TABLE public.T_CHARGE_DEFINITION ALTER COLUMN CAZ_OPERATOR_NAME SET NOT NULL;
