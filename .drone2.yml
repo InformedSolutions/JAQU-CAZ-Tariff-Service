@@ -732,7 +732,7 @@ steps:
       TF_VAR_master_access_key:
         from_secret: jaqu_master_aws_access_key_id
       TF_VAR_master_secret_key:
-        from_secret: jaqu_master_aws_secret_access_ke
+        from_secret: jaqu_master_aws_secret_access_key
       AWS_ACCESS_KEY_ID:
         from_secret: jaqu_controlled_aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
@@ -866,7 +866,7 @@ name: staging
 
 trigger:
   branch:
-    - iac-restructure-staging-preprod
+    - staging
   event:
     - pull_request
     - push
@@ -1384,7 +1384,7 @@ steps:
       - export TF_VAR_lambda_file=/opt/package/$LAMBDA_FUNCTION-$VERSION.zip
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
-      - git checkout live_prod
+      - git checkout prod_live
       - cd terraform-iac/projects/tariffs/layers/01.networking
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
@@ -1454,7 +1454,7 @@ steps:
       - export TF_VAR_lambda_file=/opt/package/$LAMBDA_FUNCTION-$VERSION.zip
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
-      - git checkout live_prod
+      - git checkout prod_live
       - cd terraform-iac/projects/tariffs/layers/01.networking
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
