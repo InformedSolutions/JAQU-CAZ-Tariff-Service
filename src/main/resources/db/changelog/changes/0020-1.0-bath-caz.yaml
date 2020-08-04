@@ -3,101 +3,25 @@ databaseChangeLog:
       id: 0020-1.0
       author: lukasz.kuczynski
       changes:
-        - insert:
-            tableName: T_CHARGE_DEFINITION
-            columns:
-              - column:
-                  name: CHARGE_DEFINITION_ID
-                  value: 3
-              - column:
-                  name: CAZ_NAME
-                  value: "Bath"
-              - column:
-                  name: CAZ_CLASS
-                  value: 'C'
-              - column:
-                  name: CLEAN_AIR_ZONE_ID
-                  value: "131af03c-f7f4-4aef-81ee-aae4f56dbeb5"
-              - column:
-                  name: ACTIVE_CHARGE_START_TIME
-                  value: "2019-08-20"
-              - column:
-                  name: ACTIVE_CHARGE_END_TIME
-                  value: "2019-12-20"
-              - column:
-                  name: CHARGE_IDENTIFIER
-                  value: "BAT01"
-              - column:
-                  name: CAZ_OPERATOR_NAME
-                  value: "Bath and North East Somerset Council"
-              - column:
-                  name: CHARGING_DISABLED_VEHICLES
-                  value: false
+        - sql:
+            comment: Add Bath tariffs and links
+            dbms: postgresql
+            endDelimiter: ;GO
+            splitStatements: true
+            sql: 
+              DO $$ 
+              BEGIN
+                BEGIN
+                  INSERT INTO T_CHARGE_DEFINITION(charge_definition_id, caz_name, caz_class, clean_air_zone_id, active_charge_start_time, active_charge_end_time, insert_timestmp, charge_identifier, charging_disabled_vehicles, caz_operator_name)
+                  VALUES (3, 'Bath', 'C', '131af03c-f7f4-4aef-81ee-aae4f56dbeb5', '2019-08-20', '2019-12-20', now(), 'BAT01', false, 'Bath and North East Somerset Council');
                   
-        - insert:
-            tableName: T_TARIFF_DEFINITION
-            columns:
-              - column:
-                  name: TARIFF_ID
-                  value: 4
-              - column:
-                  name: CHARGE_DEFINITION_ID
-                  value: 3
-              - column:
-                  name: HGV_ENTRANT_FEE
-                  value: 100
-              - column:
-                  name: TAXI_ENTRANT_FEE
-                  value: 9
-              - column:
-                  name: CAR_ENTRANT_FEE
-                  value: 0
-              - column:
-                  name: MINIBUS_ENTRANT_FEE
-                  value: 9
-              - column:
-                  name: PHV_ENTRANT_FEE
-                  value: 9
-              - column:
-                  name: BUS_ENTRANT_FEE
-                  value: 100
-              - column:
-                  name: MOTORCYCLE_ENT_FEE
-                  value: 0
-              - column:
-                  name: COACH_ENTRANT_FEE
-                  value: 100
-              - column:
-                  name: VAN_ENTRANT_FEE
-                  value: 9
-              - column:
-                  name: MOPED_ENTRANT_FEE
-                  value: 0
-
-        - insert:
-            tableName: T_CAZ_LINK_DETAIL
-            columns:
-              - column:
-                  name: CHARGE_DEFINITION_ID
-                  value: 3
-              - column:
-                  name: CAZ_LINK_ID
-                  value: 3
-              - column:
-                  name: BOUNDARY_URL
-                  value: "https://www.bathnes.gov.uk/bath-breathes-2021-overview/the-zone-boundary"
-              - column:
-                  name: MAIN_INFO_URL
-                  value: "https://www.bathnes.gov.uk/bath-breathes-2021-overview"
-              - column:
-                  name: EXEMPTION_URL
-                  value: "https://www.bathnes.gov.uk/bath-breathes-2021-overview/exemptions"
-              - column:
-                  name: BECOME_COMPLIANT_URL
-                  value: "https://www.bathnes.gov.uk/bath-breathes-2021-overview/support"
-              - column:
-                  name: ADDITIONAL_INFO_URL
-                  value: "https://www.bathnes.gov.uk/bath-breathes-2021-overview"
-              - column:
-                  name: PUBLIC_TRANSPORT_OPTIONS_URL
-                  value: "https://www.bathnes.gov.uk/bath-breathes-2021-overview/clean-air-bath"
+                  INSERT INTO public.T_TARIFF_DEFINITION(tariff_id, charge_definition_id, hgv_entrant_fee, taxi_entrant_fee, car_entrant_fee, minibus_entrant_fee, phv_entrant_fee, bus_entrant_fee, motorcycle_ent_fee, coach_entrant_fee, van_entrant_fee, moped_entrant_fee, insert_timestmp)
+                  VALUES (4, 3, 100, 9, 0, 9, 9, 100, 0, 100, 9, 0, now());
+                  
+                  INSERT INTO public.t_caz_link_detail(caz_link_id, charge_definition_id, main_info_url, exemption_url, become_compliant_url, boundary_url, insert_timestmp, additional_info_url, public_transport_options_url)
+                  VALUES (3, 3, 'https://www.bathnes.gov.uk/bath-breathes-2021-overview', 'https://www.bathnes.gov.uk/bath-breathes-2021-overview/exemptions', 'https://www.bathnes.gov.uk/bath-breathes-2021-overview/support', 'https://www.bathnes.gov.uk/bath-breathes-2021-overview/the-zone-boundary', now(), 'https://www.bathnes.gov.uk/bath-breathes-2021-overview', 'https://www.bathnes.gov.uk/bath-breathes-2021-overview/clean-air-bath');
+                EXCEPTION
+                  WHEN unique_violation THEN RAISE NOTICE 'Primary key violation when inserting Bath.';
+                END;
+              END;
+              $$;
