@@ -13,7 +13,7 @@ databaseChangeLog:
               BEGIN
                 BEGIN
                   INSERT INTO T_CHARGE_DEFINITION(charge_definition_id, caz_name, caz_class, clean_air_zone_id, active_charge_start_time, active_charge_end_time, insert_timestmp, charge_identifier, charging_disabled_vehicles, caz_operator_name)
-                  VALUES (3, 'Bath', 'C', '131af03c-f7f4-4aef-81ee-aae4f56dbeb5', '2019-08-20', '2019-12-20', now(), 'BAT01', false, 'Bath and North East Somerset Council');
+                  VALUES (3, 'Bath', 'C', '131af03c-f7f4-4aef-81ee-aae4f56dbeb5', '2025-01-01', '2030-01-01', now(), 'BAT01', false, 'Bath and North East Somerset Council');
                   
                   INSERT INTO public.T_TARIFF_DEFINITION(tariff_id, charge_definition_id, hgv_entrant_fee, taxi_entrant_fee, car_entrant_fee, minibus_entrant_fee, phv_entrant_fee, bus_entrant_fee, motorcycle_ent_fee, coach_entrant_fee, van_entrant_fee, moped_entrant_fee, insert_timestmp)
                   VALUES (4, 3, 100, 9, 0, 9, 9, 100, 0, 100, 9, 0, now());
