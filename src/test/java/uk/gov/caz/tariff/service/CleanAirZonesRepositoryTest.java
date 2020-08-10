@@ -131,19 +131,19 @@ class CleanAirZonesRepositoryTest {
                 "https://www.birmingham.gov.uk/info/20076/pollution/"
                     + "1763/a_clean_air_zone_for_birmingham/3",
                 "https://exemptions.birmingham.gov.uk", MAIN_INFO_URL,
-                ACTIVE_CHARGE_START_DATE, "Birmingham City Council"),
+                ACTIVE_CHARGE_START_DATE, "Birmingham City Council", false),
 
             caz("Leeds", "39e54ed8-3ed2-441d-be3f-38fc9b70c8d3",
                 "https://www.arcgis.com/home/webmap/viewer.html?webmap="
                     + "de0120ae980b473982a3149ab072fdfc&extent=-1.733%2c53.7378%2c-1.333%2c53.8621",
                 "https://exemptions.leeds.gov.uk", MAIN_INFO_URL,
-                ACTIVE_CHARGE_START_DATE, "Leeds City Council")
+                ACTIVE_CHARGE_START_DATE, "Leeds City Council", true)
         )).build().getCleanAirZones();
   }
 
   private CleanAirZoneDto caz(String cazName, String cleanAirZoneId, String boundaryUrl,
       String exemptionUrl, String mainInfoUrl, LocalDate activeChargeStartDate,
-      String operatorName) {
+      String operatorName, boolean directDebitEnabled) {
     return CleanAirZoneDto.builder()
         .name(cazName)
         .cleanAirZoneId(UUID.fromString(cleanAirZoneId))
@@ -152,6 +152,7 @@ class CleanAirZonesRepositoryTest {
         .mainInfoUrl(URI.create(mainInfoUrl))
         .activeChargeStartDate(activeChargeStartDate.format(DateTimeFormatter.ISO_DATE))
         .operatorName(operatorName)
+        .directDebitEnabled(directDebitEnabled)
         .build();
   }
 
