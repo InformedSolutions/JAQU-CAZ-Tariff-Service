@@ -25,6 +25,7 @@ public class CleanAirZonesRepository {
       + "charge.caz_name, "
       + "charge.active_charge_start_time, "
       + "charge.caz_operator_name, "
+      + "charge.direct_debit_enabled, "
       + "link.boundary_url, "
       + "link.exemption_url, "
       + "link.main_info_url "
@@ -64,6 +65,7 @@ public class CleanAirZonesRepository {
           .mainInfoUrl(URI.create(rs.getString("main_info_url")))
           .activeChargeStartDate(safelyGetActiveChargeStartDate(rs))
           .operatorName(rs.getString("caz_operator_name"))
+          .directDebitEnabled(rs.getBoolean("direct_debit_enabled"))
           .build();
     }
   }

@@ -855,6 +855,24 @@ steps:
       event:
         - push
 
+  # subscribe to operational monitoring alert in api SIT
+  - name: subscribe to operational monitoring alert in api SIT
+    image: alpine:3.11.6
+    commands:
+      - apk add --update python3 groff
+      - pip3 install awscli
+      - python3 ./ci-cd-resources/subscribe_to_alert_topics.py -e freeable-memory -e 4xx -e usage -e evictions -e csv -i="-sit" -i tariffs ISSupport-CAZ@informed.com
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+      PROJECT: tariffs
+      DEPLOY_ENVIRONMENT: sit
+    when:
+      event:
+        - push
   ################################################ End of SIT Environment Steps ############################################################
 
 ---
@@ -1055,6 +1073,24 @@ steps:
       event:
         - push
 
+  # subscribe to operational monitoring alert in api preprod
+  - name: subscribe to operational monitoring alert in api preprod
+    image: alpine:3.11.6
+    commands:
+      - apk add --update python3 groff
+      - pip3 install awscli
+      - python3 ./ci-cd-resources/subscribe_to_alert_topics.py -e freeable-memory -e 4xx -e usage -e evictions -e csv -i="-preprod" -i tariffs ISSupport-CAZ@informed.com
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+      PROJECT: tariffs
+      DEPLOY_ENVIRONMENT: preprod
+    when:
+      event:
+        - push
   ################################################ End Preprod Environment Steps ############################################################
 ---
 
@@ -1536,6 +1572,25 @@ steps:
       PROJECT: tariffs
       DEPLOY_ENVIRONMENT: prod
       LAMBDA_BUCKET: jaqu-shared-project-lambda-bucket
+    when:
+      event:
+        - push
+
+  # subscribe to operational monitoring alert in api prod
+  - name: subscribe to operational monitoring alert in api prod
+    image: alpine:3.11.6
+    commands:
+      - apk add --update python3 groff
+      - pip3 install awscli
+      - python3 ./ci-cd-resources/subscribe_to_alert_topics.py -e freeable-memory -e 4xx -e usage -e evictions -e csv -i="-prod" -i tariffs ISSupport-CAZ@informed.com
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+      PROJECT: tariffs
+      DEPLOY_ENVIRONMENT: prod
     when:
       event:
         - push
