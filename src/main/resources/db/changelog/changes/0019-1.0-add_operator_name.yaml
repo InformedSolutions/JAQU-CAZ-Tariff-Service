@@ -8,17 +8,7 @@ databaseChangeLog:
             dbms: postgresql
             endDelimiter: ;GO
             splitStatements: true
-            sql: 
-              DO $$ 
-                BEGIN
-                    BEGIN
-                        ALTER TABLE public.T_CHARGE_DEFINITION ADD CAZ_OPERATOR_NAME VARCHAR(50);
-                    EXCEPTION
-                        WHEN duplicate_column THEN RAISE NOTICE 'column CAZ_OPERATOR_NAME already exists in T_CHARGE_DEFINITION.';
-                    END;
-                END;
-              $$;
-
+            sql: ALTER TABLE public.T_CHARGE_DEFINITION ADD CAZ_OPERATOR_NAME VARCHAR(50);
               UPDATE T_CHARGE_DEFINITION
               SET CAZ_OPERATOR_NAME = 'Leeds City Council'
               WHERE CAZ_NAME = 'Leeds';
@@ -30,5 +20,5 @@ databaseChangeLog:
               UPDATE T_CHARGE_DEFINITION
               SET CAZ_OPERATOR_NAME = 'Bath and North East Somerset Council'
               WHERE CAZ_NAME = 'Bath';
-              
+
               ALTER TABLE public.T_CHARGE_DEFINITION ALTER COLUMN CAZ_OPERATOR_NAME SET NOT NULL;
