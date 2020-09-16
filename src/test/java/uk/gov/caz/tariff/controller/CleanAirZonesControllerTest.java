@@ -35,6 +35,7 @@ class CleanAirZonesControllerTest {
   private static final String SOME_CLEAN_AIR_ZONE_ID = "dc1efcaf-a2cf-41ec-aa37-ea4b28a20a1d";
   private static LocalDate ACTIVE_CHARGE_START_DATE = LocalDate.of(2018, 10, 28);
   private static final String SOME_URL = "www.test.uk";
+  private static final String MAIN_INFO_URL = "www.main.info";
 
   @Mock
   private TariffRepository tariffRepository;
@@ -64,6 +65,7 @@ class CleanAirZonesControllerTest {
                 "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/3"))
             .exemptionUrl(URI.create("https://exemption.birmingham.gov.uk"))
             .activeChargeStartDate("2018-10-28")
+            .mainInfoUrl(URI.create(MAIN_INFO_URL))
             .build()
     );
   }
@@ -144,23 +146,26 @@ class CleanAirZonesControllerTest {
                 "https://www.birmingham.gov.uk/info/20076/pollution/"
                     + "1763/a_clean_air_zone_for_birmingham/3",
                 "https://exemption.birmingham.gov.uk",
+                MAIN_INFO_URL,
                 ACTIVE_CHARGE_START_DATE),
 
             caz("Leeds", "39e54ed8-3ed2-441d-be3f-38fc9b70c8d3",
                 "https://www.arcgis.com/home/webmap/viewer.html?webmap="
                     + "de0120ae980b473982a3149ab072fdfc&extent=-1.733%2c53.7378%2c-1.333%2c53.8621",
                 "https://exemption.leeds.gov.uk",
+                MAIN_INFO_URL,
                 ACTIVE_CHARGE_START_DATE)
         )).build();
   }
 
   private CleanAirZoneDto caz(String cazName, String cleanAirZoneId, String boundaryUrl,
-      String exemptionUrl, LocalDate activeChargeStartDate) {
+      String exemptionUrl, String mainInfoUrl, LocalDate activeChargeStartDate) {
     return CleanAirZoneDto.builder()
         .name(cazName)
         .cleanAirZoneId(UUID.fromString(cleanAirZoneId))
         .boundaryUrl(URI.create(boundaryUrl))
         .exemptionUrl(URI.create(exemptionUrl))
+        .mainInfoUrl(URI.create(mainInfoUrl))
         .activeChargeStartDate(activeChargeStartDate.format(DateTimeFormatter.ISO_DATE))
         .build();
   }
