@@ -1,5 +1,5 @@
 application:
-  title: CAZ Tariff/Exemption Service
+  title: CAZ Tariff Service
 
 management:
   endpoints:
@@ -85,6 +85,8 @@ spring:
       maximum-pool-size: 1
       connection-timeout: 5000 # in ms
       max-lifetime: 0 # always keep the connection in the pool unless it has been closed
+  main:
+    banner-mode: "off"
 
 springfox:
   documentation:
