@@ -11,7 +11,7 @@
       "cleanAirZoneId": "5dd5c926-ed33-4a0a-b911-46324433e866",
       "name": "Bath",
       "boundaryUrl": "http://www.bathnes.gov.uk/zonemaps",
-      "exemptionUrl": "http://www.bathnes.gov.uk/BathCAZ",
+      "exemptionUrl": "http://www.bathnes.gov.uk/CAZexemptions",
       "activeChargeStartDate": "2018-10-28"
     }
   ]
