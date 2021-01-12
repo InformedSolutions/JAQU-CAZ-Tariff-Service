@@ -14,7 +14,7 @@
       "name": "Bath",
       "operatorName": "Bath and North East Somerset Council",
       "boundaryUrl": "http://www.bathnes.gov.uk/zonemaps",
-      "exemptionUrl": "http://www.bathnes.gov.uk/BathCAZ",
+      "exemptionUrl": "http://www.bathnes.gov.uk/CAZexemptions",
       "activeChargeStartDate": "2018-10-28",
       "directDebitEnabled": false
     }
