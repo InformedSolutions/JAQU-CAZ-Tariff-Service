@@ -2,7 +2,7 @@
   "cleanAirZoneId": "5dd5c926-ed33-4a0a-b911-46324433e866",
   "name": "Bath",
   "tariffClass": "C",
-  "chargeIdentifier": "BAC01",
+  "chargeIdentifier": "BAT01",
   "rates": {
     "bus": 5.5,
     "car": 15.5,
