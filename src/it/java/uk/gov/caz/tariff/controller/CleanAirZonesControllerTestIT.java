@@ -157,7 +157,7 @@ class CleanAirZonesControllerTestIT {
 
             caz("Bath", "5dd5c926-ed33-4a0a-b911-46324433e866",
                 "http://www.bathnes.gov.uk/zonemaps",
-                "http://www.bathnes.gov.uk/BathCAZ",
+                "http://www.bathnes.gov.uk/CAZexemptions",
                 ACTIVE_CHARGE_START_DATE, "Bath and North East Somerset Council")
         )).build();
   }
