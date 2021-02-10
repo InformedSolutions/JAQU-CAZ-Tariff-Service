@@ -189,7 +189,7 @@ steps:
 
   # Invoke terraform apply
   - name: deploy to dev
-    image: hashicorp/terraform:0.12.3
+    image: hashicorp/terraform:0.12.23
     commands:
       - apk update && apk add bash
       - mkdir ~/.ssh
@@ -435,7 +435,7 @@ steps:
 
   # Invoke terraform apply
   - name: plan updates in st
-    image: hashicorp/terraform:0.12.3
+    image: hashicorp/terraform:0.12.23
     commands:
       - apk update && apk add bash
       - mkdir ~/.ssh
@@ -496,7 +496,7 @@ steps:
 
   # Invoke terraform apply
   - name: deploy to st
-    image: hashicorp/terraform:0.12.3
+    image: hashicorp/terraform:0.12.23
     commands:
       - apk update && apk add bash
       - mkdir ~/.ssh
@@ -741,7 +741,7 @@ steps:
 
   # Invoke terraform apply
   - name: plan updates in sit
-    image: hashicorp/terraform:0.12.3
+    image: hashicorp/terraform:0.12.23
     commands:
       - apk update && apk add bash
       - mkdir ~/.ssh
@@ -802,7 +802,7 @@ steps:
 
   # Invoke terraform apply
   - name: deploy to sit
-    image: hashicorp/terraform:0.12.3
+    image: hashicorp/terraform:0.12.23
     commands:
       - apk update && apk add bash
       - mkdir ~/.ssh
@@ -945,7 +945,7 @@ volumes:
 
 steps:
   - name: plan updates in preprod
-    image: hashicorp/terraform:0.12.3
+    image: hashicorp/terraform:0.12.23
     commands:
       - apk add --update bash python python-dev py-pip build-base jq wget
       - pip install awscli
@@ -1015,7 +1015,7 @@ steps:
 
   # Invoke terraform apply
   - name: deploy to preprod
-    image: hashicorp/terraform:0.12.3
+    image: hashicorp/terraform:0.12.23
     commands:
       - apk add --update bash python python-dev py-pip build-base jq wget
       - pip install awscli
@@ -1269,7 +1269,7 @@ steps:
 
   # Invoke terraform apply
   - name: plan updates in uat
-    image: hashicorp/terraform:0.12.3
+    image: hashicorp/terraform:0.12.23
     commands:
       - apk update && apk add bash
       - mkdir ~/.ssh
@@ -1330,7 +1330,7 @@ steps:
 
   # Invoke terraform apply
   - name: deploy to uat
-    image: hashicorp/terraform:0.12.3
+    image: hashicorp/terraform:0.12.23
     commands:
       - apk update && apk add bash
       - mkdir ~/.ssh
@@ -1452,7 +1452,7 @@ volumes:
 
 steps:
   - name: plan updates in prod
-    image: hashicorp/terraform:0.12.3
+    image: hashicorp/terraform:0.12.23
     commands:
       - apk add --update bash python python-dev py-pip build-base jq wget
       - pip install awscli
@@ -1522,7 +1522,7 @@ steps:
 
   # Invoke terraform apply
   - name: deploy to prod
-    image: hashicorp/terraform:0.12.3
+    image: hashicorp/terraform:0.12.23
     commands:
       - apk add --update bash python python-dev py-pip build-base jq wget
       - pip install awscli
