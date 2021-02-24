@@ -34,9 +34,9 @@ class TariffRepositoryTest {
 
   private static final String SOME_URL = "www.test.uk";
 
-  private static final String SOME_CHARGE_IDENTIFIER = "LCC01";
+  private static final String SOME_CHARGE_IDENTIFIER = "BTH01";
 
-  private static final String LEEDS = "Leeds";
+  private static final String BATH = "Bath";
 
   @Mock
   private JdbcTemplate jdbcTemplate;
@@ -114,11 +114,11 @@ class TariffRepositoryTest {
         String argument = answer.getArgument(0);
         switch (argument) {
           case "caz_name":
-            return LEEDS;
+            return BATH;
           case "charge_identifier":
             return SOME_CHARGE_IDENTIFIER;
           case "caz_class":
-            return String.valueOf('C');
+            return String.valueOf('B');
           case "become_compliant_url":
           case "main_info_url":
           case "exemption_url":
@@ -169,7 +169,7 @@ class TariffRepositoryTest {
   private Tariff mockTariffInDB() {
     Tariff tariff = Tariff.builder()
         .cleanAirZoneId(SOME_CLEAN_AIR_ZONE_ID)
-        .name("Leeds")
+        .name("Bath")
         .build();
     when(jdbcTemplate.queryForObject(anyString(), any(TariffRowMapper.class), any())).thenReturn(
         tariff);
@@ -199,8 +199,8 @@ class TariffRepositoryTest {
         .build();
     return Tariff.builder()
         .cleanAirZoneId(SOME_CLEAN_AIR_ZONE_ID)
-        .name(LEEDS)
-        .tariffClass('C')
+        .name(BATH)
+        .tariffClass('B')
         .chargeIdentifier(SOME_CHARGE_IDENTIFIER)
         .rates(rates)
         .informationUrls(informationUrls)

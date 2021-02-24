@@ -40,7 +40,7 @@ class CleanAirZonesControllerTestIT {
 
   private static final String SOME_URL = "www.test.uk";
 
-  private static final String CLEAN_AIR_ZONE_ID = "dc1efcaf-a2cf-41ec-aa37-ea4b28a20a1d";
+  private static final String CLEAN_AIR_ZONE_ID = "5dd5c926-ed33-4a0a-b911-46324433e866";
 
   private static LocalDate ACTIVE_CHARGE_START_DATE = LocalDate.of(2018, 10, 28);
 
@@ -137,9 +137,9 @@ class CleanAirZonesControllerTestIT {
 
     return Optional.ofNullable(Tariff.builder()
         .cleanAirZoneId(UUID.fromString(CLEAN_AIR_ZONE_ID))
-        .name("Leeds")
-        .tariffClass('A')
-        .chargeIdentifier("LCC01")
+        .name("Bath")
+        .tariffClass('C')
+        .chargeIdentifier("BAT01")
         .activeChargeStartDate("2020-04-24")
         .informationUrls(informationUrls)
         .rates(rates)
@@ -155,11 +155,10 @@ class CleanAirZonesControllerTestIT {
                 "https://exemption.birmingham.gov.uk",
                 ACTIVE_CHARGE_START_DATE, "Birmingham City Council"),
 
-            caz("Leeds", "39e54ed8-3ed2-441d-be3f-38fc9b70c8d3",
-                "https://www.arcgis.com/home/webmap/viewer.html?webmap="
-                    + "de0120ae980b473982a3149ab072fdfc&extent=-1.733%2c53.7378%2c-1.333%2c53.8621",
-                "https://exemption.leeds.gov.uk",
-                ACTIVE_CHARGE_START_DATE, "Leeds City Council")
+            caz("Bath", "5dd5c926-ed33-4a0a-b911-46324433e866",
+                "http://www.bathnes.gov.uk/zonemaps",
+                "http://www.bathnes.gov.uk/CAZexemptions",
+                ACTIVE_CHARGE_START_DATE, "Bath and North East Somerset Council")
         )).build();
   }
 
