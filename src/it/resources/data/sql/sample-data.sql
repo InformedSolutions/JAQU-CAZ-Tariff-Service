@@ -17,8 +17,8 @@ INSERT INTO public.T_CHARGE_DEFINITION (CHARGE_DEFINITION_ID, CAZ_NAME, CAZ_CLAS
                                         CLEAN_AIR_ZONE_ID, CHARGE_IDENTIFIER,
                                         ACTIVE_CHARGE_START_TIME, ACTIVE_CHARGE_END_TIME,
                                         CAZ_OPERATOR_NAME)
-VALUES (2, 'Leeds', 'B', '39e54ed8-3ed2-441d-be3f-38fc9b70c8d3', 'LCC01', '2019-07-20',
-        '2019-11-20', 'Leeds City Council');
+VALUES (2, 'Bath', 'C', '5dd5c926-ed33-4a0a-b911-46324433e866', 'BAT01', '2018-10-28',
+        '2019-11-20', 'Bath and North East Somerset Council');
 
 INSERT INTO public.T_TARIFF_DEFINITION (CHARGE_DEFINITION_ID, HGV_ENTRANT_FEE, CAR_ENTRANT_FEE,
                                         MINIBUS_ENTRANT_FEE, TAXI_ENTRANT_FEE, PHV_ENTRANT_FEE,
@@ -58,9 +58,10 @@ INSERT INTO public.T_CAZ_LINK_DETAIL (CHARGE_DEFINITION_ID,
                                       ADDITIONAL_INFO_URL,
                                       PUBLIC_TRANSPORT_OPTIONS_URL)
 VALUES (2,
-        'https://www.arcgis.com/home/webmap/viewer.html?webmap=de0120ae980b473982a3149ab072fdfc&extent=-1.733%2c53.7378%2c-1.333%2c53.8621',
-        'https://www.leeds.gov.uk/business/environmental-health-for-business/air-quality',
-        'https://exemption.leeds.gov.uk',
-        'https://www.leeds.gov.uk/business/environmental-health-for-business/air-quality/exempt-vehicles-clean-air-charging-zone',
-        'https://www.leeds.gov.uk/business/environmental-health-for-business/air-quality?utm_source=Clean_Air_Leeds_Website&utm_medium=referral&utm_term=What_Are_We_Doing',
-        'https://cleanairleeds.co.uk/what-can-i-do/residents');
+        'http://www.bathnes.gov.uk/zonemaps',
+        'http://www.bathnes.gov.uk/BathCAZ',
+        'http://www.bathnes.gov.uk/CAZexemptions',
+        'http://www.bathnes.gov.uk/CAZsupport',
+        'https://www.bathnes.gov.uk/bath-breathes-2021-overview',
+        'http://www.bathnes.gov.uk/cleanair4bathnes');
+

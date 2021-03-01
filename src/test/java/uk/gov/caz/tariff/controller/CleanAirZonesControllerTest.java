@@ -129,11 +129,11 @@ class CleanAirZonesControllerTest {
         .build();
     Tariff tariff = Tariff.builder()
         .cleanAirZoneId(UUID.fromString(SOME_CLEAN_AIR_ZONE_ID))
-        .name("Leeds")
+        .name("Bath")
         .tariffClass('C')
         .informationUrls(informationUrls)
         .rates(rates)
-        .activeChargeStartDate("2020-04-23")
+        .activeChargeStartDate("2018-10-28")
         .build();
 
     return Optional.ofNullable(tariff);
@@ -149,10 +149,9 @@ class CleanAirZonesControllerTest {
                 MAIN_INFO_URL,
                 ACTIVE_CHARGE_START_DATE),
 
-            caz("Leeds", "39e54ed8-3ed2-441d-be3f-38fc9b70c8d3",
-                "https://www.arcgis.com/home/webmap/viewer.html?webmap="
-                    + "de0120ae980b473982a3149ab072fdfc&extent=-1.733%2c53.7378%2c-1.333%2c53.8621",
-                "https://exemption.leeds.gov.uk",
+            caz("Bath", "5dd5c926-ed33-4a0a-b911-46324433e866",
+                "http://www.bathnes.gov.uk/zonemaps",
+                "http://www.bathnes.gov.uk/CAZexemptions",
                 MAIN_INFO_URL,
                 ACTIVE_CHARGE_START_DATE)
         )).build();
