@@ -113,6 +113,8 @@ class CleanAirZonesControllerTest {
         .becomeCompliant(SOME_URL)
         .boundary(SOME_URL)
         .exemptionOrDiscount(SOME_URL)
+        .paymentsCompliance(SOME_URL)
+        .fleetsCompliance(SOME_URL)
         .mainInfo(SOME_URL)
         .build();
     Rates rates = Rates.builder()

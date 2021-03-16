@@ -123,7 +123,8 @@ class TariffRepositoryTest {
           case "main_info_url":
           case "exemption_url":
           case "boundary_url":
-          case "additional_info_url":
+          case "payments_compliance_url":
+          case "fleets_compliance_url":
           case "public_transport_options_url":
             return SOME_URL;
 
@@ -182,7 +183,8 @@ class TariffRepositoryTest {
         .exemptionOrDiscount(SOME_URL)
         .becomeCompliant(SOME_URL)
         .boundary(SOME_URL)
-        .additionalInfo(SOME_URL)
+        .paymentsCompliance(SOME_URL)
+        .fleetsCompliance(SOME_URL)
         .publicTransportOptions(SOME_URL)
         .build();
     Rates rates = Rates.builder()
