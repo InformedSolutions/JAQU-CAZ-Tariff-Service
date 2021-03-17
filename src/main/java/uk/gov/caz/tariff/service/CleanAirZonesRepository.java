@@ -28,7 +28,9 @@ public class CleanAirZonesRepository {
       + "charge.direct_debit_enabled, "
       + "link.boundary_url, "
       + "link.exemption_url, "
-      + "link.main_info_url "
+      + "link.main_info_url, "
+      + "link.payments_compliance_url, "
+      + "link.fleets_compliance_url "
       + "FROM t_charge_definition charge, t_caz_link_detail link "
       + "WHERE link.charge_definition_id = charge.charge_definition_id ";
 
@@ -63,6 +65,8 @@ public class CleanAirZonesRepository {
           .boundaryUrl(URI.create(rs.getString("boundary_url")))
           .exemptionUrl(URI.create(rs.getString("exemption_url")))
           .mainInfoUrl(URI.create(rs.getString("main_info_url")))
+          .paymentsComplianceUrl(URI.create(rs.getString("payments_compliance_url")))
+          .fleetsComplianceUrl(URI.create(rs.getString("fleets_compliance_url")))
           .activeChargeStartDate(safelyGetActiveChargeStartDate(rs))
           .operatorName(rs.getString("caz_operator_name"))
           .directDebitEnabled(rs.getBoolean("direct_debit_enabled"))
