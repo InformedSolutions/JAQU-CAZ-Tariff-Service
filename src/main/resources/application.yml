@@ -57,7 +57,8 @@ swagger:
       exemptionOrDiscountUrl: URL provided by zone operators, exemption or discount
       becomeCompliantUrl: URL provided by zone operators, become compliant
       boundaryUrl: URL provided by zone operators, boundary
-      additionalInfoUrl: URL provided by zone operators, additional info
+      paymentsComplianceUrl: URL provided by zone operators, payments compliance
+      fleetsComplianceUrl: URL provided by zone operators, fleets compliance
       publicTransportOptionsUrl: URL provided by zone operators, public transport options
     rate:
       bus: Price for bus

@@ -33,7 +33,8 @@ public class TariffRepository {
       + "link.exemption_url, "
       + "link.become_compliant_url, "
       + "link.boundary_url, "
-      + "link.additional_info_url, "
+      + "link.payments_compliance_url, "
+      + "link.fleets_compliance_url, "
       + "link.public_transport_options_url, "
       + "tar.hgv_entrant_fee, "
       + "tar.minibus_entrant_fee, "
@@ -94,7 +95,8 @@ public class TariffRepository {
               .mainInfo(rs.getString("main_info_url"))
               .exemptionOrDiscount(rs.getString("exemption_url"))
               .boundary(rs.getString("boundary_url"))
-              .additionalInfo(rs.getString("additional_info_url"))
+              .paymentsCompliance(rs.getString("payments_compliance_url"))
+              .fleetsCompliance(rs.getString("fleets_compliance_url"))
               .publicTransportOptions(rs.getString("public_transport_options_url"))
               .build())
           .rates(Rates.builder()
