@@ -2,6 +2,11 @@ databaseChangeLog:
   - changeSet:
       id: 0025.1-1.0
       author: dawid.ratka
+      preConditions:
+        - onFail: MARK_RAN
+        - sqlCheck:
+            expectedResult: 0
+            sql:  SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 't_caz_link_detail' AND column_name = 'payments_compliance_url' OR column_name = 'fleets_compliance_url';
       changes:
         - dropColumn:
             comment: Remove column for additionalInfoUrl
