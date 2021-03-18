@@ -1,8 +1,9 @@
 version: '2' # only version 2.x is supported by the maven plugin
 
 services:
-  postgres-it:
-    image: postgres:11-alpine
+  postgres-pgaudit-local:
+    build: ../../../docker/postgres-with-pgaudit
+    image: postgres-pgaudit-local:1
     ports:
       # if you modify the port, remember to change it in application's configuration as well
       - 9999:5432
