@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0026.1-0-update-pgaudit-level
+      author: informed
+      changes:
+        - sql:
+            comment: Uplift pgaudit to not log READ statements.
+            dbms: postgresql
+            endDelimiter: ;GO
+            splitStatements: true
+            sql: >-
+              CREATE EXTENSION if not exists pgaudit;
+              ALTER DATABASE "tariffs" set pgaudit.log = 'ALL, -READ';
+            stripComments: true

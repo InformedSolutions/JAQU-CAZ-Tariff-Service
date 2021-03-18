@@ -328,6 +328,7 @@
             <id>start</id>
             <phase>pre-integration-test</phase>
             <goals>
+              <goal>build</goal>           
               <goal>start</goal>
             </goals>
           </execution>
@@ -336,6 +337,7 @@
             <phase>post-integration-test</phase>
             <goals>
               <goal>stop</goal>
+              <goal>remove</goal>              
             </goals>
 
           </execution>
@@ -346,7 +348,7 @@
           <autoCreateCustomNetworks>true</autoCreateCustomNetworks>
           <images>
             <image>
-              <alias>postgres-it</alias>
+              <alias>postgres-pgaudit-local</alias>
               <external>
                 <type>compose</type>
                 <basedir>src/it/resources</basedir>
