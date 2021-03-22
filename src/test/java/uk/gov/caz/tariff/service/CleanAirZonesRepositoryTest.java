@@ -37,11 +37,13 @@ class CleanAirZonesRepositoryTest {
   private static final String MAIN_INFO_URL = "www.main.info";
   private static final String FLEETS_COMPLIANCE_URL = "www.fleets-compliance.info";
   private static final String PAYMENTS_COMPLIANCE_URL = "www.payments-compliance.info";
+  private static final String PRIVACY_POLICY_URL = "www.policy.info";
 
   private static final String BATH = "Bath";
   private static final String BATH_OPERATOR_NAME = "Bath and North East Somerset Council";
 
   private static LocalDate ACTIVE_CHARGE_START_DATE = LocalDate.of(2018, 10, 28);
+  private static LocalDate DISPLAY_FROM = LocalDate.of(2021, 3, 15);;
 
   @Mock
   private JdbcTemplate jdbcTemplate;
@@ -98,6 +100,8 @@ class CleanAirZonesRepositoryTest {
       when(resultSet.getDate("active_charge_start_time"))
           .thenReturn(Date.valueOf(ACTIVE_CHARGE_START_DATE));
 
+      when(resultSet.getDate("display_from")).thenReturn(Date.valueOf(DISPLAY_FROM));
+
       when(resultSet.getString(anyString())).thenAnswer(answer -> {
         String argument = answer.getArgument(0);
         switch (argument) {
@@ -111,10 +115,16 @@ class CleanAirZonesRepositoryTest {
             return MAIN_INFO_URL;
           case "payments_compliance_url":
             return PAYMENTS_COMPLIANCE_URL;
+          case "privacy_policy_url":
+            return PRIVACY_POLICY_URL;
           case "fleets_compliance_url":
             return FLEETS_COMPLIANCE_URL;
           case "caz_operator_name":
             return BATH_OPERATOR_NAME;
+          case "active_charge_start_date_text":
+            return "15 March 2021";
+          case "display_order":
+            return 1;
         }
         throw new RuntimeException("Value not stubbed!");
       });
@@ -137,20 +147,23 @@ class CleanAirZonesRepositoryTest {
                 "https://www.birmingham.gov.uk/info/20076/pollution/"
                     + "1763/a_clean_air_zone_for_birmingham/3",
                 "https://exemptions.birmingham.gov.uk", MAIN_INFO_URL, FLEETS_COMPLIANCE_URL,
-                PAYMENTS_COMPLIANCE_URL, ACTIVE_CHARGE_START_DATE, "Birmingham City Council",
-                false),
+                PAYMENTS_COMPLIANCE_URL, PRIVACY_POLICY_URL, ACTIVE_CHARGE_START_DATE,
+                "1 June 2021", DISPLAY_FROM, 2,
+                "Birmingham City Council", false),
 
             caz("Bath", "5dd5c926-ed33-4a0a-b911-46324433e866",
                 "http://www.bathnes.gov.uk/zonemaps",
                 "http://www.bathnes.gov.uk/CAZexemptions", MAIN_INFO_URL, FLEETS_COMPLIANCE_URL,
-                PAYMENTS_COMPLIANCE_URL, ACTIVE_CHARGE_START_DATE,
+                PAYMENTS_COMPLIANCE_URL, PRIVACY_POLICY_URL, ACTIVE_CHARGE_START_DATE,
+                "15 March 2021", DISPLAY_FROM, 1,
                 "Bath and North East Somerset Council", true)
         )).build().getCleanAirZones();
   }
 
   private CleanAirZoneDto caz(String cazName, String cleanAirZoneId, String boundaryUrl,
       String exemptionUrl, String mainInfoUrl, String fleetsComplianceUrl,
-      String paymentsComplianceUrl, LocalDate activeChargeStartDate,
+      String paymentsComplianceUrl, String privacyPolicyUrl, LocalDate activeChargeStartDate,
+      String activeChargeStartDateText, LocalDate displayFrom, Integer displayOrder,
       String operatorName, boolean directDebitEnabled) {
     return CleanAirZoneDto.builder()
         .name(cazName)
@@ -160,7 +173,11 @@ class CleanAirZonesRepositoryTest {
         .mainInfoUrl(URI.create(mainInfoUrl))
         .fleetsComplianceUrl(URI.create(fleetsComplianceUrl))
         .paymentsComplianceUrl(URI.create(paymentsComplianceUrl))
+        .privacyPolicyUrl(URI.create(privacyPolicyUrl))
         .activeChargeStartDate(activeChargeStartDate.format(DateTimeFormatter.ISO_DATE))
+        .activeChargeStartDateText(activeChargeStartDateText)
+        .displayFrom(displayFrom.format(DateTimeFormatter.ISO_DATE))
+        .displayOrder(displayOrder)
         .operatorName(operatorName)
         .directDebitEnabled(directDebitEnabled)
         .build();
@@ -175,8 +192,11 @@ class CleanAirZonesRepositoryTest {
         .exemptionUrl(URI.create(EXEMPTION_URL))
         .mainInfoUrl(URI.create(MAIN_INFO_URL))
         .paymentsComplianceUrl(URI.create(PAYMENTS_COMPLIANCE_URL))
+        .privacyPolicyUrl(URI.create(PRIVACY_POLICY_URL))
         .fleetsComplianceUrl(URI.create(FLEETS_COMPLIANCE_URL))
         .activeChargeStartDate(ACTIVE_CHARGE_START_DATE.format(DateTimeFormatter.ISO_DATE))
+        .activeChargeStartDateText("15 March 2021")
+        .displayFrom(DISPLAY_FROM.format(DateTimeFormatter.ISO_DATE))
         .build();
   }
 }

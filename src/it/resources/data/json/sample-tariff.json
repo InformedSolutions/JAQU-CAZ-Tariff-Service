@@ -21,6 +21,7 @@
     "becomeCompliant": "www.test.uk",
     "boundary": "www.test.uk",
     "paymentsCompliance": "www.test.uk",
+    "privacyPolicy": "www.test.uk",
     "fleetsCompliance": "www.test.uk",
     "publicTransportOptions": "www.test.uk"
   }

@@ -114,6 +114,7 @@ class CleanAirZonesControllerTest {
         .boundary(SOME_URL)
         .exemptionOrDiscount(SOME_URL)
         .paymentsCompliance(SOME_URL)
+        .privacyPolicy(SOME_URL)
         .fleetsCompliance(SOME_URL)
         .mainInfo(SOME_URL)
         .build();
@@ -135,7 +136,10 @@ class CleanAirZonesControllerTest {
         .tariffClass('C')
         .informationUrls(informationUrls)
         .rates(rates)
-        .activeChargeStartDate("2018-10-28")
+        .activeChargeStartDate("2021-03-15")
+        .activeChargeStartDateText("15 March 2021")
+        .displayFrom("2021-01-01")
+        .displayOrder(1)
         .build();
 
     return Optional.ofNullable(tariff);

@@ -1,6 +1,6 @@
 package uk.gov.caz.tariff.service;
 
-import static uk.gov.caz.tariff.service.RepositoryUtils.safelyGetActiveChargeStartDate;
+import static uk.gov.caz.tariff.service.RepositoryUtils.safelyGetDate;
 
 import com.google.common.annotations.VisibleForTesting;
 import java.sql.ResultSet;
@@ -29,11 +29,15 @@ public class TariffRepository {
       + "charge.charge_identifier, "
       + "charge.charging_disabled_vehicles, "
       + "charge.active_charge_start_time, "
+      + "charge.active_charge_start_date_text, "
+      + "charge.display_from, "
+      + "charge.display_order, "
       + "link.main_info_url, "
       + "link.exemption_url, "
       + "link.become_compliant_url, "
       + "link.boundary_url, "
       + "link.payments_compliance_url, "
+      + "link.privacy_policy_url, "
       + "link.fleets_compliance_url, "
       + "link.public_transport_options_url, "
       + "tar.hgv_entrant_fee, "
@@ -89,13 +93,17 @@ public class TariffRepository {
           .tariffClass(rs.getString("caz_class").charAt(0))
           .chargeIdentifier(rs.getString("charge_identifier"))
           .chargingDisabledVehicles(rs.getBoolean("charging_disabled_vehicles"))
-          .activeChargeStartDate(safelyGetActiveChargeStartDate(rs))
+          .activeChargeStartDate(safelyGetDate(rs, "active_charge_start_time"))
+          .activeChargeStartDateText(rs.getString("active_charge_start_date_text"))
+          .displayFrom(safelyGetDate(rs, "display_from"))
+          .displayOrder(rs.getObject("display_order", Integer.class))
           .informationUrls(InformationUrls.builder()
               .becomeCompliant(rs.getString("become_compliant_url"))
               .mainInfo(rs.getString("main_info_url"))
               .exemptionOrDiscount(rs.getString("exemption_url"))
               .boundary(rs.getString("boundary_url"))
               .paymentsCompliance(rs.getString("payments_compliance_url"))
+              .privacyPolicy(rs.getString("privacy_policy_url"))
               .fleetsCompliance(rs.getString("fleets_compliance_url"))
               .publicTransportOptions(rs.getString("public_transport_options_url"))
               .build())
