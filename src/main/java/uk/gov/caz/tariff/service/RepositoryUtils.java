@@ -14,19 +14,20 @@ import lombok.experimental.UtilityClass;
 public class RepositoryUtils {
 
   /**
-   * Given results set, takes active_charge_start_time value and returns String representation.
+   * Given results set, takes date value and returns String representation.
    *
    * @param rs Result set.
+   * @param columnName String column name in database
    * @return String representation of date.
    * @throws SQLException if date was malformed.
    */
-  public static String safelyGetActiveChargeStartDate(ResultSet rs) throws SQLException {
-    String chargeStartTime = "";
-    Date chargeStartTimeDt = rs.getDate("active_charge_start_time");
-    if (chargeStartTimeDt != null) {
-      LocalDate localDate = chargeStartTimeDt.toLocalDate();
-      chargeStartTime = localDate.format(DateTimeFormatter.ISO_DATE);
+  public static String safelyGetDate(ResultSet rs, String columnName) throws SQLException {
+    String dateTime = "";
+    Date dateValueDt = rs.getDate(columnName);
+    if (dateValueDt != null) {
+      LocalDate localDate = dateValueDt.toLocalDate();
+      dateTime = localDate.format(DateTimeFormatter.ISO_DATE);
     }
-    return chargeStartTime;
+    return dateTime;
   }
 }

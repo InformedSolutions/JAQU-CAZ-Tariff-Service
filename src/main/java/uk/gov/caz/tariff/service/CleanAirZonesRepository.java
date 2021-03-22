@@ -1,6 +1,6 @@
 package uk.gov.caz.tariff.service;
 
-import static uk.gov.caz.tariff.service.RepositoryUtils.safelyGetActiveChargeStartDate;
+import static uk.gov.caz.tariff.service.RepositoryUtils.safelyGetDate;
 
 import com.google.common.annotations.VisibleForTesting;
 import java.net.URI;
@@ -24,12 +24,16 @@ public class CleanAirZonesRepository {
   static final String SELECT_ALL_SQL = "SELECT charge.clean_air_zone_id, "
       + "charge.caz_name, "
       + "charge.active_charge_start_time, "
+      + "charge.active_charge_start_date_text, "
+      + "charge.display_from, "
+      + "charge.display_order, "
       + "charge.caz_operator_name, "
       + "charge.direct_debit_enabled, "
       + "link.boundary_url, "
       + "link.exemption_url, "
       + "link.main_info_url, "
       + "link.payments_compliance_url, "
+      + "link.privacy_policy_url, "
       + "link.fleets_compliance_url "
       + "FROM t_charge_definition charge, t_caz_link_detail link "
       + "WHERE link.charge_definition_id = charge.charge_definition_id ";
@@ -66,8 +70,12 @@ public class CleanAirZonesRepository {
           .exemptionUrl(URI.create(rs.getString("exemption_url")))
           .mainInfoUrl(URI.create(rs.getString("main_info_url")))
           .paymentsComplianceUrl(URI.create(rs.getString("payments_compliance_url")))
+          .privacyPolicyUrl(URI.create(rs.getString("privacy_policy_url")))
           .fleetsComplianceUrl(URI.create(rs.getString("fleets_compliance_url")))
-          .activeChargeStartDate(safelyGetActiveChargeStartDate(rs))
+          .activeChargeStartDate(safelyGetDate(rs, "active_charge_start_time"))
+          .activeChargeStartDateText(rs.getString("active_charge_start_date_text"))
+          .displayFrom(safelyGetDate(rs, "display_from"))
+          .displayOrder(rs.getObject("display_order", Integer.class))
           .operatorName(rs.getString("caz_operator_name"))
           .directDebitEnabled(rs.getBoolean("direct_debit_enabled"))
           .build();
