@@ -36,8 +36,10 @@ public class TariffRepositoryTestIT {
 
     // then
     assertThat(tariff)
-        .isEqualToComparingOnlyGivenFields(expectedTariff(), "cleanAirZoneId", "name", "tariffClass",
-            "chargeIdentifier", "activeChargeStartDate", "rates.hgv", "rates.car", "rates.miniBus", "rates.taxi");
+        .isEqualToComparingOnlyGivenFields(expectedTariff(), "cleanAirZoneId",
+            "name", "tariffClass", "chargeIdentifier", "activeChargeStartDate",
+            "activeChargeStartDateText", "displayFrom", "displayOrder", "rates.hgv", "rates.car",
+            "rates.miniBus", "rates.taxi");
   }
 
   @Test
@@ -65,7 +67,10 @@ public class TariffRepositoryTestIT {
         .tariffClass('D')
         .chargeIdentifier("BCC01")
         .rates(rates)
-        .activeChargeStartDate("2019-08-20")
+        .activeChargeStartDate("2021-06-01")
+        .activeChargeStartDateText("1 June 2021")
+        .displayFrom("2021-01-01")
+        .displayOrder(2)
         .build();
   }
 

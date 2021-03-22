@@ -10,15 +10,17 @@ VALUES ('D', 'Buses, coaches, taxis, PHVs, HGVs LGVs and cars');
 INSERT INTO public.T_CHARGE_DEFINITION (CHARGE_DEFINITION_ID, CAZ_NAME, CAZ_CLASS,
                                         CLEAN_AIR_ZONE_ID, CHARGE_IDENTIFIER,
                                         ACTIVE_CHARGE_START_TIME, ACTIVE_CHARGE_END_TIME,
-                                        CAZ_OPERATOR_NAME, DISPLAY_FROM, DISPLAY_ORDER)
-VALUES (1, 'Birmingham', 'D', '5cd7441d-766f-48ff-b8ad-1809586fea37', 'BCC01', '2019-08-20',
-        '2019-12-20', 'Birmingham City Council', '2019-12-20', 1);
+                                        ACTIVE_CHARGE_START_DATE_TEXT,CAZ_OPERATOR_NAME,
+                                        DISPLAY_FROM, DISPLAY_ORDER)
+VALUES (1, 'Birmingham', 'D', '5cd7441d-766f-48ff-b8ad-1809586fea37', 'BCC01', '2021-06-01',
+        '2021-12-20', '1 June 2021', 'Birmingham City Council', '2021-01-01', 2);
+
 INSERT INTO public.T_CHARGE_DEFINITION (CHARGE_DEFINITION_ID, CAZ_NAME, CAZ_CLASS,
                                         CLEAN_AIR_ZONE_ID, CHARGE_IDENTIFIER,
                                         ACTIVE_CHARGE_START_TIME, ACTIVE_CHARGE_END_TIME,
                                         CAZ_OPERATOR_NAME, DISPLAY_FROM, DISPLAY_ORDER)
-VALUES (2, 'Bath', 'C', '5dd5c926-ed33-4a0a-b911-46324433e866', 'BAT01', '2018-10-28',
-        '2019-11-20', 'Bath and North East Somerset Council', '2019-12-20', 2);
+VALUES (2, 'Bath', 'C', '5dd5c926-ed33-4a0a-b911-46324433e866', 'BAT01', '2021-03-15',
+        '2021-11-20', 'Bath and North East Somerset Council', '2021-01-01', 1);
 
 INSERT INTO public.T_TARIFF_DEFINITION (CHARGE_DEFINITION_ID, HGV_ENTRANT_FEE, CAR_ENTRANT_FEE,
                                         MINIBUS_ENTRANT_FEE, TAXI_ENTRANT_FEE, PHV_ENTRANT_FEE,
