@@ -41,4 +41,13 @@ public class Tariff {
 
   @ApiModelProperty(value = "${swagger.model.descriptions.tariff.activeChargeStartDate}")
   String activeChargeStartDate;
+
+  @ApiModelProperty(value = "${swagger.model.descriptions.tariff.activeChargeStartDateText}")
+  String activeChargeStartDateText;
+
+  @ApiModelProperty(value = "${swagger.model.descriptions.tariff.displayFrom}")
+  String displayFrom;
+
+  @ApiModelProperty(value = "${swagger.model.descriptions.tariff.displayOrder}")
+  Integer displayOrder;
 }

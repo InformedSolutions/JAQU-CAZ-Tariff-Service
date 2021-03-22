@@ -44,7 +44,10 @@ swagger:
       exemptionUrl: URL provided by zone operators, exemption
       activeChargeStartDate: ISO-8601 formatted date of when CAZ has effectively started to charge
     tariff:
+      activeChargeStartDateText: Text date when a CAZ becomes visible
       cleanAirZoneId: ID of the zone
+      displayFrom: The textual content displayed on the VCCS compliance page in the “Zone live” column
+      displayOrder: The ordering of Clean Air Zones in display components
       name: Name of Tariff
       traiffClass: Tariff Class
       chargeIdentifier: Charge Identifier
@@ -58,6 +61,7 @@ swagger:
       becomeCompliantUrl: URL provided by zone operators, become compliant
       boundaryUrl: URL provided by zone operators, boundary
       paymentsComplianceUrl: URL provided by zone operators, payments compliance
+      privacyPolicyUrl: URL linking to privacy policy page published by a given Clean Air Zone operator
       fleetsComplianceUrl: URL provided by zone operators, fleets compliance
       publicTransportOptionsUrl: URL provided by zone operators, public transport options
     rate:

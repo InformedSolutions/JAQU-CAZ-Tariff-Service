@@ -19,7 +19,7 @@ import static uk.gov.caz.security.SecurityHeadersInjector.X_CONTENT_TYPE_OPTIONS
 import static uk.gov.caz.security.SecurityHeadersInjector.X_FRAME_OPTIONS_HEADER;
 import static uk.gov.caz.security.SecurityHeadersInjector.X_FRAME_OPTIONS_VALUE;
 import static uk.gov.caz.tariff.util.JsonReader.cleanAirZonesJson;
-import static uk.gov.caz.tariff.util.JsonReader.tariffJson;
+import static uk.gov.caz.tariff.util.JsonReader.birminghamTariffJson;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +71,7 @@ public class CazTestIT {
         .contentType(MediaType.APPLICATION_JSON_VALUE)
         .accept(MediaType.APPLICATION_JSON_VALUE)
         .header(X_CORRELATION_ID_HEADER, SOME_CORRELATION_ID))
-        .andExpect(content().json(tariffJson()))
+        .andExpect(content().json(birminghamTariffJson()))
         .andExpect(status().isOk())
         .andExpect(header().string(X_CORRELATION_ID_HEADER, SOME_CORRELATION_ID));
   }
