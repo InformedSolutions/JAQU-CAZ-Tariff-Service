@@ -36,7 +36,8 @@ public class CleanAirZonesRepository {
       + "link.privacy_policy_url, "
       + "link.fleets_compliance_url "
       + "FROM t_charge_definition charge, t_caz_link_detail link "
-      + "WHERE link.charge_definition_id = charge.charge_definition_id ";
+      + "WHERE link.charge_definition_id = charge.charge_definition_id "
+      + "ORDER BY charge.display_order ";
 
   private static final CleanAirZoneRowMapper MAPPER = new CleanAirZoneRowMapper();
 
