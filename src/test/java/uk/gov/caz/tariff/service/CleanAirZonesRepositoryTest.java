@@ -62,7 +62,7 @@ class CleanAirZonesRepositoryTest {
     // then
     assertThat(result.getCleanAirZones())
         .hasSize(2)
-        .contains(cleanAirZones.get(0), cleanAirZones.get(1));
+        .containsExactly(cleanAirZones.get(0), cleanAirZones.get(1));
   }
 
   @Test
