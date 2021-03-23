@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0027.1-1.0
+      author: exlabs
+      changes:
+        - sql:
+            comment: Update display order for Birmingham CAZ
+            dbms: postgresql
+            endDelimiter: ;GO
+            splitStatements: true
+            sql:
+              UPDATE public.t_charge_definition
+              SET display_order = 2
+              WHERE CHARGE_DEFINITION_ID = 1;
+            stripComments: true
