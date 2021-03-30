@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0029-1.0
+      author: Informed
+      changes:
+        - sql:
+            comment: Add portsmouth tariffs and links
+            dbms: postgresql
+            endDelimiter: ;GO
+            splitStatements: true
+            sql: 
+              UPDATE public.t_charge_definition
+              SET  active_charge_start_date_text='26 November 2021'
+              WHERE charge_definition_id=4;
