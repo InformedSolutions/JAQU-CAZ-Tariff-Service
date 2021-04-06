@@ -29,6 +29,7 @@ public class CleanAirZonesRepository {
       + "charge.display_order, "
       + "charge.caz_operator_name, "
       + "charge.direct_debit_enabled, "
+      + "charge.direct_debit_start_date_text, "
       + "link.boundary_url, "
       + "link.exemption_url, "
       + "link.main_info_url, "
@@ -79,6 +80,7 @@ public class CleanAirZonesRepository {
           .displayOrder(rs.getObject("display_order", Integer.class))
           .operatorName(rs.getString("caz_operator_name"))
           .directDebitEnabled(rs.getBoolean("direct_debit_enabled"))
+          .directDebitStartDateText(rs.getString("direct_debit_start_date_text"))
           .build();
     }
   }

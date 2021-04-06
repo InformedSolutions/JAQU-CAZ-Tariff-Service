@@ -1,6 +1,7 @@
 package uk.gov.caz.tariff.controller;
 
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import uk.gov.caz.tariff.service.TariffRepository;
  */
 @RestController
 @Slf4j
+@RequiredArgsConstructor
 public class CleanAirZonesController implements CleanAirZonesControllerApiSpec {
 
   public static final String PATH = "/v1/clean-air-zones";
@@ -24,12 +26,6 @@ public class CleanAirZonesController implements CleanAirZonesControllerApiSpec {
   private final TariffRepository tariffRepository;
 
   private final CleanAirZonesRepository cleanAirZonesRepository;
-
-  public CleanAirZonesController(TariffRepository tariffRepository,
-      CleanAirZonesRepository cleanAirZonesRepository) {
-    this.tariffRepository = tariffRepository;
-    this.cleanAirZonesRepository = cleanAirZonesRepository;
-  }
 
   @Override
   public ResponseEntity<CleanAirZonesDto> cleanAirZones() {

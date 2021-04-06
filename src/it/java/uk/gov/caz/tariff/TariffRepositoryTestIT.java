@@ -29,8 +29,6 @@ public class TariffRepositoryTestIT {
 
   @Test
   public void shouldReturnSampleTariff() {
-    // given
-
     // when
     Tariff tariff = tariffRepository.findByCleanAirZoneId(CLEAN_AIR_ZONE_ID).get();
 
@@ -38,8 +36,8 @@ public class TariffRepositoryTestIT {
     assertThat(tariff)
         .isEqualToComparingOnlyGivenFields(expectedTariff(), "cleanAirZoneId",
             "name", "tariffClass", "chargeIdentifier", "activeChargeStartDate",
-            "activeChargeStartDateText", "displayFrom", "displayOrder", "rates.hgv", "rates.car",
-            "rates.miniBus", "rates.taxi");
+            "activeChargeStartDateText", "displayFrom", "displayOrder", "directDebitStartDateText",
+            "rates.hgv", "rates.car", "rates.miniBus", "rates.taxi");
   }
 
   @Test
@@ -71,6 +69,7 @@ public class TariffRepositoryTestIT {
         .activeChargeStartDateText("1 June 2021")
         .displayFrom("2021-01-01")
         .displayOrder(2)
+        .directDebitStartDateText("4 May 2021")
         .build();
   }
 

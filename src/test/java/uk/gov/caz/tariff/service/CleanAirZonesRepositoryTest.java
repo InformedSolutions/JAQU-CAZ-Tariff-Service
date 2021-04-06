@@ -41,6 +41,7 @@ class CleanAirZonesRepositoryTest {
 
   private static final String BATH = "Bath";
   private static final String BATH_OPERATOR_NAME = "Bath and North East Somerset Council";
+  private static final String DIRECT_DEBIT_START_DATE_TEXT = "4 May 2021";
 
   private static LocalDate ACTIVE_CHARGE_START_DATE = LocalDate.of(2018, 10, 28);
   private static LocalDate DISPLAY_FROM = LocalDate.of(2021, 3, 15);;
@@ -123,6 +124,8 @@ class CleanAirZonesRepositoryTest {
             return BATH_OPERATOR_NAME;
           case "active_charge_start_date_text":
             return "15 March 2021";
+          case "direct_debit_start_date_text":
+            return "4 May 2021";
           case "display_order":
             return 1;
         }
@@ -197,6 +200,7 @@ class CleanAirZonesRepositoryTest {
         .activeChargeStartDate(ACTIVE_CHARGE_START_DATE.format(DateTimeFormatter.ISO_DATE))
         .activeChargeStartDateText("15 March 2021")
         .displayFrom(DISPLAY_FROM.format(DateTimeFormatter.ISO_DATE))
+        .directDebitStartDateText(DIRECT_DEBIT_START_DATE_TEXT)
         .build();
   }
 }
