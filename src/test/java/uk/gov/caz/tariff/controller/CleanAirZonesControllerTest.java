@@ -36,6 +36,7 @@ class CleanAirZonesControllerTest {
   private static LocalDate ACTIVE_CHARGE_START_DATE = LocalDate.of(2018, 10, 28);
   private static final String SOME_URL = "www.test.uk";
   private static final String MAIN_INFO_URL = "www.main.info";
+  private static final String DIRECT_DEBIT_START_DATE_TEXT = "4 May 2021";
 
   @Mock
   private TariffRepository tariffRepository;
@@ -66,6 +67,7 @@ class CleanAirZonesControllerTest {
             .exemptionUrl(URI.create("https://exemption.birmingham.gov.uk"))
             .activeChargeStartDate("2018-10-28")
             .mainInfoUrl(URI.create(MAIN_INFO_URL))
+            .directDebitStartDateText(DIRECT_DEBIT_START_DATE_TEXT)
             .build()
     );
   }
@@ -153,18 +155,21 @@ class CleanAirZonesControllerTest {
                     + "1763/a_clean_air_zone_for_birmingham/3",
                 "https://exemption.birmingham.gov.uk",
                 MAIN_INFO_URL,
-                ACTIVE_CHARGE_START_DATE),
+                ACTIVE_CHARGE_START_DATE,
+                DIRECT_DEBIT_START_DATE_TEXT),
 
             caz("Bath", "5dd5c926-ed33-4a0a-b911-46324433e866",
                 "http://www.bathnes.gov.uk/zonemaps",
                 "http://www.bathnes.gov.uk/CAZexemptions",
                 MAIN_INFO_URL,
-                ACTIVE_CHARGE_START_DATE)
+                ACTIVE_CHARGE_START_DATE,
+                DIRECT_DEBIT_START_DATE_TEXT)
         )).build();
   }
 
   private CleanAirZoneDto caz(String cazName, String cleanAirZoneId, String boundaryUrl,
-      String exemptionUrl, String mainInfoUrl, LocalDate activeChargeStartDate) {
+      String exemptionUrl, String mainInfoUrl, LocalDate activeChargeStartDate,
+      String directDebitStartDateText) {
     return CleanAirZoneDto.builder()
         .name(cazName)
         .cleanAirZoneId(UUID.fromString(cleanAirZoneId))
@@ -172,6 +177,7 @@ class CleanAirZonesControllerTest {
         .exemptionUrl(URI.create(exemptionUrl))
         .mainInfoUrl(URI.create(mainInfoUrl))
         .activeChargeStartDate(activeChargeStartDate.format(DateTimeFormatter.ISO_DATE))
+        .directDebitStartDateText(directDebitStartDateText)
         .build();
   }
 }

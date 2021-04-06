@@ -35,14 +35,6 @@ swagger:
         description: Evolve DB schema
 
   model.descriptions:
-    cleanAirZones:
-      cleanAirZoneDetails: List of Clean Air Zones
-    cleanAirZone:
-      cleanAirZoneId: ID of the zone
-      name: Name of Tariff
-      boundaryUrl: URL provided by zone operators, boundary
-      exemptionUrl: URL provided by zone operators, exemption
-      activeChargeStartDate: ISO-8601 formatted date of when CAZ has effectively started to charge
     tariff:
       activeChargeStartDateText: Text date when a CAZ becomes visible
       cleanAirZoneId: ID of the zone
@@ -55,6 +47,7 @@ swagger:
       informationUrls: URLs information
       chargingDisabledVehicles: Indicates if vehicles with 'DISABLED' tax class are chargeable under this tariff
       activeChargeStartDate: ISO-8601 formatted date of when CAZ has effectively started to charge
+      directDebitStartDateText: Text date when payments with direct debits are going to be enabled
     informationUrl:
       mainInfoUrl: URL provided by zone operators, clean air zone
       exemptionOrDiscountUrl: URL provided by zone operators, exemption or discount

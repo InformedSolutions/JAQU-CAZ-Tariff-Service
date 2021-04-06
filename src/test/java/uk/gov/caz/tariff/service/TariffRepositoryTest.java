@@ -36,6 +36,7 @@ class TariffRepositoryTest {
   private static final String SOME_CHARGE_IDENTIFIER = "BTH01";
   private static final String BATH = "Bath";
   private static LocalDate DISPLAY_FROM = LocalDate.of(2021, 1, 1);;
+  private static final String DIRECT_DEBIT_START_DATE_TEXT = "4 May 2021";
 
   @Mock
   private JdbcTemplate jdbcTemplate;
@@ -133,7 +134,8 @@ class TariffRepositoryTest {
           case "fleets_compliance_url":
           case "public_transport_options_url":
             return SOME_URL;
-
+          case "direct_debit_start_date_text":
+            return DIRECT_DEBIT_START_DATE_TEXT;
         }
         throw new RuntimeException("Value not stubbed!");
       });
@@ -218,6 +220,7 @@ class TariffRepositoryTest {
         .activeChargeStartDate("2020-01-01")
         .activeChargeStartDateText("15 March 2021")
         .displayFrom(String.valueOf(DISPLAY_FROM))
+        .directDebitStartDateText(DIRECT_DEBIT_START_DATE_TEXT)
         .build();
   }
 
