@@ -50,4 +50,7 @@ public class Tariff {
 
   @ApiModelProperty(value = "${swagger.model.descriptions.tariff.displayOrder}")
   Integer displayOrder;
+
+  @ApiModelProperty(value = "${swagger.model.descriptions.tariff.directDebitStartDateText}")
+  String directDebitStartDateText;
 }
