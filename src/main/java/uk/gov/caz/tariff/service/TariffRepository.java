@@ -32,6 +32,7 @@ public class TariffRepository {
       + "charge.active_charge_start_date_text, "
       + "charge.display_from, "
       + "charge.display_order, "
+      + "charge.direct_debit_start_date_text, "
       + "link.main_info_url, "
       + "link.exemption_url, "
       + "link.become_compliant_url, "
@@ -97,6 +98,7 @@ public class TariffRepository {
           .activeChargeStartDateText(rs.getString("active_charge_start_date_text"))
           .displayFrom(safelyGetDate(rs, "display_from"))
           .displayOrder(rs.getObject("display_order", Integer.class))
+          .directDebitStartDateText(rs.getString("direct_debit_start_date_text"))
           .informationUrls(InformationUrls.builder()
               .becomeCompliant(rs.getString("become_compliant_url"))
               .mainInfo(rs.getString("main_info_url"))
