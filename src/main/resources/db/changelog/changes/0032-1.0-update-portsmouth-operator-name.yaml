@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0032-1.0
+      author: Informed
+      changes:
+        - sql:
+            comment: Update portsmouth operator name
+            dbms: postgresql
+            endDelimiter: ;GO
+            splitStatements: true
+            sql: 
+              UPDATE public.t_charge_definition
+              SET  caz_operator_name='Portsmouth City Council'
+              WHERE charge_definition_id=4;
