@@ -84,15 +84,6 @@ services:
 
 steps:
 
-  # Clean agent images and containers to prevent disk space overuse
-  - name: clean agent
-    image: docker:19.03.11-git
-    commands:
-      - docker system prune -f
-    volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
-
   # Build Docker Image for Running Maven
   - name: build docker maven base
     image: docker:19.03.11-git
@@ -307,8 +298,6 @@ steps:
     when:
       event:
         - push
-
-
 ################################################ End of  Dev Environment Steps ############################################################
 
 ---
@@ -615,8 +604,6 @@ steps:
     when:
       event:
         - push
-
-
 ################################################ End of ST Environment Steps ############################################################
 
 ---
@@ -922,7 +909,6 @@ steps:
     when:
       event:
         - push
-
   ################################################ End of SIT Environment Steps ############################################################
 
 ---
@@ -1144,7 +1130,6 @@ steps:
     when:
       event:
         - push
-
   ################################################ End Preprod Environment Steps ############################################################
 ---
 

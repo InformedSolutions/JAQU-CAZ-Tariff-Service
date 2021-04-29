@@ -42,8 +42,6 @@ class CleanAirZonesControllerTestIT {
 
   private static final String CLEAN_AIR_ZONE_ID = "5dd5c926-ed33-4a0a-b911-46324433e866";
 
-  private static LocalDate ACTIVE_CHARGE_START_DATE = LocalDate.of(2018, 10, 28);
-
   private static final String SOME_CORRELATION_ID = UUID.randomUUID().toString();
 
   @MockBean
@@ -119,7 +117,9 @@ class CleanAirZonesControllerTestIT {
         .boundary(SOME_URL)
         .exemptionOrDiscount(SOME_URL)
         .mainInfo(SOME_URL)
-        .additionalInfo(SOME_URL)
+        .paymentsCompliance(SOME_URL)
+        .privacyPolicy(SOME_URL)
+        .fleetsCompliance(SOME_URL)
         .publicTransportOptions(SOME_URL)
         .build();
     Rates rates = Rates.builder()
@@ -140,7 +140,10 @@ class CleanAirZonesControllerTestIT {
         .name("Bath")
         .tariffClass('C')
         .chargeIdentifier("BAT01")
-        .activeChargeStartDate("2020-04-24")
+        .activeChargeStartDate("2021-03-15")
+        .activeChargeStartDateText("15 March 2021")
+        .displayFrom("2020-01-01")
+        .displayOrder(1)
         .informationUrls(informationUrls)
         .rates(rates)
         .build());
@@ -153,23 +156,36 @@ class CleanAirZonesControllerTestIT {
                 "https://www.birmingham.gov.uk/info/20076/pollution/"
                     + "1763/a_clean_air_zone_for_birmingham/3",
                 "https://exemption.birmingham.gov.uk",
-                ACTIVE_CHARGE_START_DATE, "Birmingham City Council"),
+                "https://www.birmingham.gov.uk/info/20015/environment/2005/privacy_statement_-_environmental_health/2",
+                LocalDate.of(2021, 6, 1),
+                "1 June 2021",
+                LocalDate.of(2021, 1, 1), 2,
+                "Birmingham City Council"),
 
             caz("Bath", "5dd5c926-ed33-4a0a-b911-46324433e866",
                 "http://www.bathnes.gov.uk/zonemaps",
                 "http://www.bathnes.gov.uk/CAZexemptions",
-                ACTIVE_CHARGE_START_DATE, "Bath and North East Somerset Council")
+                "https://beta.bathnes.gov.uk/council-privacy-policy",
+                LocalDate.of(2021, 3, 15),
+                "15 March 2021",
+                LocalDate.of(2021, 1, 1), 1,
+                "Bath and North East Somerset Council")
         )).build();
   }
 
   private CleanAirZoneDto caz(String cazName, String cleanAirZoneId, String boundaryUrl,
-      String exemptionUrl, LocalDate activeChargeStartDate, String operatorName) {
+      String exemptionUrl, String privacyPolicyUrl, LocalDate activeChargeStartDate, String activeChargeStartDateText,
+      LocalDate displayFrom, Integer displayOrder,String operatorName) {
     return CleanAirZoneDto.builder()
         .name(cazName)
         .cleanAirZoneId(UUID.fromString(cleanAirZoneId))
         .boundaryUrl(URI.create(boundaryUrl))
         .exemptionUrl(URI.create(exemptionUrl))
+        .privacyPolicyUrl(URI.create(privacyPolicyUrl))
         .activeChargeStartDate(activeChargeStartDate.format(DateTimeFormatter.ISO_DATE))
+        .activeChargeStartDateText(activeChargeStartDateText)
+        .displayFrom(displayFrom.format(DateTimeFormatter.ISO_DATE))
+        .displayOrder(displayOrder)
         .operatorName(operatorName)
         .build();
   }

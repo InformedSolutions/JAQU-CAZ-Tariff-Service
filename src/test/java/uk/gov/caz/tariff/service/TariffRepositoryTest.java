@@ -11,6 +11,7 @@ import java.math.RoundingMode;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Nested;
@@ -31,12 +32,11 @@ class TariffRepositoryTest {
 
   private static final UUID SOME_CLEAN_AIR_ZONE_ID = UUID
       .fromString("dc1efcaf-a2cf-41ec-aa37-ea4b28a20a1d");
-
   private static final String SOME_URL = "www.test.uk";
-
   private static final String SOME_CHARGE_IDENTIFIER = "BTH01";
-
   private static final String BATH = "Bath";
+  private static LocalDate DISPLAY_FROM = LocalDate.of(2021, 1, 1);;
+  private static final String DIRECT_DEBIT_START_DATE_TEXT = "4 May 2021";
 
   @Mock
   private JdbcTemplate jdbcTemplate;
@@ -89,7 +89,7 @@ class TariffRepositoryTest {
 
     @Test
     public void shouldMapResultSetToTariff() throws SQLException {
-      ResultSet resultSet = mockResultSet(Date.valueOf("2020-01-01"));
+      ResultSet resultSet = mockResultSet(Date.valueOf("2020-01-01"), Date.valueOf(DISPLAY_FROM));
 
       Tariff tariff = rowMapper.mapRow(resultSet, 0);
 
@@ -98,7 +98,7 @@ class TariffRepositoryTest {
 
     @Test
     public void shouldReturnEmptyStringWhenChargeDateIsMissing() throws SQLException {
-      ResultSet resultSet = mockResultSet(null);
+      ResultSet resultSet = mockResultSet(null, null);
 
       Tariff tariff = rowMapper.mapRow(resultSet, 0);
 
@@ -106,7 +106,7 @@ class TariffRepositoryTest {
     }
 
 
-    private ResultSet mockResultSet(Date activeChargeStartDate) throws SQLException {
+    private ResultSet mockResultSet(Date activeChargeStartDate, Date displayFrom) throws SQLException {
       ResultSet resultSet = mock(ResultSet.class);
       when(resultSet.getObject("clean_air_zone_id", UUID.class)).thenReturn(SOME_CLEAN_AIR_ZONE_ID);
 
@@ -119,14 +119,23 @@ class TariffRepositoryTest {
             return SOME_CHARGE_IDENTIFIER;
           case "caz_class":
             return String.valueOf('B');
+          case "active_charge_start_date_text":
+            return "15 March 2021";
+          case "display_order":
+            return 1;
+          case "display_from":
+            return displayFrom;
           case "become_compliant_url":
           case "main_info_url":
           case "exemption_url":
           case "boundary_url":
-          case "additional_info_url":
+          case "payments_compliance_url":
+          case "privacy_policy_url":
+          case "fleets_compliance_url":
           case "public_transport_options_url":
             return SOME_URL;
-
+          case "direct_debit_start_date_text":
+            return DIRECT_DEBIT_START_DATE_TEXT;
         }
         throw new RuntimeException("Value not stubbed!");
       });
@@ -162,6 +171,8 @@ class TariffRepositoryTest {
       when(resultSet.getDate("active_charge_start_time"))
           .thenReturn(activeChargeStartDate);
 
+      when(resultSet.getDate("display_from")).thenReturn(displayFrom);
+
       return resultSet;
     }
   }
@@ -182,7 +193,9 @@ class TariffRepositoryTest {
         .exemptionOrDiscount(SOME_URL)
         .becomeCompliant(SOME_URL)
         .boundary(SOME_URL)
-        .additionalInfo(SOME_URL)
+        .paymentsCompliance(SOME_URL)
+        .privacyPolicy(SOME_URL)
+        .fleetsCompliance(SOME_URL)
         .publicTransportOptions(SOME_URL)
         .build();
     Rates rates = Rates.builder()
@@ -205,6 +218,9 @@ class TariffRepositoryTest {
         .rates(rates)
         .informationUrls(informationUrls)
         .activeChargeStartDate("2020-01-01")
+        .activeChargeStartDateText("15 March 2021")
+        .displayFrom(String.valueOf(DISPLAY_FROM))
+        .directDebitStartDateText(DIRECT_DEBIT_START_DATE_TEXT)
         .build();
   }
 

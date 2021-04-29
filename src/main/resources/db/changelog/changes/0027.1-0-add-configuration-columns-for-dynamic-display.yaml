@@ -1,0 +1,98 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0026.1-1.0
+      author: exlabs
+      preConditions:
+        - onFail: MARK_RAN
+        - sqlCheck:
+            expectedResult: 0
+            sql:  SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 't_charge_definition' AND column_name = 'active_charge_start_date_text' OR column_name = 'display_from' OR column_name = 'display_order';
+        - sqlCheck:
+            expectedResult: 0
+            sql:  SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 't_caz_link_detail' AND column_name = 'privacy_policy_url';
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: active_charge_start_date_text
+                  type: varchar(30)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: display_from
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: display_order
+                  type: integer
+                  defaultValueNumeric: 1
+                  constraints:
+                    nullable: false
+            schemaName: public
+            tableName: t_charge_definition
+        - addColumn:
+            columns:
+              - column:
+                  name: privacy_policy_url
+                  type: text
+                  defaultValue: ""
+                  constraints:
+                    nullable: false
+            schemaName: public
+            tableName: t_caz_link_detail
+  - changeSet:
+      id: 0026.2-1.0
+      author: exlabs
+      changes:
+        - sql:
+            comment: Update data for existing CAZes
+            dbms: postgresql
+            endDelimiter: ;GO
+            splitStatements: true
+            sql:
+              UPDATE public.t_charge_definition
+              SET display_from = '2021-01-01',
+              display_order = 1
+              WHERE CHARGE_DEFINITION_ID = 3;
+
+              UPDATE public.t_charge_definition
+              SET active_charge_start_date_text = '1 June 2021',
+              display_from = '2021-01-01',
+              display_order = 1
+              WHERE CHARGE_DEFINITION_ID = 1;
+            stripComments: true
+        - sql:
+            comment: Update privacy_policy_url for existing CAZes
+            dbms: postgresql
+            endDelimiter: ;GO
+            splitStatements: true
+            sql:
+              UPDATE public.T_CAZ_LINK_DETAIL
+              SET privacy_policy_url = 'https://www.birmingham.gov.uk/info/20015/environment/2005/privacy_statement_-_environmental_health/2'
+              WHERE CHARGE_DEFINITION_ID = 1;
+
+              UPDATE public.T_CAZ_LINK_DETAIL
+              SET privacy_policy_url = 'https://beta.bathnes.gov.uk/council-privacy-policy'
+              WHERE CHARGE_DEFINITION_ID = 3;
+            stripComments: true
+  - changeSet:
+      id: 0026.3-1.0
+      author: exlabs
+      changes:
+        - dropDefaultValue:
+            columnDataType:  timestamp
+            columnName:  display_from
+            schemaName:  public
+            tableName:  t_charge_definition
+        - dropDefaultValue:
+            columnDataType:  integer
+            columnName:  display_order
+            schemaName:  public
+            tableName:  t_charge_definition
+        - dropDefaultValue:
+            columnDataType:  text
+            columnName:  privacy_policy_url
+            schemaName:  public
+            tableName:  t_caz_link_detail
