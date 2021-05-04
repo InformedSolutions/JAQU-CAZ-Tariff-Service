@@ -20,7 +20,13 @@
     "exemptionOrDiscount": "https://exemption.birmingham.gov.uk",
     "becomeCompliant": "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/7",
     "boundary": "https://www.birmingham.gov.uk/info/20076/pollution/1763/a_clean_air_zone_for_birmingham/3",
-    "additionalInfo": "https://www.brumbreathes.co.uk/what-does-it-mean-for-me",
+    "paymentsCompliance": "https://www.brumbreathes.co.uk/homepage/7/financial-incentive",
+    "privacyPolicy": "https://www.birmingham.gov.uk/info/20015/environment/2005/privacy_statement_-_environmental_health/2",
+    "fleetsCompliance": "https://businessbreathes.co.uk/",
     "publicTransportOptions": "https://www.brumbreathes.co.uk/info/15/drive-work-clean-air-zone-1/9/drive-work-clean-air-zone/4"
-  }
+  },
+  "activeChargeStartDate": "2021-06-01",
+  "activeChargeStartDateText": "1 June 2021",
+  "displayFrom": "2021-01-01",
+  "displayOrder": 2
 }

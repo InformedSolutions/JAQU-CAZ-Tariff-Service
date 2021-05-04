@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0030-1.0-tariffs
+      author: antoni.pstras
+      preConditions:
+        - onFail: MARK_RAN
+        - sqlCheck:
+            expectedResult: 0
+            sql: SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 't_charge_definition' AND column_name = 'direct_debit_start_date_text';
+      changes:
+        - addColumn:
+            comment: Add column to store information about date when payments with direct debits are going to start
+            tableName: T_CHARGE_DEFINITION
+            columns:
+              - column:
+                  name: DIRECT_DEBIT_START_DATE_TEXT
+                  type: varchar(30)
+
+  - changeSet:
+      id: 0030-2.0-tariffs
+      author: antoni.pstras
+      changes:
+        - sql:
+            comment: Update data for Birmingham
+            dbms: postgresql
+            endDelimiter: ;GO
+            splitStatements: true
+            sql:
+              UPDATE public.t_charge_definition
+              SET direct_debit_start_date_text = '4 May 2021'
+              WHERE CHARGE_DEFINITION_ID = 1;
+            stripComments: true

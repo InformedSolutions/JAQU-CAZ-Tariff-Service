@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0029-1.0
+      author: Informed
+      changes:
+        - sql:
+            comment: Add portsmouth tariffs and links
+            dbms: postgresql
+            endDelimiter: ;GO
+            splitStatements: true
+            sql: 
+              DO $$ 
+              BEGIN
+                BEGIN
+                  INSERT INTO T_CHARGE_DEFINITION(charge_definition_id, caz_name, caz_class, clean_air_zone_id, active_charge_start_time, active_charge_end_time, insert_timestmp, charge_identifier, charging_disabled_vehicles, direct_debit_enabled, caz_operator_name, active_charge_start_date_text, display_from, display_order)
+                  VALUES (4, 'Portsmouth', 'B', 'aecc6d2b-7e18-42a9-a436-9a3827a189df', '2021-11-26', '2050-01-01', now(), 'PCC01', false, false, 'Portsmouth', '26th November 2021', '2021-06-01', 3);
+                  
+                  INSERT INTO public.T_TARIFF_DEFINITION(tariff_id, charge_definition_id, hgv_entrant_fee, taxi_entrant_fee, car_entrant_fee, minibus_entrant_fee, phv_entrant_fee, bus_entrant_fee, motorcycle_ent_fee, coach_entrant_fee, van_entrant_fee, moped_entrant_fee, insert_timestmp)
+                  VALUES (5, 4, 50, 10, 0, 0, 10, 50, 0, 50, 0, 0, now());
+                  
+                  INSERT INTO public.t_caz_link_detail(caz_link_id, charge_definition_id, main_info_url, exemption_url, become_compliant_url, boundary_url, insert_timestmp, public_transport_options_url, payments_compliance_url, fleets_compliance_url, privacy_policy_url)
+                  VALUES (4, 4, 'https://travel.portsmouth.gov.uk/schemes/charging-clean-air-zone/', 'https://travel.portsmouth.gov.uk/schemes/clean-air-fund-financial-support-for-businesses/', 'https://travel.portsmouth.gov.uk/schemes/clean-air-fund-financial-support-for-businesses/', 'https://travel.portsmouth.gov.uk/schemes/charging-clean-air-zone/', now(), 'https://travel.portsmouth.gov.uk/schemes/', 'https://travel.portsmouth.gov.uk/schemes/charging-clean-air-zone/', 'https://travel.portsmouth.gov.uk/schemes/charging-clean-air-zone/', 'https://www.portsmouth.gov.uk/services/council-and-democracy/transparency/data-protection-privacy-notice/');
+                EXCEPTION
+                  WHEN unique_violation THEN RAISE NOTICE 'Primary key violation when inserting Portsmouth.';
+                END;
+              END;
+              $$;

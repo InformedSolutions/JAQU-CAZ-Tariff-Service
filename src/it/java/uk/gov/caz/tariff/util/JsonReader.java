@@ -16,8 +16,8 @@ public class JsonReader {
     return readJson(DATA_JSON + "sample-tariff.json");
   }
 
-  public static String tariffJson() throws IOException {
-    return readJson(DATA_JSON + "tariff.json");
+  public static String birminghamTariffJson() throws IOException {
+    return readJson(DATA_JSON + "birmingham-tariff.json");
   }
 
   public static String sampleCleanAirZonesJson() throws IOException {

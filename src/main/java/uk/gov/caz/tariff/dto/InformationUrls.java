@@ -23,8 +23,14 @@ public class InformationUrls {
   @ApiModelProperty(value = "${swagger.model.descriptions.informationUrl.boundaryUrl}")
   String boundary;
 
-  @ApiModelProperty(value = "${swagger.model.descriptions.informationUrl.additionalInfoUrl}")
-  String additionalInfo;
+  @ApiModelProperty(value = "${swagger.model.descriptions.informationUrl.paymentsComplianceUrl}")
+  String paymentsCompliance;
+
+  @ApiModelProperty(value = "${swagger.model.descriptions.informationUrl.fleetsComplianceUrl}")
+  String fleetsCompliance;
+
+  @ApiModelProperty(value = "${swagger.model.descriptions.informationUrl.privacyPolicyUrl}")
+  String privacyPolicy;
 
   @ApiModelProperty(value =
       "${swagger.model.descriptions.informationUrl.publicTransportOptionsUrl}")
