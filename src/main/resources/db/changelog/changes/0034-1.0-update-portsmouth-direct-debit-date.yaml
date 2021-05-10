@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0034-1.0
+      author: Informed
+      changes:
+        - sql:
+            comment: Update portsmouth direct debit availability date
+            dbms: postgresql
+            endDelimiter: ;GO
+            splitStatements: true
+            sql: 
+              UPDATE public.t_charge_definition
+              SET direct_debit_start_date_text='Late 2021'
+              WHERE charge_definition_id=4;
