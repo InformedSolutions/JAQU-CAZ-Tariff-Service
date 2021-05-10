@@ -10,5 +10,9 @@ databaseChangeLog:
             splitStatements: true
             sql: 
               UPDATE public.t_charge_definition
-              SET  display_from='2021-06-17'
+              SET display_from='2021-06-17'
+              WHERE charge_definition_id=4;
+              
+              UPDATE public.t_charge_definition
+              SET active_charge_start_date_text='Late 2021'
               WHERE charge_definition_id=4;
