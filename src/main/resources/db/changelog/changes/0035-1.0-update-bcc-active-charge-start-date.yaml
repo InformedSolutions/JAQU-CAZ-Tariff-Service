@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0035-1.0
+      author: Informed
+      changes:
+        - sql:
+            comment: Update BCC active charge start date
+            dbms: postgresql
+            endDelimiter: ;GO
+            splitStatements: true
+            sql: 
+              UPDATE public.t_charge_definition
+              SET active_charge_start_time='2021-06-14 00:00:00'
+              WHERE charge_definition_id = 1;
