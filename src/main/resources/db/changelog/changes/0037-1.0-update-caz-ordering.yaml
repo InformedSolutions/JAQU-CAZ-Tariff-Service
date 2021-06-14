@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0037.1-1.0
+      author: Informed
+      changes:
+        - sql:
+            comment: Update display order for Portsmouth CAZ
+            dbms: postgresql
+            endDelimiter: ;GO
+            splitStatements: true
+            sql:
+              UPDATE public.t_charge_definition
+              SET display_order = 4
+              WHERE CHARGE_DEFINITION_ID = 4;
+            stripComments: true
