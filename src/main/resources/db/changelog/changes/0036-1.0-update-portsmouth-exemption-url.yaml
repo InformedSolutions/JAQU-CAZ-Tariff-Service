@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0036-1.0
+      author: Informed
+      changes:
+        - sql:
+            comment: Update portsmouth exemption url
+            dbms: postgresql
+            endDelimiter: ;GO
+            splitStatements: true
+            sql:
+              UPDATE public.t_caz_link_detail
+              SET exemption_url = 'https://cleanerairportsmouth.co.uk/clean-air-zone-exemptions'
+              WHERE charge_definition_id = 4;
