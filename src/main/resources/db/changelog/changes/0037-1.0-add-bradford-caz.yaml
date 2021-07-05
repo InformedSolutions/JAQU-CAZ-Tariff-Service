@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 0036-1.0
+      id: 0037-1.0
       author: Informed
       changes:
         - sql:
@@ -13,7 +13,7 @@ databaseChangeLog:
               BEGIN
                 BEGIN
                   INSERT INTO T_CHARGE_DEFINITION(charge_definition_id, caz_name, caz_class, clean_air_zone_id, active_charge_start_time, active_charge_end_time, insert_timestmp, charge_identifier, charging_disabled_vehicles, direct_debit_enabled, caz_operator_name, active_charge_start_date_text, display_from, display_order)
-                  VALUES (5, 'Bradford', 'C', 'eac7ca5a-dfe7-4ff8-864d-b6fb772d7630', '2050-01-01', '2050-01-01', now(), 'CBC01', 'false', 'false', 'Bradford City Council', 'Early 2022', '2021-07-30', 3);
+                  VALUES (5, 'Bradford', 'C', 'eac7ca5a-dfe7-4ff8-864d-b6fb772d7630', '2050-01-01', '2050-01-01', now(), 'CBC01', 'false', 'false', 'Bradford City Council', 'Early 2022', '2021-09-14', 3);
 
                   INSERT INTO public.T_TARIFF_DEFINITION(tariff_id, charge_definition_id, hgv_entrant_fee, taxi_entrant_fee, car_entrant_fee, minibus_entrant_fee, phv_entrant_fee, bus_entrant_fee, motorcycle_ent_fee, coach_entrant_fee, van_entrant_fee, moped_entrant_fee, insert_timestmp)
                   VALUES (5, 5, 50, 12.50, 0, 9, 12.50, 50, 0, 50, 9, 0, now());
